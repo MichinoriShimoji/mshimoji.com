@@ -135,10 +135,10 @@ body {
 
 .nav-link {
   display: block;
-  padding: var(--spacing-sm) 0.6rem;
+  padding: 0.4rem 0.5rem;
   color: var(--color-text);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 500;
   transition: color var(--transition), background-color var(--transition);
   border-radius: 4px;
@@ -362,7 +362,7 @@ body {
 
 .member-research {
   color: var(--color-text-light);
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   margin-bottom: var(--spacing-sm);
 }
 
@@ -593,7 +593,7 @@ body {
 .footer-section p,
 .footer-section a {
   color: rgba(255, 255, 255, 0.8);
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 
 .footer-section a {
