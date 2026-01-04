@@ -8,16 +8,21 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>">
   <style>
     .guide-content { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-    .guide-content h3 { color: var(--color-primary); margin: 1.5rem 0 1rem; font-size: 1.2rem; }
-    .guide-content p { line-height: 1.8; margin-bottom: 1rem; text-indent: 1em; }
-    .guide-content ul, .guide-content ol { margin: 1rem 0 1rem 1.5rem; line-height: 1.8; }
+    .guide-content h3 { color: var(--color-primary); margin: 2rem 0 1rem; font-size: 1.15rem; font-weight: bold; }
+    .guide-content h3:first-of-type { margin-top: 0; }
+    .guide-content p { line-height: 1.9; margin-bottom: 1rem; text-indent: 1em; }
+    .guide-content ul, .guide-content ol { margin: 1rem 0 1rem 1.5rem; line-height: 1.9; }
     .guide-content li { margin-bottom: 0.5rem; }
     .guide-content ul ul { margin: 0.5rem 0 0.5rem 1.5rem; }
     .back-link { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--color-text-light); text-decoration: none; margin-bottom: 1.5rem; }
     .back-link:hover { color: var(--color-primary); }
     .section-title-box { background: var(--color-primary); color: white; padding: 1rem 1.5rem; border-radius: 8px 8px 0 0; margin: -2rem -2rem 1.5rem; }
     .section-title-box h2 { margin: 0; font-size: 1.3rem; }
-    .example { background: #f7fafc; padding: 1rem; border-left: 3px solid var(--color-primary); margin: 1rem 0; font-family: monospace; }
+    .example { background: #f7fafc; padding: 1rem 1.25rem; border-left: 3px solid var(--color-primary); margin: 1rem 0; font-family: "Hiragino Kaku Gothic Pro", monospace; line-height: 1.8; }
+    .example p { text-indent: 0; margin-bottom: 0.5rem; }
+    .tree { margin: 1rem 0; padding: 1rem; background: #f8f9fa; border-radius: 6px; }
+    .tree-item { margin-left: 1.5rem; }
+    a { color: var(--color-primary); }
   </style>
 </head>
 <body>
@@ -33,13 +38,32 @@
         <div class="section-title-box"><h2>3.2. 語根・語幹・語基</h2></div>
         <h3>記述のポイント</h3>
 <p>語根は語に必須の要素であり、典型的には語彙的な意味を表すが、補助動詞のように語全体が文法的意味を表す場合は、語根もまた文法的な意味を持つことになる。語根は接辞に対立する概念である。</p>
-<p>語根と接辞の連続の構造において，接辞は一様ではなく，語の完成において必須の接辞（屈折接辞）と，それ以外の接辞（派生接辞）という機能的な区別がある。語から屈折接辞を除いた単位を語幹と呼ぶ。</p>
+
+<p>語根と接辞の連続の構造において，接辞は一様ではなく，語の完成において必須の接辞（屈折接辞）と，それ以外の接辞（派生接辞）という機能的な区別がある。語から屈折接辞を除いた単位を語幹と呼ぶ。以下の動詞の構造において，(a)は語根 vs. 接辞のレベルにおける構造化であり，(b)は語幹 vs. 屈折のレベルにおける構造化である。(b)のレベルにおいて，語幹の最小単位は語幹核（詳しくは<a href="5-3.html">5.3節</a>）であり，これは単独の語根が埋めることもあるが，2つの語根の複合語幹や，別品詞の語根から派生された派生語幹が埋めることもある。</p>
+
 <div class="example">
-(1) kak-ase-rare-ta（書く-CAUS-PASS-PST）<br>
-(a) 語根-接辞-接辞-接辞<br>
-(b) [語根-派生接辞-派生接辞]語幹-屈折接辞
+<p>(1) kak-ase-rare-ta</p>
+<p>　　書く-CAUS-PASS-PST</p>
+<p>(a) 語根-接辞-接辞-接辞</p>
+<p>(b) [語根-派生接辞-派生接辞]<sub>語幹</sub>-屈折接辞</p>
 </div>
-<p>語基は語形成における入力となる要素を広く指す。</p>
+
+<p>語基は語形成における入力となる要素を広く指す。例えば，宮古語伊良部島方言における以下の例を考えてみよう。</p>
+
+<div class="example">
+<p>(2) a. taka-「高い」</p>
+<p>　　b. taka-sa（高い-NLZ）「高さ」</p>
+<p>　　c. taka-ka-tar（高い-VLZ-PST）「高かった」</p>
+<p>　　d. takaa~taka（RED~高い）「高い」</p>
+</div>
+
+<p>(2a)は語根である。これを入力として(2b)の名詞形式が派生される。この際，語根taka-は語形taka-saの語基であり，名詞化接辞-saは語基taka-に接続している，ということになる。</p>
+
+<p>(2c)は活用形容詞（伊良部の文法では動詞の一種，状態動詞）である。taka-を入力として動詞語幹taka-ka(r)が形成され，これに屈折接辞-tarが接続している。すなわち，taka-を語基として動詞語幹taka-ka(r)が派生されている，といえ，taka-ka(r)を語基として動詞語形taka-ka-tarが形成されているといえる。接辞の側から見れば，-ka(r)の語基はtaka-であり，-tarの語基はtaka-ka(r)である。上述した「語幹と屈折」という対立軸においては，taka-ka(r)は語幹，-tarは屈折であるのに対し，語基という概念で捉えると，-tarにとってtaka-ka(r)は（出力であるtaka-ka-tarを作るための入力である）語基でもある。</p>
+
+<p>(2d)は重複形式である。taka-という語根を入力すなわち語基として，出力形式takaa~takaが形成されている（なお，重複の境界記号は~を使うのが一般的）。</p>
+
+<p>よく，語基とは，「ある形態素からみて，その接続先全体をさす」と言われるが，それは(2b-c)のような，接辞による語形成の場合であり，より正確には，(2d)のような重複のような例も踏まえ，「語形成における入力となる要素」と言った方が良い。</p>
       </div>
     </section>
   </main>

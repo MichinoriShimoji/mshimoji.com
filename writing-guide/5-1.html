@@ -8,35 +8,45 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>">
   <style>
     .guide-content { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-    .guide-content h3 { color: var(--color-primary); margin: 1.5rem 0 1rem; font-size: 1.2rem; }
-    .guide-content p { line-height: 1.8; margin-bottom: 1rem; text-indent: 1em; }
-    .guide-content ul, .guide-content ol { margin: 1rem 0 1rem 1.5rem; line-height: 1.8; }
+    .guide-content h3 { color: var(--color-primary); margin: 2rem 0 1rem; font-size: 1.15rem; font-weight: bold; }
+    .guide-content h3:first-of-type { margin-top: 0; }
+    .guide-content p { line-height: 1.9; margin-bottom: 1rem; text-indent: 1em; }
+    .guide-content ul, .guide-content ol { margin: 1rem 0 1rem 1.5rem; line-height: 1.9; }
     .guide-content li { margin-bottom: 0.5rem; }
     .guide-content ul ul { margin: 0.5rem 0 0.5rem 1.5rem; }
     .back-link { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--color-text-light); text-decoration: none; margin-bottom: 1.5rem; }
     .back-link:hover { color: var(--color-primary); }
     .section-title-box { background: var(--color-primary); color: white; padding: 1rem 1.5rem; border-radius: 8px 8px 0 0; margin: -2rem -2rem 1.5rem; }
     .section-title-box h2 { margin: 0; font-size: 1.3rem; }
+    .example { background: #f7fafc; padding: 1rem 1.25rem; border-left: 3px solid var(--color-primary); margin: 1rem 0; line-height: 1.8; }
+    .example p { text-indent: 0; margin-bottom: 0.5rem; }
+    a { color: var(--color-primary); }
+    .survey-box { background: #e8f4f8; padding: 1rem; border-radius: 6px; margin: 1rem 0; }
+    .survey-box a { display: inline-block; margin: 0.25rem 0.5rem 0.25rem 0; }
   </style>
 </head>
 <body>
   <header class="site-header"><div class="header-content"><a href="../index.html" class="site-title">下地理則の研究室</a><p class="site-subtitle">琉球語と日本語方言の研究 | 九州大学言語学講座</p></div></header>
-  <nav class="main-nav"><div class="nav-container"><ul class="nav-list" id="navList">
-    <li class="nav-item"><a href="../index.html" class="nav-link">HOME</a></li>
-    <li class="nav-item"><a href="../resources.html" class="nav-link active">方言記述のリソース</a></li>
-  </ul></div></nav>
+  <nav class="main-nav"><div class="nav-container"><ul class="nav-list"><li class="nav-item"><a href="../index.html" class="nav-link">HOME</a></li><li class="nav-item"><a href="../resources.html" class="nav-link active">方言記述のリソース</a></li></ul></div></nav>
   <main class="main-content">
     <section class="section">
       <a href="../writing-guide.html" class="back-link">← 執筆項目リストに戻る</a>
       <div class="guide-content">
         <div class="section-title-box"><h2>5.1. 動詞語幹と活用クラス</h2></div>
         <h3>記述のポイント</h3>
-<p>動詞形態論の記述は主に，屈折形態論と派生形態論にわけられる。屈折形態論は範列関係にある体系を記述し，派生形態論では連辞関係にある構造を記述する。</p>
-<p>5章全体で，この２つの形態論的記述を行うが，このセクション(5.1節)では，屈折形態論を記述する上で要となる，語幹のクラスの導入を行う。</p>
+<p>動詞形態論の記述は主に，屈折形態論と派生形態論にわけられる。端的に言って，屈折形態論は範列関係にある体系を記述し，派生形態論では連辞関係にある構造を記述する，と言える。</p>
+
+<p>屈折形態論では，動詞の語幹と義務的な文法カテゴリー（テンス，きれ続きなど）の接辞の範列的な体系を記述する。すなわち，一般に活用と言われる分野を指す。一方，派生形態論では，語根に非義務的な接辞（ヴォイス，否定など）を連辞的に加えて，語幹を拡張して意味を限定していくプロセスを記述する。</p>
+
+<p>5章全体で，この２つの形態論的記述を行うが，このセクション(5.1節)では，屈折形態論を記述する上で要となる，語幹のクラスの導入を行う。標準語を始め，ほとんどの方言には，母音語幹（一段，弱変化）と子音語幹（五段，強変化）のクラス，すなわち活用クラスが設定でき，形態音韻的交替や接辞の選択など多くの屈折形態論的交替が，このクラスに依存している。</p>
 
 <h3>母音語幹動詞と子音語幹動詞</h3>
-<p>母音語幹動詞は，例えば九州方言のように二段活用を持つ方言もあり，南琉球宮古語のように，完全に一段化している方言もある。歴史的な観点から，二段活用動詞のリストを作成し，その活用をチェックする必要がある。</p>
-<p>母音語幹動詞と子音語幹動詞とで接辞が異なる場合も当然あるはずで，その記述も漏らさず行う。</p>
+
+<p>母音語幹動詞は，例えば九州方言のように二段活用を持つ方言もあり，南琉球宮古語のように，完全に一段化している方言もある。歴史的な観点から，二段活用動詞のリストを作成し，その活用をチェックする必要がある。子音語幹動詞のうち，テ形やタ形で起こる音便，/w/を語幹末に持つ場合の語幹の基底形の解釈など，形態音韻交替に関する記述は網羅的に行っておく。</p>
+
+<p>母音語幹動詞と子音語幹動詞とで接辞が異なる場合（例：標準語の命令形接辞）も当然あるはずで，その記述も漏らさず行う。</p>
+
+<p>これらの記述が済んだ段階で，変格活用や不規則動詞，存在動詞，コピュラ動詞，補助動詞などの活用パターンを，通常の母音語幹動詞・子音語幹動詞のパターンに言及しながら記述すると良い。</p>
       </div>
     </section>
   </main>
