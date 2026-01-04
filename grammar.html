@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="記述文法作成支援 - 方言記述のスタートガイド、執筆項目リスト、記述文法リスト">
+  <title>記述文法作成支援 | 下地理則の研究室</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>">
+  <style>
+    .resource-card {
+      background: var(--color-white);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .resource-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    }
+    .resource-card h3 {
+      color: var(--color-primary);
+      margin: 0 0 0.75rem 0;
+      font-size: 1.2rem;
+    }
+    .resource-card p {
+      color: var(--color-text);
+      line-height: 1.7;
+      margin: 0 0 1rem 0;
+    }
+    .resource-card .card-link {
+      display: inline-block;
+      background: var(--color-primary);
+      color: white;
+      padding: 0.5rem 1.25rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+    }
+    .resource-card .card-link:hover {
+      background: var(--color-primary-dark, #1a365d);
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--color-text-light);
+      text-decoration: none;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+    .back-link:hover {
+      color: var(--color-primary);
+    }
+    .section-intro {
+      background: #f8f9fa;
+      padding: 1.25rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      border-left: 4px solid var(--color-primary);
+    }
+    .section-intro p {
+      margin: 0;
+      line-height: 1.7;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-content">
+      <a href="index.html" class="site-title">下地理則の研究室</a>
+      <p class="site-subtitle">琉球語と日本語方言の研究 | 九州大学言語学講座</p>
+    </div>
+  </header>
+
+  <nav class="main-nav">
+    <div class="nav-container">
+      <button class="mobile-menu-btn" aria-label="メニュー" onclick="toggleMenu()">
+        <span class="hamburger"></span>
+      </button>
+      <ul class="nav-list" id="navList">
+        <li class="nav-item"><a href="index.html" class="nav-link">HOME</a></li>
+        <li class="nav-item"><a href="members.html" class="nav-link">メンバー</a></li>
+        <li class="nav-item"><a href="research.html" class="nav-link">研究</a></li>
+        <li class="nav-item"><a href="teaching.html" class="nav-link">授業</a></li>
+        <li class="nav-item"><a href="theses.html" class="nav-link">指導した学位論文</a></li>
+        <li class="nav-item"><a href="irabu.html" class="nav-link">伊良部島方言を知る</a></li>
+        <li class="nav-item"><a href="resources.html" class="nav-link active">方言記述のリソース</a></li>
+        <li class="nav-item"><a href="prospective.html" class="nav-link">大学院志望者へ</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <section class="page-hero">
+      <h1 class="page-title">記述文法作成支援</h1>
+      <p class="page-description">グラマーの執筆項目リスト、記述のポイント解説など</p>
+    </section>
+
+    <section class="section">
+      <a href="resources.html" class="back-link">← 方言記述のリソースに戻る</a>
+      
+      <div class="section-intro">
+        <p>記述文法（グラマー）を書くためのガイドラインや、執筆項目のリスト、各項目における記述のポイントなどを解説しています。フィールドワークで得られたデータを、体系的な文法書としてまとめる際の参考にしてください。</p>
+      </div>
+
+      <div class="resource-card">
+        <h3>📖 方言記述のスタートガイド</h3>
+        <p>下地ゼミ監修による、総合的な記述文法を独力で仕上げていくために知っておくべきことをコンパクトにまとめたガイドブックです。</p>
+        <a href="https://www.canva.com/design/DAF6CK2iCHo/7f-u1_Xb1LYXOl-Euc19Jw/view?utm_content=DAF6CK2iCHo&utm_campaign=designshare&utm_medium=link&utm_source=editor" class="card-link" target="_blank" rel="noopener">ガイドを見る</a>
+      </div>
+
+      <div class="resource-card">
+        <h3>📋 執筆項目リスト</h3>
+        <p>どのような言語であっても最低限カバーすべき執筆項目のリストと、項目ごとの記述上のポイントをまとめています。</p>
+        <a href="https://docs.google.com/spreadsheets/d/1Omcg1dMxr-xYf5xM82qJB5bMJxFKG00TCQvsu3X4J70/edit#gid=0" class="card-link" target="_blank" rel="noopener">リストを見る</a>
+      </div>
+
+      <div class="resource-card">
+        <h3>📚 記述文法リスト</h3>
+        <p>これまでに出版ないし公開された日琉諸語の記述文法/概説のリストです。その多くにPDFリンクがついています。ご自身の執筆の参考にしてください。リンクに追加して欲しい執筆者の方は<a href="mailto:smz@kyudai.jp?subject=記述文法リスト追加の件">下地までメール</a>をください。</p>
+        <a href="https://docs.google.com/spreadsheets/d/1tEUe9VKN0gqPYd0jQViqSjkvAXurZK7GtLw8GgXAt7E/edit#gid=0" class="card-link" target="_blank" rel="noopener">リストを見る</a>
+      </div>
+
+      <div class="resource-card">
+        <h3>📝 日琉諸語の調査票ポータル</h3>
+        <p>松岡葵氏作成のelicitation調査票のポータルサイトです。音韻、形態、構文その他、トピックごとに、さまざまな調査票がまとめられています。</p>
+        <a href="https://sites.google.com/view/japoniclanguages-questionnaire/%E3%83%9B%E3%83%BC%E3%83%A0" class="card-link" target="_blank" rel="noopener">ポータルを見る</a>
+      </div>
+
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>下地理則の研究室</h3>
+        <p>九州大学大学院人文科学研究院<br>言語学講座</p>
+        <p style="margin-top: 1rem;">smz [at] kyudai.jp</p>
+      </div>
+      <div class="footer-section">
+        <h3>リンク</h3>
+        <a href="https://kyushu-u.academia.edu/MichinoriShimoji" target="_blank" rel="noopener">Academia.edu</a>
+        <a href="https://researchmap.jp/read0122330" target="_blank" rel="noopener">Researchmap</a>
+        <a href="https://note.com/lingfieldwork" target="_blank" rel="noopener">note</a>
+      </div>
+      <div class="footer-section">
+        <h3>サイトマップ</h3>
+        <a href="index.html">HOME</a>
+        <a href="members.html">メンバー</a>
+        <a href="research.html">研究</a>
+        <a href="teaching.html">授業</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 下地理則研究室. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById('navList').classList.toggle('active');
+    }
+  </script>
+</body>
+</html>
