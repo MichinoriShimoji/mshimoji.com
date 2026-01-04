@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="下地理則研究室の研究 - 日琉諸語の総合的記述">
+  <title>研究 | 下地理則の研究室</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>">
+</head>
+<body>
+  <!-- ヘッダー -->
+  <header class="site-header">
+    <div class="header-content">
+      <a href="index.html" class="site-title">下地理則の研究室</a>
+      <p class="site-subtitle">琉球語と日本語方言の研究 | 九州大学言語学講座</p>
+    </div>
+  </header>
+
+  <!-- ナビゲーション -->
+  <nav class="main-nav">
+    <div class="nav-container">
+      <button class="mobile-menu-btn" aria-label="メニュー" onclick="toggleMenu()">
+        <span class="hamburger"></span>
+      </button>
+      <ul class="nav-list" id="navList">
+        <li class="nav-item"><a href="index.html" class="nav-link">HOME</a></li>
+        <li class="nav-item"><a href="members.html" class="nav-link">メンバー</a></li>
+        <li class="nav-item"><a href="research.html" class="nav-link active">研究</a></li>
+        <li class="nav-item"><a href="teaching.html" class="nav-link">授業</a></li>
+        <li class="nav-item"><a href="theses.html" class="nav-link">指導した学位論文</a></li>
+        <li class="nav-item"><a href="irabu.html" class="nav-link">伊良部島方言を知る</a></li>
+        <li class="nav-item"><a href="resources.html" class="nav-link">方言記述のリソース</a></li>
+        <li class="nav-item"><a href="prospective.html" class="nav-link">大学院志望者へ</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- メインコンテンツ -->
+  <main class="main-content">
+    <section class="page-hero" style="padding-bottom:var(--spacing-xl);">
+      <h1 class="page-title">研究</h1>
+      <p class="page-description" style="margin-bottom:var(--spacing-lg);">私の研究の３つの柱</p>
+      
+      <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:1.5rem;max-width:1000px;margin:0 auto;">
+        <div style="background:#fff;padding:1.8rem;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.08);border-top:3px solid #0284c7;text-align:left;">
+          <div style="font-size:0.75rem;font-weight:600;color:#0284c7;letter-spacing:0.1em;margin-bottom:0.5rem;">01</div>
+          <h3 style="font-size:1.05rem;margin-bottom:0.7rem;font-weight:600;color:#1a1a1a;">日琉諸語の総合的記述</h3>
+          <p style="font-size:0.85rem;line-height:1.8;color:#555;">フィールドワークを通じて言語データを収集し、文法書、辞書、談話資料を作成します。</p>
+        </div>
+        <div style="background:#fff;padding:1.8rem;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.08);border-top:3px solid #0284c7;text-align:left;">
+          <div style="font-size:0.75rem;font-weight:600;color:#0284c7;letter-spacing:0.1em;margin-bottom:0.5rem;">02</div>
+          <h3 style="font-size:1.05rem;margin-bottom:0.7rem;font-weight:600;color:#1a1a1a;">一般言語学的研究</h3>
+          <p style="font-size:0.85rem;line-height:1.8;color:#555;">実証データを元に、通言語的・類型論的仮説を検証・修正する研究を行います。</p>
+        </div>
+        <div style="background:#fff;padding:1.8rem;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.08);border-top:3px solid #0284c7;text-align:left;">
+          <div style="font-size:0.75rem;font-weight:600;color:#0284c7;letter-spacing:0.1em;margin-bottom:0.5rem;">03</div>
+          <h3 style="font-size:1.05rem;margin-bottom:0.7rem;font-weight:600;color:#1a1a1a;">言語記録保存とNLP</h3>
+          <p style="font-size:0.85rem;line-height:1.8;color:#555;">自然言語処理技術を用いた消滅危機言語の記録保存に取り組みます。</p>
+        </div>
+      </div>
+      
+      <div style="text-align:center;margin-top:1.5rem;">
+        <a href="publications.html" style="display:inline-block;padding:0.7rem 2rem;background:#0284c7;color:#fff;border-radius:6px;text-decoration:none;font-size:0.9rem;font-weight:500;transition:background 0.3s;">業績一覧を見る →</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">研究リソース</h2>
+      <div class="link-card-grid">
+        <a href="https://kyushu-u.academia.edu/MichinoriShimoji" class="link-card" target="_blank" rel="noopener">
+          <div class="link-card-icon">📄</div>
+          <div class="link-card-content">
+            <div class="link-card-title">Academia.edu</div>
+            <div class="link-card-desc">研究成果（論文pdf、発表スライド）を広く公開しています。</div>
+          </div>
+        </a>
+        
+        <a href="https://researchmap.jp/read0122330" class="link-card" target="_blank" rel="noopener">
+          <div class="link-card-icon">🔬</div>
+          <div class="link-card-content">
+            <div class="link-card-title">Researchmap</div>
+            <div class="link-card-desc">より詳細な研究成果・科研取得・参画状況など。</div>
+          </div>
+        </a>
+
+        <a href="irabu.html" class="link-card">
+          <div class="link-card-icon">🗣️</div>
+          <div class="link-card-content">
+            <div class="link-card-title">Language Data</div>
+            <div class="link-card-desc">同意書に基づいて公開できる範囲で、伊良部島方言の音声・映像、談話サンプルをアップしています。</div>
+          </div>
+        </a>
+
+        <a href="https://note.com/lingfieldwork" class="link-card" target="_blank" rel="noopener">
+          <div class="link-card-icon">📝</div>
+          <div class="link-card-content">
+            <div class="link-card-title">note</div>
+            <div class="link-card-desc">研究コラム、お役立ち情報のシェアなどの目的で更新しています。</div>
+          </div>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- フッター -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>下地理則の研究室</h3>
+        <p>九州大学大学院人文科学研究院<br>言語学講座</p>
+        <p style="margin-top: 1rem;">
+          <a href="/cdn-cgi/l/email-protection#99eaf4e3d9f2e0ecfdf8f0b7f3e9">smz [at] kyudai.jp</a>
+        </p>
+      </div>
+      <div class="footer-section">
+        <h3>リンク</h3>
+        <a href="https://kyushu-u.academia.edu/MichinoriShimoji" target="_blank" rel="noopener">Academia.edu</a>
+        <a href="https://researchmap.jp/read0122330" target="_blank" rel="noopener">Researchmap</a>
+        <a href="https://note.com/lingfieldwork" target="_blank" rel="noopener">note</a>
+      </div>
+      <div class="footer-section">
+        <h3>サイトマップ</h3>
+        <a href="index.html">HOME</a>
+        <a href="members.html">メンバー</a>
+        <a href="research.html">研究</a>
+        <a href="teaching.html">授業</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 下地理則研究室. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></scr

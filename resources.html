@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="方言記述のリソース - 記述文法作成支援、ドキュメンテーション支援、文献検索システム">
+  <title>方言記述のリソース | 下地理則の研究室</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>">
+</head>
+<body>
+  <!-- ヘッダー -->
+  <header class="site-header">
+    <div class="header-content">
+      <a href="index.html" class="site-title">下地理則の研究室</a>
+      <p class="site-subtitle">琉球語と日本語方言の研究 | 九州大学言語学講座</p>
+    </div>
+  </header>
+
+  <!-- ナビゲーション -->
+  <nav class="main-nav">
+    <div class="nav-container">
+      <button class="mobile-menu-btn" aria-label="メニュー" onclick="toggleMenu()">
+        <span class="hamburger"></span>
+      </button>
+      <ul class="nav-list" id="navList">
+        <li class="nav-item"><a href="index.html" class="nav-link">HOME</a></li>
+        <li class="nav-item"><a href="members.html" class="nav-link">メンバー</a></li>
+        <li class="nav-item"><a href="research.html" class="nav-link">研究</a></li>
+        <li class="nav-item"><a href="teaching.html" class="nav-link">授業</a></li>
+        <li class="nav-item"><a href="theses.html" class="nav-link">指導した学位論文</a></li>
+        <li class="nav-item"><a href="irabu.html" class="nav-link">伊良部島方言を知る</a></li>
+        <li class="nav-item"><a href="resources.html" class="nav-link active">方言記述のリソース</a></li>
+        <li class="nav-item"><a href="prospective.html" class="nav-link">大学院志望者へ</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- メインコンテンツ -->
+  <main class="main-content">
+    <section class="page-hero">
+      <h1 class="page-title">方言記述のリソース</h1>
+      <p class="page-description">フィールドワーカーを支援するさまざまな取り組み</p>
+    </section>
+
+    <section class="section">
+      <div class="text-content">
+        <p>
+          日琉諸語の記述研究、特に記述文法作成にかかる困難に対応するため、ここではさまざまな形でフィールドワーカーを支援する取り組みを進めています。
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">リソース一覧</h2>
+      <div class="link-card-grid">
+        <a href="#grammar" class="link-card">
+          <div class="link-card-icon">📝</div>
+          <div class="link-card-content">
+            <div class="link-card-title">記述文法作成支援</div>
+            <div class="link-card-desc">グラマーの執筆項目リスト、記述のポイント解説など</div>
+          </div>
+        </a>
+        
+        <a href="#documentation" class="link-card">
+          <div class="link-card-icon">🏷️</div>
+          <div class="link-card-content">
+            <div class="link-card-title">ドキュメンテーション・グロスづけ支援</div>
+            <div class="link-card-desc">例文提示法、グロスづけに関する解説、その他、ドキュメンテーション関連の便利なツールなど</div>
+          </div>
+        </a>
+
+        <a href="https://michinorishimoji.github.io/test/" class="link-card" target="_blank" rel="noopener">
+          <div class="link-card-icon">🔍</div>
+          <div class="link-card-content">
+            <div class="link-card-title">日本の地域言語総合文献検索システム</div>
+            <div class="link-card-desc">松岡葵氏作成の「地域別方言研究文献リスト」のデータを用いた検索システムです。随時更新。</div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section class="section" id="grammar">
+      <h2 class="section-title">記述文法作成支援</h2>
+      <div class="text-content">
+        <p>
+          記述文法（グラマー）を書くためのガイドラインや、執筆項目のリスト、各項目における記述のポイントなどを解説しています。フィールドワークで得られたデータを、体系的な文法書としてまとめる際の参考にしてください。
+        </p>
+      </div>
+    </section>
+
+    <section class="section" id="documentation">
+      <h2 class="section-title">ドキュメンテーション・グロスづけ支援</h2>
+      <div class="text-content">
+        <p>
+          言語データの記録・保存（ドキュメンテーション）に関する解説や、例文の提示法、グロスづけの方法などを紹介しています。Leipzig Glossing Rules に準拠したグロスづけの方法や、便利なツールの紹介も含まれています。
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div style="background:var(--color-sea-foam);padding:var(--spacing-lg);border-radius:12px;">
+        <h3 style="font-family:var(--font-serif);color:var(--color-primary-dark);margin-bottom:var(--spacing-sm);">文献検索システムについて</h3>
+        <p style="color:var(--color-text-light);">
+          <a href="https://michinorishimoji.github.io/test/" target="_blank" rel="noopener">日本の地域言語総合文献検索システム</a>は、<a href="https://researchmap.jp/matsuokaaoi" target="_blank" rel="noopener">松岡葵氏</a>作成の「地域別方言研究文献リスト」のデータを用いています。日琉諸語に関する研究文献を地域別に検索できます。
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- フッター -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>下地理則の研究室</h3>
+        <p>九州大学大学院人文科学研究院<br>言語学講座</p>
+        <p style="margin-top: 1rem;">
+          <a href="/cdn-cgi/l/email-protection#3e4d53447e55474b5a5f5710544e">smz [at] kyudai.jp</a>
+        </p>
+      </div>
+      <div class="footer-section">
+        <h3>リンク</h3>
+        <a href="https://kyushu-u.academia.edu/MichinoriShimoji" target="_blank" rel="noopener">Academia.edu</a>
+        <a href="https://researchmap.jp/read0122330" target="_blank" rel="noopener">Researchmap</a>
+        <a href="https://note.com/lingfieldwork" target="_blank" rel="noopener">note</a>
+      </div>
+      <div class="footer-section">
+        <h3>サイトマップ</h3>
+        <a href="index.html">HOME</a>
+        <a href="members.html">メンバー</a>
+        <a href="research.html">研究</a>
+        <a href="teaching.html">授業</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 下地理則研究室. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></scr
