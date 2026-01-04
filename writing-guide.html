@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="記述文法の執筆項目リスト - 方言記述のための体系的なガイド">
+  <title>執筆項目リスト | 下地理則の研究室</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>">
+  <style>
+    .guide-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      background: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .guide-table th {
+      background: var(--color-primary);
+      color: white;
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+    }
+    .guide-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #e2e8f0;
+      vertical-align: top;
+    }
+    .guide-table tr:hover {
+      background: #f7fafc;
+    }
+    .chapter-row {
+      background: #edf2f7 !important;
+      font-weight: 600;
+    }
+    .chapter-row td {
+      color: var(--color-primary);
+      padding: 1rem;
+    }
+    .section-num {
+      color: var(--color-text-light);
+      font-family: monospace;
+      white-space: nowrap;
+    }
+    .point-link {
+      display: inline-block;
+      background: var(--color-primary);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: background 0.2s;
+    }
+    .point-link:hover {
+      background: var(--color-primary-dark, #1a365d);
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--color-text-light);
+      text-decoration: none;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+    .back-link:hover {
+      color: var(--color-primary);
+    }
+    .section-intro {
+      background: #f8f9fa;
+      padding: 1.25rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      border-left: 4px solid var(--color-primary);
+    }
+    .section-intro p {
+      margin: 0;
+      line-height: 1.7;
+    }
+    .inline-note {
+      color: var(--color-text-light);
+      font-size: 0.9rem;
+    }
+    @media (max-width: 768px) {
+      .guide-table {
+        font-size: 0.9rem;
+      }
+      .guide-table th, .guide-table td {
+        padding: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-content">
+      <a href="index.html" class="site-title">下地理則の研究室</a>
+      <p class="site-subtitle">琉球語と日本語方言の研究 | 九州大学言語学講座</p>
+    </div>
+  </header>
+
+  <nav class="main-nav">
+    <div class="nav-container">
+      <button class="mobile-menu-btn" aria-label="メニュー" onclick="toggleMenu()">
+        <span class="hamburger"></span>
+      </button>
+      <ul class="nav-list" id="navList">
+        <li class="nav-item"><a href="index.html" class="nav-link">HOME</a></li>
+        <li class="nav-item"><a href="members.html" class="nav-link">メンバー</a></li>
+        <li class="nav-item"><a href="research.html" class="nav-link">研究</a></li>
+        <li class="nav-item"><a href="teaching.html" class="nav-link">授業</a></li>
+        <li class="nav-item"><a href="theses.html" class="nav-link">指導した学位論文</a></li>
+        <li class="nav-item"><a href="irabu.html" class="nav-link">伊良部島方言を知る</a></li>
+        <li class="nav-item"><a href="resources.html" class="nav-link active">方言記述のリソース</a></li>
+        <li class="nav-item"><a href="prospective.html" class="nav-link">大学院志望者へ</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <section class="page-hero">
+      <h1 class="page-title">執筆項目リスト</h1>
+      <p class="page-description">記述文法の執筆項目と記述のポイント</p>
+    </section>
+
+    <section class="section">
+      <a href="grammar.html" class="back-link">← 記述文法作成支援に戻る</a>
+      
+      <div class="section-intro">
+        <p>どのような言語であっても最低限カバーすべき執筆項目のリストと、項目ごとの記述上のポイントをまとめています。「記述のポイント」をクリックすると、各項目の詳しい解説ページに移動します。</p>
+      </div>
+
+      <table class="guide-table">
+        <thead>
+          <tr>
+            <th style="width:10%">章</th>
+            <th style="width:55%">内容</th>
+            <th style="width:35%">記述のポイント</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- 1章 -->
+          <tr class="chapter-row"><td colspan="3">１章　言語の概要</td></tr>
+          <tr><td class="section-num">1.1.</td><td>地理・系統</td><td></td></tr>
+          <tr><td class="section-num">1.1.1.</td><td>地理</td><td></td></tr>
+          <tr><td class="section-num">1.1.2.</td><td>系統</td><td></td></tr>
+          <tr><td class="section-num">1.1.3.</td><td>方言差</td><td></td></tr>
+          <tr><td class="section-num">1.2.</td><td>話者数、民族構成、産業</td><td></td></tr>
+          <tr><td class="section-num">1.2.1.</td><td>話者数</td><td></td></tr>
+          <tr><td class="section-num">1.2.2.</td><td>民族構成（現在の構成に至る移民，植民の歴史なども含む）</td><td></td></tr>
+          <tr><td class="section-num">1.2.3.</td><td>産業・生業</td><td></td></tr>
+          <tr><td class="section-num">1.3.</td><td>人類学的記述</td><td></td></tr>
+          <tr><td class="section-num">1.3.1.</td><td>言語の名前（現地の人は自らの言語をどう呼ぶか，その由来など）</td><td></td></tr>
+          <tr><td class="section-num">1.3.2.</td><td>言語人類学的記述（語彙の体系で興味深い点など）</td><td></td></tr>
+          <tr><td class="section-num">1.4.</td><td>社会学的記述</td><td></td></tr>
+          <tr><td class="section-num">1.4.1.</td><td>教育・メディア・活性度 (今後話者数を維持できるか)</td><td></td></tr>
+          <tr><td class="section-num">1.4.2.</td><td>多言語併用状況</td><td></td></tr>
+          <tr><td class="section-num">1.5.</td><td>先行研究のサマリー</td><td></td></tr>
+          <tr><td class="section-num">1.6.</td><td>類型論的特徴</td><td class="inline-note">当該言語の音韻と文法面それぞれで特に理論的・類型論的に際立った特徴があれば，当該記述箇所と相互参照しつつまとめておくと便利。</td></tr>
+          <tr><td class="section-num">1.6.1.</td><td>音韻的特徴</td><td></td></tr>
+          <tr><td class="section-num">1.6.2.</td><td>文法的特徴</td><td></td></tr>
+          <tr><td class="section-num">1.7.</td><td>使用するデータとフィールドワークの内容</td><td></td></tr>
+
+          <!-- 2章 -->
+          <tr class="chapter-row"><td colspan="3">２章　音韻論</td></tr>
+          <tr><td class="section-num">2.1.</td><td>音素目録</td><td><a href="writing-guide/2-1.html" class="point-link">記述のポイント</a></td></tr>
+          <tr><td class="section-num">2.1.1.</td><td>子音</td><td></td></tr>
+          <tr><td class="section-num">2.1.2.</td><td>母音</td><td></td></tr>
+          <tr><td class="section-num">2.1.3.</td><td>最小対のリスト</td><td></td></tr>
+          <tr><td class="section-num">2.2.</td><td>音節構造・音素配列</td><td><a href="writing-guide/2-2.html" class="point-link">記述のポイント</a></td></tr>
+          <tr><td class="section-num">2.2.1.</td><td>単純語の音節構造</td><td></td></tr>
+          <tr><td class="section-num">2.2.2.</td><td>合成語の音節構造</td><td></td></tr>
+          <tr><td class="section-num">2.2.3.</td><td>基礎語彙中の音節構造別の頻度</td><td></td></tr>
+          <tr><td class="section-num">2.2.4.</td><td>音素配列</td><td></td></tr>
+          <tr><td class="section-num">2.3.</td><td>モーラ</td><td></td></tr>
+          <tr><td class="section-num">2.3.1.</td><td>モーラと音節構造の対応</td><td></td></tr>
+          <tr><td class="section-num">2.3.2.</td><td>最小語制約（もしあれば）</td><td></td></tr>
+          <tr><td class="section-num">2.3.3.</td><td>その他（weight-sensitivity, 超重音節回避など）</td><td></td></tr>
+          <tr><td class="section-num">2.4.</td><td>(形態) 音韻規則 (一般規則と形態素個別の規則)</td><td><a href="writing-guide/2-4.html" class="point-link">記述のポイント</a></td></tr>
+          <tr><td class="section-num">2.4.1.</td><td>一般的な音韻規則（形態構造に依存しない音韻規則）</td><td></td></tr>
+          <tr><td class="section-num">2.4.2.</td><td>形態音韻規則（形態構造に依存する規則）</td><td></td></tr>
+          <tr><td class="section-num">2.5.</td><td>語レベルの韻律</td><td><a href="writing-guide/2-5.html" class="point-link">記述のポイント</a></td></tr>
+          <tr><td class="section-num">2.5.1.</td><td>体系</td><td></td></tr>
+          <tr><td class="section-num">2.5.2.</td><td>形態構造と韻律</td><td></td></tr>
+          <tr><td class="section-num">2.5.3.</td><td>中和</td><td></td></tr>
+          <tr><td class="section-num">2.5.4.</td><td>歴史的観点（合流，分岐，etc.）</td><td></td></tr>
+          <tr><td class="section-num">2.6.</td><td>イントネーション</td><td><a href="writing-guide/2-6.html" class="point-link">記述のポイント</a></td></tr>
+          <tr><td class="section-num">2.6.1.</td><td>境界標示（句・節境界などの標示）</td><td></td></tr>
+          <tr><td class="section-num">2.6.2.</td><td>イベント標示（対比，焦点，疑問，etc.の語句の卓立）</td><td></td></tr>
+          <tr><td class="section-num">2.6.3.</td><td>アクセントとイントネーションの相互作用</td><td></td></tr>
+
+          <!-- 3章 -->
+          <tr class="chapter-row"><td colspan="3">３章　文法記述のための用語の導入と定義</td></tr>
+          <tr><td class="section-num">3.1.</td><td>語・接辞・接語</td><td><a href="writing-guide/3-1.html" class="point-link">記述のポイント</a></td></tr>
+          <tr><td class="section-num">3.2.</td><td>語根・語幹・語基</td><td><a href="writing-guide/3-2.html" class="point-link">記述のポイント</a></td></tr>
+          <tr><td class="section-num">3.3.</td><td>品詞分類</td><td><a href="writing-guide/3-3.html" class="point-link">記述のポイント</a></td></tr>
+          <tr><td class="section-num">3.4.</td><td>文法関係（主語・目的語など）</td><td><a href="writing-guide/3-4.html" class="point-link">記述のポイント</a></td></tr>
+
+          <!-- 4章 -->
+          <tr class="chapter-row"><td colspan="3">４章　名詞形態論</td></tr>
+          <tr><td class="section-num">4.1.</td><td>代名詞</td><td><a href="writing-guide/4-1.html" class="point-link">記述のポイント</a></td></tr>
+          <tr><td class="section-num">4.1.1.</td><td>人称代名詞の体系</td><td></td></tr>
+          <tr><td class="section-num">4.1.2.</td><td>再帰代名詞</td><td></td></tr>
+          <tr><td class="section-num">4.1.3.</td><td>指示代名詞と疑問代名詞</td><td></td></tr>
+          <tr><td class="section-num">4.2.</td><td>名詞</td><td><a href="writing-guide/4-2.html" class="point-link">記述のポイント</a></td></tr>
+          <tr><td class="section-num">4.2.1.</td><td>内部構造</td><td></td></tr>
+          <tr><td class="section-num">4.2.2.</td><td>形式名詞</td><td></td></tr>
+          <tr><td class="section-num">4.3.</td><td>数詞</td><td><a href="writing-guide/4-3.html" class="point-link">記述のポイント</a></td></tr>
+          <tr><td class="section-num">4.4.</td><td>連体詞</td><td><a href="writing-guide/4-4.html" class="point-link">記述のポイント</a></td></tr>
+
+          <!-- 5章 -->
+          <tr class="chapter-row"><td colspan="3">５章　動詞形態論</td></tr>
+          <tr><td class="section-num">5.1.</td><td>語幹の屈折クラス</td><td><a href="writing-guide/5-1.html" class="point-link">記述のポイント</a></td></tr>
+          <tr><td class="section-num">5.1.1.</td><td>主要なクラス（子音語幹，母音語幹など）</td><td></td></tr>
+          <tr><td class="section-num">5.1.2.</td><td>特殊なクラス</td><td></td></tr>
+          <tr><td class="section-num">5.2.</td><td>屈折形態論</td><td><a href="writing-guide/5-2.html" class="point-link">記述のポイント</a></td></tr>
+          <tr><td class="section-num">5.2.1.</td><td>定動詞の屈折</td><td></td></tr>
+          <tr><td class="section-num">5.2.2.</td><td>副動詞の屈折</td><td></td></tr>
+          <tr><td class="section-num">5.3.</td><td>派生形態論</td><td><a href="writing-guide/5-3.html" class="point-link">記述のポイント</a></td></tr>
+          <tr><td class="section-num">5.3.1.</td><td>語幹を拡張する派生（使役，受動，尊敬など）</td><td></td></tr>
+          <tr><td class="section-num">5.3.2.</td><td>品詞を変える派生（名詞語幹化，形容詞語幹化など）</td><td></td></tr>
+          <tr><td class="section-num">5.4.</td><td>特殊な動詞</td><td></td></tr>
+          <tr><td class="section-num">5.4.1.</td><td>存在動詞・状態動詞・コピュラ動詞</td><td></td></tr>
+          <tr><td class="section-num">5.4.2.</td><td>軽動詞（「する」など）</td><td></td></tr>
+
+          <!-- 6章 -->
+          <tr class="chapter-row"><td colspan="3">６章　形容詞類の構造と体系</td></tr>
+          <tr><td class="section-num">6.1.</td><td>構造と屈折体系</td><td><a href="writing-guide/6-1.html" class="point-link">記述のポイント</a></td></tr>
+          <tr><td class="section-num">6.2.</td><td>非屈折形容詞（形容動詞）の構造（もしあれば）</td><td><a href="writing-guide/6-2.html" class="point-link">記述のポイント</a></td></tr>
+
+          <!-- 7章 -->
+          <tr class="chapter-row"><td colspan="3">７章　品詞転換</td></tr>
+          <tr><td class="section-num">7.1.</td><td>名詞化</td><td><a href="writing-guide/7-1.html" class="point-link">記述のポイント</a></td></tr>
+          <tr><td class="section-num">7.2.</td><td>動詞化</td><td><a href="writing-guide/7-2.html" class="point-link">記述のポイント</a></td></tr>
+          <tr><td class="section-num">7.3.</td><td>形容詞化</td><td><a href="writing-guide/7-3.html" class="point-link">記述のポイント</a></td></tr>
+
+          <!-- 8章 -->
+          <tr class="chapter-row"><td colspan="3">８章　指示語・疑問語の体系</td></tr>
+          <tr><td class="section-num">8.1.</td><td>指示語の体系</td><td><a href="writing-guide/8-1.html" class="point-link">記述のポイント</a></td></tr>
+          <tr><td class="section-num">8.2.</td><td>疑問語</td><td><a href="writing-guide/8-2.html" class="point-link">記述のポイント</a></td></tr>
+
+          <!-- 9章 -->
+          <tr class="chapter-row"><td colspan="3">９章　述語の構造</td></tr>
+          <tr><td class="section-num">9.1.</td><td>動詞述語</td><td><a href="writing-guide/9-1.html" class="point-link">記述のポイント</a></td></tr>
+          <tr><td class="section-num">9.2.</td><td>名詞述語</td><td><a href="writing-guide/9-2.html" class="point-link">記述のポイント</a></td></tr>
+
+          <!-- 10章 -->
+          <tr class="chapter-row"><td colspan="3">１０章　名詞句の構造</td></tr>
+          <tr><td class="section-num">10.1.</td><td>修飾部</td><td></td></tr>
+          <tr><td class="section-num">10.1.1.</td><td>属格修飾</td><td></td></tr>
+          <tr><td class="section-num">10.1.2.</td><td>形容詞修飾</td><td></td></tr>
+          <tr><td class="section-num">10.1.3.</td><td>連体詞修飾</td><td></td></tr>
+          <tr><td class="section-num">10.1.4.</td><td>連体節修飾</td><td></td></tr>
+          <tr><td class="section-num">10.2.</td><td>主要部(形式名詞など特殊な主要部含む)</td><td></td></tr>
+          <tr><td class="section-num">10.3.</td><td>格</td><td></td></tr>
+
+          <!-- 11章 -->
+          <tr class="chapter-row"><td colspan="3">１１章　単文の構造</td></tr>
+          <tr><td class="section-num">11.1.</td><td>基本語順</td><td><a href="writing-guide/11-1.html" class="point-link">記述のポイント</a></td></tr>
+          <tr><td class="section-num">11.2.</td><td>格フレーム</td><td></td></tr>
+          <tr><td class="section-num">11.3.</td><td>平叙・疑問・命令</td><td><a href="writing-guide/11-3.html" class="point-link">記述のポイント</a></td></tr>
+          <tr><td class="section-num">11.4.</td><td>肯定・否定</td><td><a href="writing-guide/11-4.html" class="point-link">記述のポイント</a></td></tr>
+          <tr><td class="section-num">11.5.</td><td>TAM体系</td><td><a href="writing-guide/11-5.html" class="point-link">記述のポイント</a></td></tr>
+
+          <!-- 12章 -->
+          <tr class="chapter-row"><td colspan="3">１２章　複文の構造</td></tr>
+          <tr><td class="section-num">12.1.</td><td>従属節</td><td></td></tr>
+          <tr><td class="section-num">12.1.1.</td><td>副詞節</td><td><a href="writing-guide/12-1-1.html" class="point-link">記述のポイント</a></td></tr>
+          <tr><td class="section-num">12.1.2.</td><td>連体修飾節</td><td><a href="writing-guide/12-1-2.html" class="point-link">記述のポイント</a></td></tr>
+          <tr><td class="section-num">12.1.3.</td><td>名詞節</td><td><a href="writing-guide/12-1-3.html" class="point-link">記述のポイント</a></td></tr>
+          <tr><td class="section-num">12.2.</td><td>引用節</td><td><a href="writing-guide/12-2.html" class="point-link">記述のポイント</a></td></tr>
+        </tbody>
+      </table>
+
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>下地理則の研究室</h3>
+        <p>九州大学大学院人文科学研究院<br>言語学講座</p>
+        <p style="margin-top: 1rem;">smz [at] kyudai.jp</p>
+      </div>
+      <div class="footer-section">
+        <h3>リンク</h3>
+        <a href="https://kyushu-u.academia.edu/MichinoriShimoji" target="_blank" rel="noopener">Academia.edu</a>
+        <a href="https://researchmap.jp/read0122330" target="_blank" rel="noopener">Researchmap</a>
+        <a href="https://note.com/lingfieldwork" target="_blank" rel="noopener">note</a>
+      </div>
+      <div class="footer-section">
+        <h3>サイトマップ</h3>
+        <a href="index.html">HOME</a>
+        <a href="members.html">メンバー</a>
+        <a href="research.html">研究</a>
+        <a href="teaching.html">授業</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 下地理則研究室. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById('navList').classList.toggle('active');
+    }
+  </script>
+</body>
+</html>
