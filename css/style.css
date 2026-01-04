@@ -138,7 +138,7 @@ body {
   padding: 0.4rem 0.5rem;
   color: var(--color-text);
   text-decoration: none;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 500;
   transition: color var(--transition), background-color var(--transition);
   border-radius: 4px;
@@ -347,7 +347,7 @@ body {
   color: var(--color-primary);
   padding: var(--spacing-xs) var(--spacing-sm);
   border-radius: 20px;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 500;
   margin-bottom: var(--spacing-xs);
 }
@@ -362,7 +362,7 @@ body {
 
 .member-research {
   color: var(--color-text-light);
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   margin-bottom: var(--spacing-sm);
 }
 
@@ -528,7 +528,7 @@ body {
   color: var(--color-white);
   padding: var(--spacing-xs) var(--spacing-sm);
   border-radius: 4px;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 500;
   white-space: nowrap;
 }
@@ -593,7 +593,7 @@ body {
 .footer-section p,
 .footer-section a {
   color: rgba(255, 255, 255, 0.8);
-  font-size: 0.8rem;
+  font-size: 0.85rem;
 }
 
 .footer-section a {
