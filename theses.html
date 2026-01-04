@@ -7,6 +7,7 @@
   <title>指導した学位論文 | 下地理則の研究室</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     .thesis-year { font-size: 1.1rem; font-weight: 600; color: var(--color-primary); margin: 1.5rem 0 0.5rem 0; padding-bottom: 0.25rem; border-bottom: 2px solid var(--color-primary); }
     .thesis-list { list-style: none; padding: 0; margin: 0 0 1rem 0; }
@@ -19,22 +20,16 @@
     .thesis-section h2 { margin-top: 0; color: var(--color-primary); }
     .thesis-note { background: #f8f9fa; padding: 1rem; border-radius: 8px; font-size: 0.9rem; color: var(--color-text-light); margin-bottom: 1.5rem; }
     .map-section { background: var(--color-white); padding: var(--spacing-lg); border-radius: 12px; margin-bottom: var(--spacing-lg); }
-    .map-container { position: relative; width: 100%; max-width: 600px; margin: 0 auto; }
-    .map-container img { width: 100%; height: auto; display: block; }
-    .map-dot { position: absolute; width: 14px; height: 14px; border-radius: 50%; cursor: pointer; transition: all 0.2s ease; transform: translate(-50%, -50%); border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-    .map-dot:hover { transform: translate(-50%, -50%) scale(1.4); z-index: 10; }
-    .map-dot.large { width: 18px; height: 18px; }
-    .map-dot.small { width: 12px; height: 12px; }
-    .map-tooltip { position: absolute; background: rgba(0,0,0,0.9); color: white; padding: 10px 14px; border-radius: 8px; font-size: 0.9rem; pointer-events: none; opacity: 0; transition: opacity 0.2s; z-index: 100; max-width: 280px; white-space: nowrap; }
-    .map-tooltip.visible { opacity: 1; }
-    .map-tooltip-title { font-weight: bold; }
-    .map-tooltip-count { color: #ffd700; margin-left: 8px; }
+    #map { width: 100%; height: 550px; border-radius: 8px; background: #f0f4f8; }
     .map-legend { display: flex; justify-content: center; gap: 20px; margin-top: 15px; flex-wrap: wrap; }
     .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; }
     .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
     .highlight-location { background: #fff3cd; transition: background 0.3s; }
-    /* 台湾追加用 */
-    .taiwan-label { position: absolute; font-size: 11px; color: #666; }
+    .leaflet-popup-content { font-size: 14px; }
+    .popup-title { font-weight: bold; margin-bottom: 4px; }
+    .popup-count { color: #e74c3c; }
+    .popup-link { color: #3498db; cursor: pointer; text-decoration: underline; margin-top: 5px; display: inline-block; }
+    .leaflet-container { background: #f0f4f8; }
   </style>
 </head>
 <body>
@@ -66,108 +61,8 @@
     </section>
     <section class="section map-section">
       <h2>📍 研究対象地域</h2>
-      <p style="text-align:center; margin-bottom:1rem; color: var(--color-text-light);">ドットをクリックすると該当論文へジャンプ</p>
-      <div class="map-container">
-        <div class="map-tooltip" id="mapTooltip"></div>
-        <img src="images/jpnmap.png" alt="日本地図">
-        
-        <!-- 北海道 -->
-        <div class="map-dot small" style="left:83%; top:8%; background:#9b59b6;" data-location="hokkaido" data-name="北海道（アイヌ語）" data-count="1"></div>
-        
-        <!-- 青森・野辺地 -->
-        <div class="map-dot small" style="left:79%; top:17%; background:#3498db;" data-location="aomori" data-name="青森県野辺地" data-count="1"></div>
-        
-        <!-- 福井・三国 -->
-        <div class="map-dot small" style="left:60%; top:38%; background:#3498db;" data-location="fukui" data-name="福井県坂井市三国町" data-count="1"></div>
-        
-        <!-- 兵庫・加古川 -->
-        <div class="map-dot small" style="left:56%; top:45%; background:#3498db;" data-location="hyogo" data-name="兵庫県加古川市" data-count="1"></div>
-        
-        <!-- 岡山 -->
-        <div class="map-dot small" style="left:51%; top:46%; background:#3498db;" data-location="okayama" data-name="岡山県" data-count="1"></div>
-        
-        <!-- 広島・安芸 -->
-        <div class="map-dot small" style="left:46%; top:47%; background:#3498db;" data-location="hiroshima" data-name="広島県安芸" data-count="1"></div>
-        
-        <!-- 山口・周防大島 -->
-        <div class="map-dot small" style="left:42%; top:49%; background:#3498db;" data-location="yamaguchi" data-name="山口県周防大島" data-count="1"></div>
-        
-        <!-- 香川 -->
-        <div class="map-dot" style="left:53%; top:50%; background:#3498db;" data-location="kagawa" data-name="香川県" data-count="2"></div>
-        
-        <!-- 徳島 -->
-        <div class="map-dot small" style="left:56%; top:52%; background:#3498db;" data-location="tokushima" data-name="徳島県" data-count="1"></div>
-        
-        <!-- 愛媛 -->
-        <div class="map-dot" style="left:47%; top:54%; background:#3498db;" data-location="ehime" data-name="愛媛県" data-count="2"></div>
-        
-        <!-- 福岡・京都郡 -->
-        <div class="map-dot small" style="left:38%; top:50%; background:#2ecc71;" data-location="fukuoka-kita" data-name="福岡県京都郡" data-count="1"></div>
-        
-        <!-- 福岡市・博多 -->
-        <div class="map-dot large" style="left:34%; top:52%; background:#2ecc71;" data-location="fukuoka" data-name="福岡市・博多" data-count="3"></div>
-        
-        <!-- 福岡・小郡 -->
-        <div class="map-dot small" style="left:35%; top:54%; background:#2ecc71;" data-location="ogori" data-name="福岡県小郡市" data-count="1"></div>
-        
-        <!-- 福岡・柳川 -->
-        <div class="map-dot" style="left:33%; top:56%; background:#2ecc71;" data-location="yanagawa" data-name="福岡県柳川市" data-count="2"></div>
-        
-        <!-- 佐賀 -->
-        <div class="map-dot large" style="left:30%; top:54%; background:#2ecc71;" data-location="saga" data-name="佐賀県" data-count="4"></div>
-        
-        <!-- 長崎市 -->
-        <div class="map-dot large" style="left:25%; top:57%; background:#2ecc71;" data-location="nagasaki" data-name="長崎市" data-count="4"></div>
-        
-        <!-- 長崎・諫早 -->
-        <div class="map-dot" style="left:28%; top:58%; background:#2ecc71;" data-location="isahaya" data-name="長崎県諫早市" data-count="2"></div>
-        
-        <!-- 長崎・島原 -->
-        <div class="map-dot large" style="left:30%; top:60%; background:#2ecc71;" data-location="shimabara" data-name="長崎県島原・南島原" data-count="3"></div>
-        
-        <!-- 長崎・平戸 -->
-        <div class="map-dot small" style="left:23%; top:53%; background:#2ecc71;" data-location="hirado" data-name="長崎県平戸" data-count="1"></div>
-        
-        <!-- 長崎・佐世保 -->
-        <div class="map-dot small" style="left:25%; top:54%; background:#2ecc71;" data-location="sasebo" data-name="長崎県佐世保" data-count="1"></div>
-        
-        <!-- 対馬 -->
-        <div class="map-dot small" style="left:22%; top:48%; background:#2ecc71;" data-location="tsushima" data-name="長崎県対馬" data-count="1"></div>
-        
-        <!-- 五島 -->
-        <div class="map-dot" style="left:18%; top:60%; background:#2ecc71;" data-location="goto" data-name="長崎県五島列島" data-count="2"></div>
-        
-        <!-- 熊本 -->
-        <div class="map-dot large" style="left:32%; top:62%; background:#2ecc71;" data-location="kumamoto" data-name="熊本県" data-count="4"></div>
-        
-        <!-- 大分 -->
-        <div class="map-dot small" style="left:39%; top:55%; background:#2ecc71;" data-location="oita" data-name="大分県" data-count="1"></div>
-        
-        <!-- 宮崎・椎葉 -->
-        <div class="map-dot large" style="left:38%; top:60%; background:#2ecc71;" data-location="shiiba" data-name="宮崎県椎葉村" data-count="7"></div>
-        
-        <!-- 宮崎・都城 -->
-        <div class="map-dot" style="left:37%; top:65%; background:#2ecc71;" data-location="miyakonojo" data-name="宮崎県都城市" data-count="2"></div>
-        
-        <!-- 鹿児島 -->
-        <div class="map-dot large" style="left:32%; top:68%; background:#2ecc71;" data-location="kagoshima" data-name="鹿児島市" data-count="3"></div>
-        
-        <!-- 徳之島 -->
-        <div class="map-dot small" style="left:26%; top:80%; background:#e74c3c;" data-location="tokunoshima" data-name="徳之島" data-count="1"></div>
-        
-        <!-- 沖縄本島 -->
-        <div class="map-dot" style="left:22%; top:86%; background:#e74c3c;" data-location="okinawa" data-name="沖縄本島" data-count="2"></div>
-        
-        <!-- 宮古島 -->
-        <div class="map-dot large" style="left:14%; top:90%; background:#e74c3c;" data-location="miyako" data-name="宮古島" data-count="4"></div>
-        
-        <!-- 八重山 -->
-        <div class="map-dot large" style="left:6%; top:93%; background:#e74c3c;" data-location="yaeyama" data-name="八重山諸島" data-count="3"></div>
-        
-        <!-- 台湾・宜蘭 -->
-        <div class="map-dot small" style="left:3%; top:85%; background:#f39c12;" data-location="taiwan" data-name="台湾・宜蘭" data-count="1"></div>
-        <span class="taiwan-label" style="left:1%; top:88%;">台湾</span>
-      </div>
+      <p style="text-align:center; margin-bottom:1rem; color: var(--color-text-light);">マーカーをクリックすると該当論文へジャンプ</p>
+      <div id="map"></div>
       <div class="map-legend">
         <div class="legend-item"><span class="legend-dot" style="background:#2ecc71"></span><span>九州</span></div>
         <div class="legend-item"><span class="legend-dot" style="background:#3498db"></span><span>本州・四国</span></div>
@@ -350,34 +245,83 @@
     </div>
     <div class="footer-bottom"><p>&copy; 2025 下地理則研究室. All rights reserved.</p></div>
   </footer>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
     function toggleMenu() { document.getElementById('navList').classList.toggle('active'); }
-    document.addEventListener('DOMContentLoaded', function() {
-      const tooltip = document.getElementById('mapTooltip');
-      const dots = document.querySelectorAll('.map-dot');
-      dots.forEach(dot => {
-        dot.addEventListener('mouseenter', function(e) {
-          tooltip.innerHTML = '<span class="map-tooltip-title">' + this.dataset.name + '</span><span class="map-tooltip-count">' + this.dataset.count + '件</span>';
-          tooltip.classList.add('visible');
-        });
-        dot.addEventListener('mousemove', function(e) {
-          const rect = document.querySelector('.map-container').getBoundingClientRect();
-          tooltip.style.left = (e.clientX - rect.left + 15) + 'px';
-          tooltip.style.top = (e.clientY - rect.top - 10) + 'px';
-        });
-        dot.addEventListener('mouseleave', function() { tooltip.classList.remove('visible'); });
-        dot.addEventListener('click', function() {
-          const location = this.dataset.location;
-          const items = document.querySelectorAll('li[data-loc="' + location + '"]');
-          document.querySelectorAll('.highlight-location').forEach(el => { el.classList.remove('highlight-location'); });
-          if (items.length > 0) {
-            items[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
-            items.forEach(item => { item.classList.add('highlight-location'); });
-            setTimeout(() => { items.forEach(item => { item.classList.remove('highlight-location'); }); }, 3000);
-          }
-        });
-      });
+    
+    // 地図初期化（シンプルな白地図、ラベルなし）
+    const map = L.map('map', {
+      zoomControl: true,
+      scrollWheelZoom: false
+    }).setView([32, 131], 6);
+    
+    // CartoDB Positron（ラベルなし）- シンプルな白地図
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; OpenStreetMap, &copy; CARTO',
+      maxZoom: 19
+    }).addTo(map);
+
+    // 研究地点データ
+    const locations = [
+      { lat: 43.06, lng: 141.35, name: '北海道', count: 1, color: '#9b59b6', loc: 'hokkaido' },
+      { lat: 40.86, lng: 141.12, name: '青森県野辺地', count: 1, color: '#3498db', loc: 'aomori' },
+      { lat: 36.22, lng: 136.15, name: '福井県三国町', count: 1, color: '#3498db', loc: 'fukui' },
+      { lat: 34.76, lng: 134.84, name: '兵庫県加古川市', count: 1, color: '#3498db', loc: 'hyogo' },
+      { lat: 34.66, lng: 133.93, name: '岡山県', count: 1, color: '#3498db', loc: 'okayama' },
+      { lat: 34.39, lng: 132.45, name: '広島県安芸', count: 1, color: '#3498db', loc: 'hiroshima' },
+      { lat: 33.91, lng: 132.22, name: '山口県周防大島', count: 1, color: '#3498db', loc: 'yamaguchi' },
+      { lat: 34.34, lng: 134.05, name: '香川県', count: 2, color: '#3498db', loc: 'kagawa' },
+      { lat: 34.07, lng: 134.55, name: '徳島県', count: 1, color: '#3498db', loc: 'tokushima' },
+      { lat: 33.84, lng: 132.77, name: '愛媛県', count: 2, color: '#3498db', loc: 'ehime' },
+      { lat: 33.69, lng: 130.98, name: '福岡県京都郡', count: 1, color: '#2ecc71', loc: 'fukuoka-kita' },
+      { lat: 33.59, lng: 130.40, name: '福岡市', count: 3, color: '#2ecc71', loc: 'fukuoka' },
+      { lat: 33.40, lng: 130.56, name: '福岡県小郡市', count: 1, color: '#2ecc71', loc: 'ogori' },
+      { lat: 33.16, lng: 130.41, name: '福岡県柳川市', count: 2, color: '#2ecc71', loc: 'yanagawa' },
+      { lat: 33.25, lng: 130.10, name: '佐賀県', count: 4, color: '#2ecc71', loc: 'saga' },
+      { lat: 32.75, lng: 129.87, name: '長崎市', count: 4, color: '#2ecc71', loc: 'nagasaki' },
+      { lat: 32.84, lng: 130.05, name: '長崎県諫早市', count: 2, color: '#2ecc71', loc: 'isahaya' },
+      { lat: 32.62, lng: 130.37, name: '長崎県島原', count: 3, color: '#2ecc71', loc: 'shimabara' },
+      { lat: 33.37, lng: 129.55, name: '長崎県平戸', count: 1, color: '#2ecc71', loc: 'hirado' },
+      { lat: 33.18, lng: 129.72, name: '長崎県佐世保', count: 1, color: '#2ecc71', loc: 'sasebo' },
+      { lat: 34.20, lng: 129.29, name: '長崎県対馬', count: 1, color: '#2ecc71', loc: 'tsushima' },
+      { lat: 32.70, lng: 128.84, name: '長崎県五島', count: 2, color: '#2ecc71', loc: 'goto' },
+      { lat: 32.79, lng: 130.74, name: '熊本県', count: 4, color: '#2ecc71', loc: 'kumamoto' },
+      { lat: 33.24, lng: 131.61, name: '大分県', count: 1, color: '#2ecc71', loc: 'oita' },
+      { lat: 32.47, lng: 131.14, name: '宮崎県椎葉村', count: 7, color: '#2ecc71', loc: 'shiiba' },
+      { lat: 31.72, lng: 131.07, name: '宮崎県都城市', count: 2, color: '#2ecc71', loc: 'miyakonojo' },
+      { lat: 31.59, lng: 130.56, name: '鹿児島市', count: 3, color: '#2ecc71', loc: 'kagoshima' },
+      { lat: 27.73, lng: 128.94, name: '徳之島', count: 1, color: '#e74c3c', loc: 'tokunoshima' },
+      { lat: 26.21, lng: 127.68, name: '沖縄本島', count: 2, color: '#e74c3c', loc: 'okinawa' },
+      { lat: 24.80, lng: 125.28, name: '宮古島', count: 4, color: '#e74c3c', loc: 'miyako' },
+      { lat: 24.34, lng: 124.16, name: '八重山諸島', count: 3, color: '#e74c3c', loc: 'yaeyama' },
+      { lat: 24.76, lng: 121.75, name: '台湾・宜蘭', count: 1, color: '#f39c12', loc: 'taiwan' }
+    ];
+
+    // マーカー追加
+    locations.forEach(loc => {
+      const radius = Math.max(8, Math.min(16, 6 + loc.count * 1.5));
+      const marker = L.circleMarker([loc.lat, loc.lng], {
+        radius: radius,
+        fillColor: loc.color,
+        color: '#fff',
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0.85
+      }).addTo(map);
+
+      marker.bindPopup(`<div class="popup-title">${loc.name}</div><div class="popup-count">${loc.count}件</div><div class="popup-link" onclick="scrollToTheses('${loc.loc}')">→ 論文を見る</div>`);
     });
+
+    function scrollToTheses(location) {
+      const items = document.querySelectorAll('li[data-loc="' + location + '"]');
+      document.querySelectorAll('.highlight-location').forEach(el => el.classList.remove('highlight-location'));
+      if (items.length > 0) {
+        map.closePopup();
+        items[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        items.forEach(item => item.classList.add('highlight-location'));
+        setTimeout(() => items.forEach(item => item.classList.remove('highlight-location')), 3000);
+      }
+    }
   </script>
 </body>
 </html>
