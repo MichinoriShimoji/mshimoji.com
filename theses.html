@@ -28,7 +28,7 @@
     .leaflet-container { background: #f0f4f8; }
     
     /* モーダル */
-    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; }
     .modal-overlay.active { display: flex; }
     .modal-content { background: white; border-radius: 12px; max-width: 600px; width: 90%; max-height: 80vh; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
     .modal-header { background: var(--color-primary, #2c5282); color: white; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; }
@@ -46,21 +46,12 @@
     .type-phd { background: #fce4ec; color: #c2185b; }
     .modal-thesis-link { color: var(--color-accent, #e53e3e); font-size: 0.9rem; margin-left: 0.5rem; }
   </style>
-<!-- Research Artisan Pro Script Tag Start -->
-<script type="text/javascript">
-  var _Ra = {};
-  _Ra.hId = '1';
-  _Ra.uCd = '26010500010465531600';  _Ra.exceptCrawler = true;
-  (function() {var s=document.getElementsByTagName('script')[0],js=document.createElement('script');js.type='text/javascript';js.async='async';js.src='https://analyze.pro.research-artisan.com/track/script.php';s.parentNode.insertBefore(js,s);})();
-</script>
-<noscript><p><img src="https://analyze.pro.research-artisan.com/track/tracker.php?ucd=26010500010465531600&amp;hid=1&amp;guid=ON" alt="" width="1" height="1" /></p></noscript>
-<!-- Research Artisan Pro Script Tag End -->
 </head>
 <body>
   <header class="site-header">
     <div class="header-content">
       <a href="index.html" class="site-title">下地理則の研究室</a>
-      <p class="site-subtitle">琉球語と日本語方言の研究 | 九州大学言語学講座</p>
+      <p class="site-subtitle">日琉諸語の総合的記述研究 | 九州大学言語学講座</p>
     </div>
   </header>
   <nav class="main-nav">
@@ -73,9 +64,8 @@
         <li class="nav-item"><a href="teaching.html" class="nav-link">授業</a></li>
         <li class="nav-item"><a href="theses.html" class="nav-link active">指導した学位論文</a></li>
         <li class="nav-item"><a href="irabu.html" class="nav-link">伊良部島方言を知る</a></li>
-        <li class="nav-item"><a href="resources.html" class="nav-link">方言記述のリソース</a></li>
+        <li class="nav-item"><a href="resources.html" class="nav-link">記述のリソース</a></li>
         <li class="nav-item"><a href="prospective.html" class="nav-link">大学院志望者へ</a></li>
-          <li class="nav-item"><a href="https://note.com/lingfieldwork" class="nav-link" target="_blank">エッセイ</a></li>
       </ul>
     </div>
   </nav>
@@ -300,7 +290,7 @@
       items.forEach(item => {
         const author = item.querySelector('.thesis-author').textContent;
         const fullText = item.textContent;
-        const titleMatch = fullText.match(/「(.+?)」/);
+        const titleMatch = fullText.match(/「(.*)」(.*)/);
         const title = titleMatch ? titleMatch[1] : '';
         const link = item.querySelector('a');
         const type = item.dataset.type || 'BA';
@@ -316,7 +306,7 @@
         if (link) {
           html += '<a href="' + link.href + '" class="modal-thesis-link" target="_blank">【download】</a>';
         }
-        html += '<div class="modal-thesis-title">「' + title + '」</div>';
+        html += '<div class="modal-thesis-title">「' + title + '」' + (titleMatch && titleMatch[2] ? titleMatch[2].replace(/【?download】?/gi, '').trim() : '') + '</div>';
         html += '</div>';
       });
       
