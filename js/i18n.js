@@ -3,7 +3,7 @@
   // 現在の言語を取得（デフォルトは日本語）
   let currentLang = localStorage.getItem('lang') || 'ja';
   
-  // 翻訳データ
+  // 翻訳データ（各ページで追加可能）
   const translations = {
     // 共通要素
     common: {
@@ -103,57 +103,76 @@
     'member-shimoji': {
       ja: {},
       en: {
-        'page-title': 'Michinori SHIMOJI',
-        'page-description': 'SHIMOJI, Michinori, Ph.D.',
+        'shimoji-page-title': 'Michinori SHIMOJI',
         'shimoji-position': 'Professor, Graduate School, Kyushu University',
         'shimoji-research-desc': 'Comprehensive description of Ryukyuan languages and Kyushu dialects. Linguistic anthropology.',
-        'shimoji-column-link': 'Research columns and more',
-        'shimoji-cv-link': 'CV and publications (as of September 2025)',
+        'shimoji-column-link': 'Research columns and more: ',
+        'shimoji-here-link': 'here',
+        'shimoji-cv-link': 'CV and publications (as of September 2025): ',
+        'shimoji-here-link2': 'here',
         'shimoji-contact': 'Contact',
-        'section-employment': 'Employment History',
-        'section-education': 'Education',
-        'section-dissertation': 'Dissertation',
-        'section-awards': 'Awards',
-        'section-research': 'Research Areas',
-        'section-funding': 'Competitive Research Funding (as PI)',
-        'section-kakenhi': 'JSPS Grants-in-Aid',
-        'section-other-funding': 'Other Funding',
-        'section-hobbies': 'Hobbies',
-        'back-to-members': '← Back to Members',
-        // 職歴
-        'job-2024': 'Professor, Linguistics, Faculty of Humanities, Kyushu University',
-        'job-2012': 'Associate Professor, Linguistics, Faculty of Humanities, Kyushu University',
-        'job-2011': 'Visiting Associate Professor, National Institute for Japanese Language and Linguistics',
-        'job-2009': 'Lecturer, Faculty of International Communication, Gunma Prefectural Women\'s University',
-        'job-2008': 'Project Researcher, Research Institute for Languages and Cultures of Asia and Africa, Tokyo University of Foreign Studies',
-        // 学歴
-        'edu-phd': 'Department of Linguistics, Australian National University (Ph.D.)',
-        'edu-ma': 'Tokyo University of Foreign Studies, Graduate School (M.A.)',
-        'edu-ba': 'Tokyo Gakugei University, Faculty of Education (B.A.)',
-        // 受賞
-        'award-2020': 'JSPS Prize (Japan Society for the Promotion of Science)',
-        'award-2019': 'Kindaichi Kyosuke Memorial Prize',
-        'award-2018': 'Okinawa Research Encouragement Award (Okinawa Association)',
-        'award-2010': 'Stephen Wurm Prize for Best PhD Thesis (Australian National University)',
-        'award-2009': 'Nakasone Seizen Memorial Research Award (Okinawa Center of Language Study)',
-        // 研究領域
-        'research-area-1': '1. Comprehensive descriptive studies through fieldwork',
-        'research-area-2': '2. Cross-linguistic studies of Japanese and Ryukyuan',
-        'research-area-3': '3. General linguistics',
-        'research-ryukyuan': 'Ryukyuan languages:',
-        'research-japanese': 'Japanese dialects:',
-        // 趣味
-        'hobby-guitar': 'Guitar (Gibson SG\'61)'
+        'shimoji-address': '744 Motooka, Nishi-ku, Fukuoka 819-0395, Japan<br>Faculty of Humanities, Kyushu University, East 1 Bldg. 5F, E-B-517<br>shimoji [at] lit.kyushu-u.ac.jp',
+        'shimoji-employment': 'Employment History',
+        'shimoji-job1': 'Professor, Linguistics, Faculty of Humanities, Kyushu University',
+        'shimoji-job2': 'Associate Professor, Linguistics, Faculty of Humanities, Kyushu University',
+        'shimoji-job3': 'Visiting Associate Professor, National Institute for Japanese Language and Linguistics',
+        'shimoji-job4': 'Lecturer, Faculty of International Communication, Gunma Prefectural Women\'s University',
+        'shimoji-job5': 'Project Researcher, Research Institute for Languages and Cultures of Asia and Africa, Tokyo University of Foreign Studies',
+        'shimoji-education': 'Education',
+        'shimoji-edu2': 'Tokyo University of Foreign Studies, Graduate School (M.A.)',
+        'shimoji-edu3': 'Tokyo Gakugei University, Faculty of Education (B.A.)',
+        'shimoji-dissertation': 'Dissertation',
+        'shimoji-awards': 'Awards',
+        'shimoji-award1': 'JSPS Prize (Japan Society for the Promotion of Science)',
+        'shimoji-award2': 'Kindaichi Kyosuke Memorial Prize',
+        'shimoji-award3': 'Okinawa Research Encouragement Award (Okinawa Association)',
+        'shimoji-award4': 'Stephen Wurm Prize for Best PhD Thesis (Australian National University)',
+        'shimoji-award5': 'Nakasone Seizen Memorial Research Award (Okinawa Center of Language Study)',
+        'shimoji-research-areas': 'Research Areas',
+        'shimoji-area1-title': '1. Comprehensive descriptive studies through fieldwork',
+        'shimoji-ryukyuan': 'Ryukyuan languages: ',
+        'shimoji-ryukyuan-detail': 'Miyako Irabu dialect (2005-), Yonaguni dialect (2010-), Miyako Ikema dialect (2017-)',
+        'shimoji-japanese': 'Japanese dialects: ',
+        'shimoji-japanese-detail': 'Shiiba Village dialect, Miyazaki (2013-), Noheji dialect, Aomori (2016-), Tome dialect, Miyagi (2017-), Takeo dialect, Saga (2017-)',
+        'shimoji-area2-title': '2. Cross-linguistic studies of Japanese and Ryukyuan',
+        'shimoji-area2-1': 'Focus marking in Ryukyuan languages using information structure theory',
+        'shimoji-area2-2': 'Diachronic typology of pronominal systems in Ryukyuan languages',
+        'shimoji-area2-3': 'Typology of case systems in Ryukyuan languages (active alignment, marked nominative, Differential Object Marking, etc.)',
+        'shimoji-area2-4': 'Case marking and focus particles in Japanese',
+        'shimoji-area3-title': '3. General linguistics',
+        'shimoji-area3-1': 'Lexicalization and prefabs in grammar',
+        'shimoji-area3-2': 'Fundamental units in language (word, parts of speech, semantic roles, etc.)',
+        'shimoji-area3-3': 'Interface between prosody and syntactic structure',
+        'shimoji-funding': 'Competitive Research Funding (as PI)',
+        'shimoji-kakenhi': 'JSPS Grants-in-Aid',
+        'shimoji-grant1': 'JSPS Grant-in-Aid (B) "Basic research on number category and its expression in Japonic languages"',
+        'shimoji-grant2': 'JSPS Grant-in-Aid (B) "Basic research on marked nominativity in Japonic languages"',
+        'shimoji-grant3': 'JSPS Grant-in-Aid for Young Scientists (B) "Basic research on focus marking in Ryukyuan dialects"',
+        'shimoji-grant4': 'JSPS Grant-in-Aid for Young Scientists (B) "Creating a descriptive grammar of Southern Ryukyuan Yonaguni"',
+        'shimoji-other-funding': 'Other Funding',
+        'shimoji-other1': 'Kyushu University QR Program Tsubasa Project "Creating a dictionary of endangered dialects using interdisciplinary networks"',
+        'shimoji-other2': 'University of the Ryukyus IIOK Joint Research "Linguistic-typological geographic research on regional differences in focus marking in Ryukyuan dialects"',
+        'shimoji-other3': 'ILCAA, TUFS Joint Research "Case marking in Ryukyuan languages from cross-linguistic and typological perspectives"',
+        'shimoji-other4': 'ILCAA, TUFS LingDy Young Researcher Program "Toward wider dissemination of Ryukyuan research: Publication of grammar overview and web publication of Pear story texts"',
+        'shimoji-hobbies': 'Hobbies',
+        'shimoji-hobby-detail': 'Guitar (Gibson SG\'61)',
+        'shimoji-back-btn': '← Back to Members'
       }
     },
 
     // 研究ページ
     research: {
       ja: {
-        'page-title': '研究'
+        'page-title': '研究',
+        'section-current': '進行中の研究プロジェクト',
+        'section-past': '過去の研究プロジェクト',
+        'section-publications': '業績一覧'
       },
       en: {
-        'page-title': 'Research'
+        'page-title': 'Research',
+        'section-current': 'Ongoing Research Projects',
+        'section-past': 'Past Research Projects',
+        'section-publications': 'Publications'
       }
     },
 
@@ -170,10 +189,28 @@
     // 学位論文ページ
     theses: {
       ja: {
-        'page-title': '指導した学位論文'
+        'page-title': '指導した学位論文',
+        'section-map': '研究対象地域',
+        'map-instruction': 'マーカーをクリックすると該当論文を表示',
+        'section-bachelor': '卒業論文',
+        'section-master': '修士論文',
+        'section-doctoral': '博士論文',
+        'legend-kyushu': '九州',
+        'legend-honshu': '本州・四国',
+        'legend-ryukyu': '琉球',
+        'comparison-btn': '方言比較'
       },
       en: {
-        'page-title': 'Theses Supervised'
+        'page-title': 'Theses Supervised',
+        'section-map': 'Research Locations',
+        'map-instruction': 'Click markers to view related theses',
+        'section-bachelor': 'Bachelor\'s Theses',
+        'section-master': 'Master\'s Theses',
+        'section-doctoral': 'Doctoral Dissertations',
+        'legend-kyushu': 'Kyushu',
+        'legend-honshu': 'Honshu/Shikoku',
+        'legend-ryukyu': 'Ryukyu',
+        'comparison-btn': 'Cross-dialectal'
       }
     },
 
