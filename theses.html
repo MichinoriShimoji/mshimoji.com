@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="下地理則研究室で指導した学位論文">
+  <title>指導した学位論文 | 下地理則の研究室</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    .thesis-year { font-size: 1.1rem; font-weight: 600; color: var(--color-primary); margin: 1.5rem 0 0.5rem 0; padding-bottom: 0.25rem; border-bottom: 2px solid var(--color-primary); }
+    .thesis-list { list-style: none; padding: 0; margin: 0 0 1rem 0; }
+    .thesis-list li { padding: 0.5rem 0; border-bottom: 1px solid #eee; line-height: 1.6; }
+    .thesis-list li:last-child { border-bottom: none; }
+    .thesis-author { font-weight: 500; }
+    .thesis-download { display: inline-block; margin-left: 0.5rem; color: var(--color-accent); font-size: 0.9rem; }
+    .thesis-download:hover { text-decoration: underline; }
+    .thesis-section { background: var(--color-white); padding: var(--spacing-lg); border-radius: 12px; margin-bottom: var(--spacing-lg); }
+    .thesis-section h2 { margin-top: 0; color: var(--color-primary); }
+    .thesis-note { background: #f8f9fa; padding: 1rem; border-radius: 8px; font-size: 0.9rem; color: var(--color-text-light); margin-bottom: 1.5rem; }
+    .map-section { background: var(--color-white); padding: var(--spacing-lg); border-radius: 12px; margin-bottom: var(--spacing-lg); }
+    #map { width: 100%; height: 550px; border-radius: 8px; background: #f0f4f8; }
+    .map-legend { display: flex; justify-content: center; gap: 20px; margin-top: 15px; flex-wrap: wrap; }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; }
+    .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .highlight-location { background: #fff3cd; transition: background 0.3s; }
+    .leaflet-container { background: #f0f4f8; }
+    
+    /* モーダル */
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; }
+    .modal-overlay.active { display: flex; }
+    .modal-content { background: white; border-radius: 12px; max-width: 600px; width: 90%; max-height: 80vh; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+    .modal-header { background: var(--color-primary, #2c5282); color: white; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+    .modal-header h3 { margin: 0; font-size: 1.2rem; }
+    .modal-close { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; line-height: 1; }
+    .modal-close:hover { opacity: 0.8; }
+    .modal-body { padding: 1.5rem; overflow-y: auto; max-height: calc(80vh - 60px); }
+    .modal-thesis-item { padding: 0.75rem 0; border-bottom: 1px solid #eee; }
+    .modal-thesis-item:last-child { border-bottom: none; }
+    .modal-thesis-author { font-weight: 600; color: var(--color-primary, #2c5282); }
+    .modal-thesis-title { margin-top: 0.25rem; }
+    .modal-thesis-type { display: inline-block; font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; margin-right: 0.5rem; }
+    .type-ba { background: #e3f2fd; color: #1565c0; }
+    .type-ma { background: #e8f5e9; color: #2e7d32; }
+    .type-phd { background: #fce4ec; color: #c2185b; }
+    .modal-thesis-link { color: var(--color-accent, #e53e3e); font-size: 0.9rem; margin-left: 0.5rem; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-content">
+      <a href="index.html" class="site-title">下地理則の研究室</a>
+      <p class="site-subtitle">日琉諸語の総合的記述研究 | 九州大学言語学講座</p>
+    </div>
+  </header>
+  <nav class="main-nav">
+    <div class="nav-container">
+      <button class="mobile-menu-btn" aria-label="メニュー" onclick="toggleMenu()"><span class="hamburger"></span></button>
+      <ul class="nav-list" id="navList">
+        <li class="nav-item"><a href="index.html" class="nav-link">HOME</a></li>
+        <li class="nav-item"><a href="members.html" class="nav-link">メンバー</a></li>
+        <li class="nav-item"><a href="research.html" class="nav-link">研究</a></li>
+        <li class="nav-item"><a href="teaching.html" class="nav-link">授業</a></li>
+        <li class="nav-item"><a href="theses.html" class="nav-link active">指導した学位論文</a></li>
+        <li class="nav-item"><a href="irabu.html" class="nav-link">伊良部島方言を知る</a></li>
+        <li class="nav-item"><a href="resources.html" class="nav-link">記述のリソース</a></li>
+        <li class="nav-item"><a href="prospective.html" class="nav-link">大学院志望者へ</a></li>
+      </ul>
+    </div>
+  </nav>
+  
+  <!-- モーダル -->
+  <div class="modal-overlay" id="thesisModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle">論文一覧</h3>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <main class="main-content">
+    <section class="page-hero">
+      <h1 class="page-title">指導した学位論文</h1>
+      <p class="page-description">卒業論文・修士論文・博士論文</p>
+    </section>
+    <section class="section map-section">
+      <h2>📍 研究対象地域</h2>
+      <p style="text-align:center; margin-bottom:1rem; color: var(--color-text-light);">マーカーをクリックすると該当論文を表示</p>
+      <div id="map"></div>
+      <div class="map-legend">
+        <div class="legend-item"><span class="legend-dot" style="background:#2ecc71"></span><span>九州</span></div>
+        <div class="legend-item"><span class="legend-dot" style="background:#3498db"></span><span>本州・四国</span></div>
+        <div class="legend-item"><span class="legend-dot" style="background:#e74c3c"></span><span>琉球</span></div>
+        <div class="legend-item"><span class="legend-dot" style="background:#f39c12"></span><span>台湾</span></div>
+        <div class="legend-item"><span class="legend-dot" style="background:#9b59b6"></span><span>北海道</span></div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="link-card-grid">
+        <a href="#bachelor" class="link-card"><div class="link-card-icon">📘</div><div class="link-card-content"><div class="link-card-title">卒業論文</div><div class="link-card-desc">2012年度〜2024年度</div></div></a>
+        <a href="#master" class="link-card"><div class="link-card-icon">📗</div><div class="link-card-content"><div class="link-card-title">修士論文</div><div class="link-card-desc">2014年度〜2021年度</div></div></a>
+        <a href="#doctor" class="link-card"><div class="link-card-icon">📕</div><div class="link-card-content"><div class="link-card-title">博士論文</div><div class="link-card-desc">2021年〜2024年</div></div></a>
+      </div>
+    </section>
+    <section class="section thesis-section" id="bachelor">
+      <h2>📘 卒業論文</h2>
+      <div class="thesis-year">2024年度</div>
+      <ul class="thesis-list">
+        <li data-loc="okinawa" data-type="BA"><span class="thesis-author">首藤 蓮太郎</span>「沖縄県中南部地域で話されるウチナーヤマトグチにおける愛称語について」<a href="files/theses/2024_BA_shuto.pdf" class="thesis-download" target="_blank">【download】</a></li>
+        <li data-loc="kagoshima" data-type="BA"><span class="thesis-author">原口 悠介</span>「鹿児島県鹿児島市方言における疑問文イントネーション -若年層に着目して‐」<a href="files/theses/2024_BA_haraguchi.pdf" class="thesis-download" target="_blank">【download】</a></li>
+        <li data-loc="nagasaki" data-type="BA"><span class="thesis-author">藤本 和佳菜</span>「長崎市方言における文末詞バイとタイ―若年層のイントネーションと代替方言に着目して―」<a href="files/theses/2024_BA_fujimoto_wakana.pdf" class="thesis-download" target="_blank">【download】</a></li>
+        <li data-loc="kagoshima" data-type="BA"><span class="thesis-author">堀之内 佑香</span>「鹿児島県鹿児島市方言の若年層におけるアクセント変化」<a href="files/theses/2024_BA_horinouchi.pdf" class="thesis-download" target="_blank">【download】</a></li>
+      </ul>
+      <div class="thesis-year">2023年度</div>
+      <ul class="thesis-list">
+        <li data-loc="saga" data-type="BA"><span class="thesis-author">秋根 紗香</span>「佐賀県鳥栖市田代方言の命令表現の形式と機能について」</li>
+        <li data-loc="hyogo" data-type="BA"><span class="thesis-author">井坂 春菜</span>「兵庫県加古川市方言における格配列−能格性・分裂自動詞性の検証を中心に−」<a href="files/theses/2023_BA_isaka.pdf" class="thesis-download" target="_blank">【download】</a></li>
+        <li data-type="BA"><span class="thesis-author">久保山 由梨</span>「コーパス分析から得られる現代日本語の左方転位構文の特徴−節内代名詞要素の文法関係に着目して−」<a href="files/theses/2023_BA_kuboyama.pdf" class="thesis-download" target="_blank">【download】</a></li>
+        <li data-type="BA"><span class="thesis-author">松下 ミユ</span>「口語における言いさし文の再検討」<a href="files/theses/2023_BA_matsushita.pdf" class="thesis-download" target="_blank">【download】</a></li>
+        <li data-type="BA"><span class="thesis-author">三輪 春佳</span>「韓国語における主語標示と情報構造」<a href="files/theses/2023_BA_miwa.pdf" class="thesis-download" target="_blank">【download】</a></li>
+        <li data-loc="miyakonojo" data-type="BA"><span class="thesis-author">渡邉 花恋</span>「宮崎県都城方言における疑問詞疑問表現の韻律特徴」<a href="files/theses/2023_BA_watanabe.pdf" class="thesis-download" target="_blank">【download】</a></li>
+        <li data-loc="shimabara" data-type="BA"><span class="thesis-author">田川 香里</span>「長崎県南島原市方言における従属節中のガ/ノ交替」<a href="files/theses/2023_BA_tagawa.pdf" class="thesis-download" target="_blank">【download】</a></li>
+      </ul>
+      <div class="thesis-year">2022年度</div>
+      <ul class="thesis-list">
+        <li data-loc="ogori" data-type="BA"><span class="thesis-author">荒津 千晴</span>「福岡県小郡市方言におけるアスペクトの体系」<a href="files/theses/2022_BA_aratsu.pdf" class="thesis-download" target="_blank">【download】</a></li>
+        <li data-loc="tokushima" data-type="BA"><span class="thesis-author">小林 花音</span>「徳島県下郡方言における禁止相当の表現「レン・ラレン」の使用条件」<a href="files/theses/2022_BA_kobayashi_kanon.pdf" class="thesis-download" target="_blank">【download】</a></li>
+        <li data-loc="kagawa" data-type="BA"><span class="thesis-author">福井 彩香</span>「香川県中讃方言におけるアスペクト体系」<a href="files/theses/2022_BA_fukui.pdf" class="thesis-download" target="_blank">【download】</a></li>
+        <li data-loc="miyakonojo" data-type="BA"><span class="thesis-author">福田 凪子</span>「宮崎県都城市方言における句レベルの韻律構造」<a href="files/theses/2022_BA_fukuda.pdf" class="thesis-download" target="_blank">【download】</a></li>
+        <li data-loc="isahaya" data-type="BA"><span class="thesis-author">藤本 悠花</span>「長崎県諫早市方言における与格と方向格の体系的記述」<a href="files/theses/2022_BA_fujimoto_yuka.pdf" class="thesis-download" target="_blank">【download】</a></li>
+      </ul>
+      <div class="thesis-year">2021年度</div>
+      <ul class="thesis-list">
+        <li data-type="BA"><span class="thesis-author">小林 宙夢</span>「標準ハンガリー語における連合複数」<a href="files/theses/2021_BA_kobayashi_hiromu.pdf" class="thesis-download" target="_blank">【download】</a></li>
+        <li data-loc="kumamoto" data-type="BA"><span class="thesis-author">立花 千夏</span>「熊本県山鹿市菊鹿町方言の動詞屈折形態論」<a href="files/theses/2021_BA_tachibana.pdf" class="thesis-download" target="_blank">【download】</a></li>
+        <li data-loc="ehime" data-type="BA"><span class="thesis-author">池 美礼</span>「愛媛県中予方言における多様な形容詞連用形の使い分け」<a href="files/theses/2021_BA_ike.pdf" class="thesis-download" target="_blank">【download】</a></li>
+        <li data-loc="nagasaki" data-type="BA"><span class="thesis-author">徳永 理子</span>「長崎市方言の可能表現－3世代間比較に基づく体系の変遷を中心に－」<a href="files/theses/2021_BA_tokunaga.pdf" class="thesis-download" target="_blank">【download】</a></li>
+        <li data-loc="shimabara" data-type="BA"><span class="thesis-author">是枝 美羽</span>「長崎県南島原市深江方言における可能表現：ダス形の使用条件」<a href="files/theses/2021_BA_korede.pdf" class="thesis-download" target="_blank">【download】</a></li>
+      </ul>
+      <div class="thesis-year">2020年度</div>
+      <ul class="thesis-list">
+        <li data-type="BA"><span class="thesis-author">松本 祐輔</span>「バスク語における逆受身構文」</li>
+        <li data-loc="fukui" data-type="BA"><span class="thesis-author">高島 麻緒</span>「福井県坂井市三国町方言におけるナ形容詞」<a href="files/theses/2020_BA_takashima.pdf" class="thesis-download" target="_blank">【download】</a></li>
+        <li data-loc="kagoshima" data-type="BA"><span class="thesis-author">前原 千紗</span>「鹿児島県鹿児島市方言における疑問文音調のイントネーション」<a href="files/theses/2020_BA_maehara.pdf" class="thesis-download" target="_blank">【download】</a></li>
+      </ul>
+      <div class="thesis-year">2019年度</div>
+      <ul class="thesis-list">
+        <li data-loc="shiiba" data-type="BA"><span class="thesis-author">三井 桃子</span>「宮崎県椎葉村尾前方言における主題標示の再検討」<a href="files/theses/2019_BA_mitsui.pdf" class="thesis-download" target="_blank">【download】</a></li>
+        <li data-loc="goto" data-type="BA"><span class="thesis-author">立山 芽衣</span>「長崎県五島列島福江島崎山方言における動詞屈折形態論の記述」<a href="files/theses/2019_BA_tateyama.pdf" class="thesis-download" target="_blank">【download】</a></li>
+        <li data-type="BA"><span class="thesis-author">山本 菜月</span>「日本語、韓国語、中国語、タガログ語、スペイン語における与格機能の類型論」<a href="files/theses/2019_BA_yamamoto.pdf" class="thesis-download" target="_blank">【download】</a></li>
+      </ul>
+      <div class="thesis-year">2018年度</div>
+      <ul class="thesis-list">
+        <li data-loc="shiiba" data-type="BA"><span class="thesis-author">井上 郁菜</span>「宮崎県椎葉村尾前方言における形容詞のサ形を修飾部にとる名詞句構造の記述」<a href="files/theses/2018_BA_inoue.pdf" class="thesis-download" target="_blank">【download】</a></li>
+        <li data-loc="aomori" data-type="BA"><span class="thesis-author">芳賀 湧</span>「青森県野辺地方言における主格標示と情報構造」<a href="files/theses/2018_BA_haga.pdf" class="thesis-download" target="_blank">【download】</a></li>
+        <li data-type="BA"><span class="thesis-author">原 縁</span>「現代日本語口語における接続助詞ケドの「主題提示」とされる用法の再解釈」</li>
+        <li data-loc="fukuoka" data-type="BA"><span class="thesis-author">平島 千尋</span>「福岡市方言における「来る」「行く」の選択について」</li>
+        <li data-loc="shiiba" data-type="BA"><span class="thesis-author">松岡 葵</span>「九州方言における形容詞経験者構文の非典型格標示」<a href="files/theses/2018_BA_matsuoka.pdf" class="thesis-download" target="_blank">【download】</a></li>
+        <li data-type="BA"><span class="thesis-author">宮岡 大</span>「日本語における子音語幹動詞の形態構造」<a href="files/theses/2018_BA_miyaoka.pdf" class="thesis-download" target="_blank">【download】</a></li>
+        <li data-loc="hiroshima" data-type="BA"><span class="thesis-author">宮本 ひかる</span>「広島県安芸方言におけるアスペクト」</li>
+      </ul>
+      <div class="thesis-year">2017年度</div>
+      <ul class="thesis-list">
+        <li data-loc="miyako" data-type="BA"><span class="thesis-author">高橋 雅貴</span>「南琉球宮古語新城方言のケースマーキング」</li>
+        <li data-loc="miyako" data-type="BA"><span class="thesis-author">田平 郁</span>「南琉球宮古語新城方言の連体修飾構造」</li>
+        <li data-loc="yaeyama" data-type="BA"><span class="thesis-author">米澤 耀子</span>「南琉球八重山語石垣真栄里方言の世代間差」</li>
+        <li data-loc="nagasaki" data-type="BA"><span class="thesis-author">大城 万葉</span>「長崎方言のガノ交替」</li>
+        <li data-loc="yamaguchi" data-type="BA"><span class="thesis-author">松野 希実</span>「山口県周防大島の漁労関連語彙集」</li>
+        <li data-loc="fukuoka" data-type="BA"><span class="thesis-author">原賀 虹帆</span>「博多方言の談話資料作成」</li>
+        <li data-loc="ehime" data-type="BA"><span class="thesis-author">片桐 七海</span>「愛媛県西予市城川町方言の格配列」</li>
+      </ul>
+      <div class="thesis-year">2016年度</div>
+      <ul class="thesis-list">
+        <li data-type="BA"><span class="thesis-author">井上 千紘</span>「タガログ語の接辞PAGをともなう動詞語根の名詞化」</li>
+        <li data-loc="kumamoto" data-type="BA"><span class="thesis-author">岩下 玲子</span>「熊本県菊池市泗水方言における主格標示の使い分け」</li>
+        <li data-loc="shiiba" data-type="BA"><span class="thesis-author">加藤 幹治</span>「The modal-evidential expressions in the Omae dialect of Shiiba」</li>
+        <li data-loc="nagasaki" data-type="BA"><span class="thesis-author">川添 もなみ</span>「長崎方言におけるアスペクト表現について」</li>
+        <li data-loc="kumamoto" data-type="BA"><span class="thesis-author">玖波井 七海</span>「熊本方言のヴォイスについての研究」</li>
+        <li data-loc="fukuoka-kita" data-type="BA"><span class="thesis-author">田川 明花</span>「福岡県京都郡みやこ町方言におけるアスペクト表現」</li>
+        <li data-loc="nagasaki" data-type="BA"><span class="thesis-author">中俣 浪漫</span>「長崎方言のアスペクト表現」</li>
+        <li data-loc="goto" data-type="BA"><span class="thesis-author">中村 京介</span>「長崎県五島宇久方言における主語標示」</li>
+      </ul>
+      <div class="thesis-year">2015年度</div>
+      <ul class="thesis-list">
+        <li data-loc="shiiba" data-type="BA"><span class="thesis-author">占部 由子</span>「宮崎県椎葉村尾前方言のアスペクト体系」</li>
+        <li data-loc="shiiba" data-type="BA"><span class="thesis-author">清岡 美里</span>「宮崎県椎葉村尾前方言の代名詞体系」</li>
+      </ul>
+      <div class="thesis-year">2014年度</div>
+      <ul class="thesis-list">
+        <li data-type="BA"><span class="thesis-author">坂口 里帆</span>「タガログ語と所有傾斜」</li>
+        <li data-type="BA"><span class="thesis-author">神屋 なつみ</span>「カヤルディルド語のmodal caseについて」</li>
+        <li data-loc="fukuoka" data-type="BA"><span class="thesis-author">横山 渓</span>「福岡博多方言の可能表現」</li>
+        <li data-loc="isahaya" data-type="BA"><span class="thesis-author">野中 真美</span>「長崎県諫早方言の可能表現」</li>
+        <li data-loc="oita" data-type="BA"><span class="thesis-author">甲斐 健次郎</span>「大分方言の可能表現」</li>
+        <li data-loc="shiiba" data-type="BA"><span class="thesis-author">古田 万紀子</span>「宮崎県椎葉方言のアクセント体系」</li>
+        <li data-loc="kagawa" data-type="BA"><span class="thesis-author">神邊 寛史</span>「香川方言のケースマーキング」</li>
+        <li data-loc="saga" data-type="BA"><span class="thesis-author">高田 彩華</span>「佐賀方言のサ詠嘆法」</li>
+        <li data-loc="saga" data-type="BA"><span class="thesis-author">桑原 ちひろ</span>「佐賀方言のル・ラル敬語」</li>
+        <li data-loc="saga" data-type="BA"><span class="thesis-author">岩橋 達郎</span>「佐賀方言の主語標示」</li>
+        <li data-loc="shimabara" data-type="BA"><span class="thesis-author">大楠 千尋</span>「長崎島原方言の敬語表現」</li>
+        <li data-loc="hirado" data-type="BA"><span class="thesis-author">松尾 千佳</span>「長崎平戸方言の否定過去形ザッタ・ンヤッタ・ンジャッタ」</li>
+      </ul>
+      <div class="thesis-year">2013年度</div>
+      <ul class="thesis-list">
+        <li data-loc="hokkaido" data-type="BA"><span class="thesis-author">門出 悟志</span>「アイヌ語の名詞抱合について」</li>
+        <li data-loc="okayama" data-type="BA"><span class="thesis-author">小中 真歩</span>「岡山方言のアスペクト」</li>
+        <li data-loc="sasebo" data-type="BA"><span class="thesis-author">山口 佑生</span>「長崎佐世保方言のガノ交替」</li>
+        <li data-loc="kumamoto" data-type="BA"><span class="thesis-author">寺沢 菜摘</span>「熊本方言のツタイについて」</li>
+        <li data-loc="miyazaki" data-type="BA"><span class="thesis-author">内山 智晶</span>「宮崎方言の終助詞コッセン」</li>
+        <li data-loc="miyazaki" data-type="BA"><span class="thesis-author">酒井 あすか</span>「宮崎方言の助詞ヤジについて」</li>
+        <li data-loc="tsushima" data-type="BA"><span class="thesis-author">山下 幹央</span>「長崎対馬方言の引用詞について」</li>
+      </ul>
+      <div class="thesis-year">2012年度</div>
+      <ul class="thesis-list">
+        <li data-loc="okinawa" data-type="BA"><span class="thesis-author">諸見里 安詩</span>「沖縄首里方言の所格助詞の使い分け」</li>
+      </ul>
+    </section>
+    <section class="section thesis-section" id="master">
+      <h2>📗 修士論文</h2>
+      <div class="thesis-year">2021年度</div>
+      <ul class="thesis-list">
+        <li data-loc="taiwan" data-type="MA"><span class="thesis-author">Lin Kaidi</span>「A basic description of Yilan Creole phonology: with a special focus on the Aohua dialect」<a href="files/theses/2021_MA_lin.pdf" class="thesis-download" target="_blank">【download】</a></li>
+      </ul>
+      <div class="thesis-year">2020年度</div>
+      <ul class="thesis-list">
+        <li data-loc="yanagawa" data-type="MA"><span class="thesis-author">松岡 葵</span>「福岡県柳川市方言の文法概説」<a href="files/theses/2020_MA_matsuoka.pdf" class="thesis-download" target="_blank">【download】</a></li>
+        <li data-type="MA"><span class="thesis-author">宮岡 大</span>「日本語諸方言におけるラ行五段化の方言間比較と通方言的一般化」<a href="files/theses/2020_MA_miyaoka.pdf" class="thesis-download" target="_blank">【download】</a></li>
+      </ul>
+      <div class="thesis-year">2018年度</div>
+      <ul class="thesis-list">
+        <li data-loc="miyako" data-type="MA"><span class="thesis-author">王 丹凝</span>「南琉球宮古語城辺新城方言の文法概説」<a href="files/theses/2018_MA_wang.pdf" class="thesis-download" target="_blank">【download】</a></li>
+      </ul>
+      <div class="thesis-year">2017年度</div>
+      <ul class="thesis-list">
+        <li data-loc="yaeyama" data-type="MA"><span class="thesis-author">占部 由子</span>「南琉球八重山語西表島船浮方言の文法概説」<a href="https://www.academia.edu/36976341/" class="thesis-download" target="_blank">【download】</a></li>
+      </ul>
+      <div class="thesis-year">2015年度</div>
+      <ul class="thesis-list">
+        <li data-type="MA"><span class="thesis-author">山下 幹央</span>「現代アメリカ英語のYes-No疑問文に関する記述研究」</li>
+      </ul>
+      <div class="thesis-year">2014年度</div>
+      <ul class="thesis-list">
+        <li data-loc="tokunoshima" data-type="MA"><span class="thesis-author">井手口 将仁</span>「北琉球語徳之島井之川方言の文法概説」</li>
+      </ul>
+    </section>
+    <section class="section thesis-section" id="doctor">
+      <h2>📕 博士論文</h2>
+      <div class="thesis-note">公開されている博士論文については、大学リポジトリの公開リンクからPDFに辿り着けるようになっています。</div>
+      <div class="thesis-year">2024年</div>
+      <ul class="thesis-list">
+        <li data-loc="yanagawa" data-type="PhD"><span class="thesis-author">松岡 葵</span>「福岡県柳川市方言の記述研究」（リポジトリ登録中）</li>
+        <li data-type="PhD"><span class="thesis-author">宮岡 大</span>「日本語諸方言における「ラ行五段化」の総合的研究」（リポジトリ登録中）</li>
+      </ul>
+      <div class="thesis-year">2022年</div>
+      <ul class="thesis-list">
+        <li data-loc="miyako" data-type="PhD"><span class="thesis-author">王 丹凝</span>「南琉球宮古語城辺町新城方言の文法」<a href="https://catalog.lib.kyushu-u.ac.jp/opac_detail_md/?lang=0&amode=MD823&bibid=5068151" class="thesis-download" target="_blank">【リポジトリへ】</a></li>
+      </ul>
+      <div class="thesis-year">2021年</div>
+      <ul class="thesis-list">
+        <li data-loc="yaeyama" data-type="PhD"><span class="thesis-author">占部 由子</span>「南琉球八重山語石垣島白保方言の記述研究」<a href="https://catalog.lib.kyushu-u.ac.jp/opac_detail_md/?lang=0&amode=MD823&bibid=4784378" class="thesis-download" target="_blank">【リポジトリへ】</a></li>
+      </ul>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section"><h3>下地理則の研究室</h3><p>九州大学大学院人文科学研究院<br>言語学講座</p><p style="margin-top: 1rem;">smz [at] kyudai.jp</p></div>
+      <div class="footer-section"><h3>リンク</h3><a href="https://kyushu-u.academia.edu/MichinoriShimoji" target="_blank" rel="noopener">Academia.edu</a><a href="https://researchmap.jp/read0122330" target="_blank" rel="noopener">Researchmap</a><a href="https://note.com/lingfieldwork" target="_blank" rel="noopener">note</a></div>
+      <div class="footer-section"><h3>サイトマップ</h3><a href="index.html">HOME</a><a href="members.html">メンバー</a><a href="research.html">研究</a><a href="teaching.html">授業</a></div>
+    </div>
+    <div class="footer-bottom"><p>&copy; 2025 下地理則研究室. All rights reserved.</p></div>
+  </footer>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    function toggleMenu() { document.getElementById('navList').classList.toggle('active'); }
+    
+    // モーダル
+    function openModal(name, loc) {
+      const modal = document.getElementById('thesisModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalBody = document.getElementById('modalBody');
+      
+      modalTitle.textContent = name + 'の論文';
+      
+      const items = document.querySelectorAll('li[data-loc="' + loc + '"]');
+      let html = '';
+      
+      items.forEach(item => {
+        const author = item.querySelector('.thesis-author').textContent;
+        const fullText = item.textContent;
+        const titleMatch = fullText.match(/「(.+)」/);
+        const title = titleMatch ? titleMatch[1] : '';
+        const link = item.querySelector('a');
+        const type = item.dataset.type || 'BA';
+        
+        let typeLabel = '卒論';
+        let typeClass = 'type-ba';
+        if (type === 'MA') { typeLabel = '修論'; typeClass = 'type-ma'; }
+        if (type === 'PhD') { typeLabel = '博論'; typeClass = 'type-phd'; }
+        
+        html += '<div class="modal-thesis-item">';
+        html += '<span class="modal-thesis-type ' + typeClass + '">' + typeLabel + '</span>';
+        html += '<span class="modal-thesis-author">' + author + '</span>';
+        if (link) {
+          html += '<a href="' + link.href + '" class="modal-thesis-link" target="_blank">【download】</a>';
+        }
+        html += '<div class="modal-thesis-title">「' + title + '」</div>';
+        html += '</div>';
+      });
+      
+      modalBody.innerHTML = html;
+      modal.classList.add('active');
+    }
+    
+    function closeModal() {
+      document.getElementById('thesisModal').classList.remove('active');
+    }
+    
+    document.getElementById('thesisModal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+    
+    // 地図初期化
+    const map = L.map('map', {
+      zoomControl: true,
+      scrollWheelZoom: false
+    }).setView([32, 131], 6);
+    
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; OpenStreetMap, &copy; CARTO',
+      maxZoom: 19
+    }).addTo(map);
+
+    // 研究地点データ
+    const locations = [
+      { lat: 43.06, lng: 141.35, name: '北海道', count: 1, color: '#9b59b6', loc: 'hokkaido' },
+      { lat: 40.86, lng: 141.12, name: '青森県野辺地', count: 1, color: '#3498db', loc: 'aomori' },
+      { lat: 36.22, lng: 136.15, name: '福井県三国町', count: 1, color: '#3498db', loc: 'fukui' },
+      { lat: 34.76, lng: 134.84, name: '兵庫県加古川市', count: 1, color: '#3498db', loc: 'hyogo' },
+      { lat: 34.66, lng: 133.93, name: '岡山県', count: 1, color: '#3498db', loc: 'okayama' },
+      { lat: 34.39, lng: 132.45, name: '広島県安芸', count: 1, color: '#3498db', loc: 'hiroshima' },
+      { lat: 33.91, lng: 132.22, name: '山口県周防大島', count: 1, color: '#3498db', loc: 'yamaguchi' },
+      { lat: 34.34, lng: 134.05, name: '香川県', count: 2, color: '#3498db', loc: 'kagawa' },
+      { lat: 34.07, lng: 134.55, name: '徳島県', count: 1, color: '#3498db', loc: 'tokushima' },
+      { lat: 33.84, lng: 132.77, name: '愛媛県', count: 2, color: '#3498db', loc: 'ehime' },
+      { lat: 33.69, lng: 130.98, name: '福岡県京都郡', count: 1, color: '#2ecc71', loc: 'fukuoka-kita' },
+      { lat: 33.59, lng: 130.40, name: '福岡市', count: 3, color: '#2ecc71', loc: 'fukuoka' },
+      { lat: 33.40, lng: 130.56, name: '福岡県小郡市', count: 1, color: '#2ecc71', loc: 'ogori' },
+      { lat: 33.16, lng: 130.41, name: '福岡県柳川市', count: 2, color: '#2ecc71', loc: 'yanagawa' },
+      { lat: 33.25, lng: 130.10, name: '佐賀県', count: 4, color: '#2ecc71', loc: 'saga' },
+      { lat: 32.75, lng: 129.87, name: '長崎市', count: 5, color: '#2ecc71', loc: 'nagasaki' },
+      { lat: 32.84, lng: 130.05, name: '長崎県諫早市', count: 2, color: '#2ecc71', loc: 'isahaya' },
+      { lat: 32.62, lng: 130.37, name: '長崎県島原', count: 3, color: '#2ecc71', loc: 'shimabara' },
+      { lat: 33.37, lng: 129.55, name: '長崎県平戸', count: 1, color: '#2ecc71', loc: 'hirado' },
+      { lat: 33.18, lng: 129.72, name: '長崎県佐世保', count: 1, color: '#2ecc71', loc: 'sasebo' },
+      { lat: 34.20, lng: 129.29, name: '長崎県対馬', count: 1, color: '#2ecc71', loc: 'tsushima' },
+      { lat: 32.70, lng: 128.84, name: '長崎県五島', count: 2, color: '#2ecc71', loc: 'goto' },
+      { lat: 32.79, lng: 130.74, name: '熊本県', count: 4, color: '#2ecc71', loc: 'kumamoto' },
+      { lat: 33.24, lng: 131.61, name: '大分県', count: 1, color: '#2ecc71', loc: 'oita' },
+      { lat: 32.47, lng: 131.14, name: '宮崎県椎葉村', count: 7, color: '#2ecc71', loc: 'shiiba' },
+      { lat: 31.72, lng: 131.07, name: '宮崎県都城市', count: 2, color: '#2ecc71', loc: 'miyakonojo' },
+      { lat: 31.91, lng: 131.42, name: '宮崎市', count: 2, color: '#2ecc71', loc: 'miyazaki' },
+      { lat: 31.59, lng: 130.56, name: '鹿児島市', count: 3, color: '#2ecc71', loc: 'kagoshima' },
+      { lat: 27.73, lng: 128.94, name: '徳之島', count: 1, color: '#e74c3c', loc: 'tokunoshima' },
+      { lat: 26.21, lng: 127.68, name: '沖縄本島', count: 2, color: '#e74c3c', loc: 'okinawa' },
+      { lat: 24.80, lng: 125.28, name: '宮古島', count: 4, color: '#e74c3c', loc: 'miyako' },
+      { lat: 24.34, lng: 124.16, name: '八重山諸島', count: 3, color: '#e74c3c', loc: 'yaeyama' },
+      { lat: 24.76, lng: 121.75, name: '台湾・宜蘭', count: 1, color: '#f39c12', loc: 'taiwan' }
+    ];
+
+    // マーカー追加
+    locations.forEach(loc => {
+      const radius = Math.max(8, Math.min(16, 6 + loc.count * 1.5));
+      const marker = L.circleMarker([loc.lat, loc.lng], {
+        radius: radius,
+        fillColor: loc.color,
+        color: '#fff',
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0.85
+      }).addTo(map);
+
+      marker.on('click', function() {
+        openModal(loc.name, loc.loc);
+      });
+      
+      marker.bindTooltip(loc.name + ' (' + loc.count + '件)', {
+        permanent: false,
+        direction: 'top',
+        offset: [0, -10]
+      });
+    });
+  </script>
+</body>
+</html>
