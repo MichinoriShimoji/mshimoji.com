@@ -7,13 +7,21 @@
   <title>研究 | 下地理則の研究室</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>">
+  <style>
+    .en { display: none; }
+    body.lang-en .ja { display: none; }
+    body.lang-en .en { display: inline; }
+    body.lang-en p.en, body.lang-en div.en, body.lang-en h1.en, body.lang-en h2.en, body.lang-en h3.en, body.lang-en span.en { display: block; }
+    body.lang-en a.en { display: inline-block; }
+    .lang-toggle { background: transparent; border: 1px solid #333; color: #333; padding: 0.3rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; margin-left: auto; }
+  </style>
 </head>
 <body>
   <!-- ヘッダー -->
   <header class="site-header">
     <div class="header-content">
-      <a href="index.html" class="site-title">下地理則の研究室</a>
-      <p class="site-subtitle">日琉諸語の総合的記述研究 | 九州大学言語学講座</p>
+      <a href="index.html" class="site-title"><span class="ja">下地理則の研究室</span><span class="en">Michinori Shimoji's Lab</span></a>
+      <p class="site-subtitle"><span class="ja">日琉諸語の総合的記述研究 | 九州大学言語学講座</span><span class="en">Comprehensive Descriptive Studies of Japonic Languages | Kyushu University Linguistics</span></p>
     </div>
   </header>
 
@@ -25,55 +33,56 @@
       </button>
       <ul class="nav-list" id="navList">
         <li class="nav-item"><a href="index.html" class="nav-link">HOME</a></li>
-        <li class="nav-item"><a href="members.html" class="nav-link">メンバー</a></li>
-        <li class="nav-item"><a href="research.html" class="nav-link active">研究</a></li>
-        <li class="nav-item"><a href="teaching.html" class="nav-link">授業</a></li>
-        <li class="nav-item"><a href="theses.html" class="nav-link">指導した学位論文</a></li>
-        <li class="nav-item"><a href="irabu.html" class="nav-link">伊良部島方言を知る</a></li>
-        <li class="nav-item"><a href="resources.html" class="nav-link">記述のリソース</a></li>
-        <li class="nav-item"><a href="prospective.html" class="nav-link">大学院志望者へ</a></li>
-        <li class="nav-item"><a href="https://note.com/lingfieldwork" class="nav-link" target="_blank">エッセイ</a></li>
+        <li class="nav-item"><a href="members.html" class="nav-link"><span class="ja">メンバー</span><span class="en">Members</span></a></li>
+        <li class="nav-item"><a href="research.html" class="nav-link active"><span class="ja">研究</span><span class="en">Research</span></a></li>
+        <li class="nav-item"><a href="teaching.html" class="nav-link"><span class="ja">授業</span><span class="en">Courses</span></a></li>
+        <li class="nav-item"><a href="theses.html" class="nav-link"><span class="ja">指導した学位論文</span><span class="en">Theses Supervised</span></a></li>
+        <li class="nav-item"><a href="irabu.html" class="nav-link"><span class="ja">伊良部島方言を知る</span><span class="en">Irabu Language</span></a></li>
+        <li class="nav-item"><a href="resources.html" class="nav-link"><span class="ja">記述のリソース</span><span class="en">Resources</span></a></li>
+        <li class="nav-item"><a href="prospective.html" class="nav-link"><span class="ja">大学院志望者へ</span><span class="en">Prospective Students</span></a></li>
+        <li class="nav-item"><a href="https://note.com/lingfieldwork" class="nav-link" target="_blank"><span class="ja">エッセイ</span><span class="en">Essays</span></a></li>
       </ul>
+      <button id="langToggle" class="lang-toggle" onclick="toggleLang()">EN</button>
     </div>
   </nav>
 
   <!-- メインコンテンツ -->
   <main class="main-content">
     <section class="page-hero" style="padding-bottom:var(--spacing-xl);">
-      <h1 class="page-title">研究</h1>
-      <p class="page-description" style="margin-bottom:var(--spacing-lg);">私の研究の３つの柱</p>
+      <h1 class="page-title"><span class="ja">研究</span><span class="en">Research</span></h1>
+      <p class="page-description" style="margin-bottom:var(--spacing-lg);"><span class="ja">私の研究の３つの柱</span><span class="en">Three Pillars of My Research</span></p>
       
       <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:1.5rem;max-width:1000px;margin:0 auto;">
         <div style="background:#fff;padding:1.8rem;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.08);border-top:3px solid #0284c7;text-align:left;">
           <div style="font-size:0.75rem;font-weight:600;color:#0284c7;letter-spacing:0.1em;margin-bottom:0.5rem;">01</div>
-          <h3 style="font-size:1.05rem;margin-bottom:0.7rem;font-weight:600;color:#1a1a1a;">日琉諸語の総合的記述</h3>
-          <p style="font-size:0.85rem;line-height:1.8;color:#555;">フィールドワークを通じて言語データを収集し、文法書、辞書、談話資料を作成します。</p>
+          <h3 style="font-size:1.05rem;margin-bottom:0.7rem;font-weight:600;color:#1a1a1a;"><span class="ja">日琉諸語の総合的記述</span><span class="en">Comprehensive Description of Japonic Languages</span></h3>
+          <p style="font-size:0.85rem;line-height:1.8;color:#555;"><span class="ja">フィールドワークを通じて言語データを収集し、文法書、辞書、談話資料を作成します。</span><span class="en">Collecting linguistic data through fieldwork to create grammars, dictionaries, and discourse materials.</span></p>
         </div>
         <div style="background:#fff;padding:1.8rem;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.08);border-top:3px solid #0284c7;text-align:left;">
           <div style="font-size:0.75rem;font-weight:600;color:#0284c7;letter-spacing:0.1em;margin-bottom:0.5rem;">02</div>
-          <h3 style="font-size:1.05rem;margin-bottom:0.7rem;font-weight:600;color:#1a1a1a;">一般言語学的研究</h3>
-          <p style="font-size:0.85rem;line-height:1.8;color:#555;">実証データを元に、通言語的・類型論的仮説を検証・修正する研究を行います。</p>
+          <h3 style="font-size:1.05rem;margin-bottom:0.7rem;font-weight:600;color:#1a1a1a;"><span class="ja">一般言語学的研究</span><span class="en">General Linguistic Research</span></h3>
+          <p style="font-size:0.85rem;line-height:1.8;color:#555;"><span class="ja">実証データを元に、通言語的・類型論的仮説を検証・修正する研究を行います。</span><span class="en">Testing and refining cross-linguistic and typological hypotheses based on empirical data.</span></p>
         </div>
         <div style="background:#fff;padding:1.8rem;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.08);border-top:3px solid #0284c7;text-align:left;">
           <div style="font-size:0.75rem;font-weight:600;color:#0284c7;letter-spacing:0.1em;margin-bottom:0.5rem;">03</div>
-          <h3 style="font-size:1.05rem;margin-bottom:0.7rem;font-weight:600;color:#1a1a1a;">言語記録保存とNLP</h3>
-          <p style="font-size:0.85rem;line-height:1.8;color:#555;">自然言語処理技術を用いた消滅危機言語の記録保存に取り組みます。</p>
+          <h3 style="font-size:1.05rem;margin-bottom:0.7rem;font-weight:600;color:#1a1a1a;"><span class="ja">言語記録保存とNLP</span><span class="en">Language Documentation and NLP</span></h3>
+          <p style="font-size:0.85rem;line-height:1.8;color:#555;"><span class="ja">自然言語処理技術を用いた消滅危機言語の記録保存に取り組みます。</span><span class="en">Working on endangered language documentation using natural language processing technology.</span></p>
         </div>
       </div>
       
       <div style="text-align:center;margin-top:1.5rem;">
-        <a href="publications.html" style="display:inline-block;padding:0.7rem 2rem;background:#0284c7;color:#fff;border-radius:6px;text-decoration:none;font-size:0.9rem;font-weight:500;transition:background 0.3s;">業績一覧を見る →</a>
+        <a href="publications.html" style="display:inline-block;padding:0.7rem 2rem;background:#0284c7;color:#fff;border-radius:6px;text-decoration:none;font-size:0.9rem;font-weight:500;transition:background 0.3s;"><span class="ja">業績一覧を見る →</span><span class="en">View Publications →</span></a>
       </div>
     </section>
 
     <section class="section">
-      <h2 class="section-title">研究リソース</h2>
+      <h2 class="section-title"><span class="ja">研究リソース</span><span class="en">Research Resources</span></h2>
       <div class="link-card-grid">
         <a href="https://kyushu-u.academia.edu/MichinoriShimoji" class="link-card" target="_blank" rel="noopener">
           <div class="link-card-icon">📄</div>
           <div class="link-card-content">
             <div class="link-card-title">Academia.edu</div>
-            <div class="link-card-desc">研究成果（論文pdf、発表スライド）を広く公開しています。</div>
+            <div class="link-card-desc"><span class="ja">研究成果（論文pdf、発表スライド）を広く公開しています。</span><span class="en">Research outputs (paper PDFs, presentation slides) are publicly available.</span></div>
           </div>
         </a>
         
@@ -81,7 +90,7 @@
           <div class="link-card-icon">🔬</div>
           <div class="link-card-content">
             <div class="link-card-title">Researchmap</div>
-            <div class="link-card-desc">より詳細な研究成果・科研取得・参画状況など。</div>
+            <div class="link-card-desc"><span class="ja">より詳細な研究成果・科研取得・参画状況など。</span><span class="en">Detailed research outputs, grants, and project participation.</span></div>
           </div>
         </a>
 
@@ -89,7 +98,7 @@
           <div class="link-card-icon">🗣️</div>
           <div class="link-card-content">
             <div class="link-card-title">Language Data</div>
-            <div class="link-card-desc">同意書に基づいて公開できる範囲で、伊良部島方言の音声・映像、談話サンプルをアップしています。</div>
+            <div class="link-card-desc"><span class="ja">同意書に基づいて公開できる範囲で、伊良部島方言の音声・映像、談話サンプルをアップしています。</span><span class="en">Audio, video, and discourse samples of Irabu dialect, available with consent.</span></div>
           </div>
         </a>
 
@@ -97,7 +106,7 @@
           <div class="link-card-icon">📝</div>
           <div class="link-card-content">
             <div class="link-card-title">note</div>
-            <div class="link-card-desc">研究コラム、お役立ち情報のシェアなどの目的で更新しています。</div>
+            <div class="link-card-desc"><span class="ja">研究コラム、お役立ち情報のシェアなどの目的で更新しています。</span><span class="en">Research columns and useful information updates.</span></div>
           </div>
         </a>
       </div>
@@ -108,24 +117,56 @@
   <footer class="site-footer">
     <div class="footer-content">
       <div class="footer-section">
-        <h3>下地理則の研究室</h3>
-        <p>九州大学大学院人文科学研究院<br>言語学講座</p>
+        <h3><span class="ja">下地理則の研究室</span><span class="en">Michinori Shimoji's Lab</span></h3>
+        <p><span class="ja">九州大学大学院人文科学研究院<br>言語学講座</span><span class="en">Faculty of Humanities<br>Kyushu University</span></p>
         <p style="margin-top: 1rem;">
-          <a href="/cdn-cgi/l/email-protection#bfccd2c5ffd4c6cadbded691d5cf"><span class="__cf_email__" data-cfemail="7b0816013b10020e1f1a1255110b">[email&#160;protected]</span></a>
+          <a href="mailto:smz@kyudai.jp">smz [at] kyudai.jp</a>
         </p>
       </div>
       <div class="footer-section">
-        <h3>リンク</h3>
+        <h3><span class="ja">リンク</span><span class="en">Links</span></h3>
         <a href="https://kyushu-u.academia.edu/MichinoriShimoji" target="_blank" rel="noopener">Academia.edu</a>
         <a href="https://researchmap.jp/read0122330" target="_blank" rel="noopener">Researchmap</a>
         <a href="https://note.com/lingfieldwork" target="_blank" rel="noopener">note</a>
       </div>
       <div class="footer-section">
-        <h3>サイトマップ</h3>
+        <h3><span class="ja">サイトマップ</span><span class="en">Site Map</span></h3>
         <a href="index.html">HOME</a>
-        <a href="members.html">メンバー</a>
-        <a href="research.html">研究</a>
-        <a href="teaching.html">授業</a>
+        <a href="members.html"><span class="ja">メンバー</span><span class="en">Members</span></a>
+        <a href="research.html"><span class="ja">研究</span><span class="en">Research</span></a>
+        <a href="teaching.html"><span class="ja">授業</span><span class="en">Courses</span></a>
       </div>
     </div>
-    <div class="
+    <div class="footer-bottom">
+      <p>&copy; 2025 <span class="ja">下地理則研究室</span><span class="en">Shimoji Laboratory</span>. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById('navList').classList.toggle('active');
+    }
+    
+    function toggleLang() {
+      const body = document.body;
+      const btn = document.getElementById('langToggle');
+      if (body.classList.contains('lang-en')) {
+        body.classList.remove('lang-en');
+        btn.textContent = 'EN';
+        localStorage.setItem('lang', 'ja');
+      } else {
+        body.classList.add('lang-en');
+        btn.textContent = '日本語';
+        localStorage.setItem('lang', 'en');
+      }
+    }
+    
+    (function() {
+      if (localStorage.getItem('lang') === 'en') {
+        document.body.classList.add('lang-en');
+        document.getElementById('langToggle').textContent = '日本語';
+      }
+    })();
+  </script>
+</body>
+</html>
