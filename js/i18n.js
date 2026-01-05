@@ -81,9 +81,9 @@
         'guay-role': '博士課程/流通経済大学准教授',
         'guay-name': 'Matthew Guay',
         'guay-research': '南琉球八重山語新城島方言の総合的記述。言語人類学。',
-        // Marco Marandola
+        // Marco Scotto di Clemente
         'marco-role': '博士課程',
-        'marco-name': 'Marco Marandola',
+        'marco-name': 'Marco Scotto di Clemente',
         'marco-research': '宮古語（池間方言）の総合的記述。',
         // 廣澤尚之
         'hirosawa-role': '博士課程/JSPS',
@@ -130,7 +130,7 @@
         'guay-research': 'Comprehensive description of Aragusuku Yaeyama. Linguistic anthropology.',
         // Marco
         'marco-role': 'Doctoral Student',
-        'marco-name': 'Marco Marandola',
+        'marco-name': 'Marco Scotto di Clemente',
         'marco-research': 'Comprehensive description of Miyako (Ikema dialect).',
         // Hirosawa
         'hirosawa-role': 'Doctoral Student / JSPS Fellow',
@@ -138,7 +138,7 @@
         'hirosawa-research': 'Comprehensive description of Omae dialect, Shiiba Village, Miyazaki. Information structure in Japonic.',
         // Iwakuma
         'iwakuma-role': "Master's Student",
-        'iwakuma-name': 'Yoshito Iwakuma',
+        'iwakuma-name': 'Konan Iwakuma',
         'iwakuma-research': 'Comprehensive description of Kuchinotsu dialect, Minamishimabara, Nagasaki.',
         // Monson
         'monson-role': 'Doctoral Student',
@@ -146,11 +146,11 @@
         'monson-research': 'Comprehensive description of Teuchi dialect, Shimokoshiki, Kagoshima.',
         // Miwa
         'miwa-role': "Master's Student",
-        'miwa-name': 'Momoka Miwa',
+        'miwa-name': 'Haruka Miwa',
         'miwa-research': 'Comprehensive description of Hikoshima dialect, Shimonoseki, Yamaguchi.',
         // Hamada
         'hamada-role': 'Undergraduate Student',
-        'hamada-name': 'Yuta Hamada',
+        'hamada-name': 'Nanami Hamada',
         'hamada-research': 'Comprehensive description of Yamakawa dialect, Ibusuki, Kagoshima.'
       }
     },
