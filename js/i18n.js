@@ -57,64 +57,16 @@
       }
     },
 
-    // メンバーページ
+    // メンバーページ - 日本語版は共通部分のみ、英語版のみ個別翻訳
     members: {
       ja: {
         'page-title': 'メンバー',
-        'page-description': '新しい方言研究を目指して',
-        'section-professor': '教員',
-        'section-postdoc': 'ポスドク研究員',
-        'section-doctoral': '博士課程',
-        'section-master': '修士課程',
-        'section-bachelor': '学部',
-        'section-alumni': '卒業生・修了生',
-        'member-link': '自己紹介詳細 →',
-        // 下地理則
-        'shimoji-role': '九州大学大学院教授',
-        'shimoji-name': '下地 理則',
-        'shimoji-research': '琉球諸語、九州方言の総合的記述。言語人類学。',
-        // 深谷康佳
-        'fukaya-role': 'JSPS (PD)',
-        'fukaya-name': '深谷 康佳',
-        'fukaya-research': 'オーストロネシア語族マラヨポリネシア語派ケラビット語の総合的記述。辞書作成。',
-        // Matthew Guay
-        'guay-role': '博士課程/流通経済大学准教授',
-        'guay-name': 'Matthew Guay',
-        'guay-research': '南琉球八重山語新城島方言の総合的記述。言語人類学。',
-        // Marco Scotto di Clemente
-        'marco-role': '博士課程',
-        'marco-name': 'Marco Scotto di Clemente',
-        'marco-research': '宮古語（池間方言）の総合的記述。',
-        // 廣澤尚之
-        'hirosawa-role': '博士課程/JSPS',
-        'hirosawa-name': '廣澤 尚之',
-        'hirosawa-research': '宮崎県椎葉村尾前方言の総合的記述。日琉諸語の情報構造。',
-        // 岩隈嘉斗
-        'iwakuma-role': '修士課程',
-        'iwakuma-name': '岩隈 嘉斗',
-        'iwakuma-research': '長崎県南島原市口之津方言の総合的記述。',
-        // Max Monson
-        'monson-role': '博士課程',
-        'monson-name': 'Max Monson',
-        'monson-research': '鹿児島県薩摩川内市下甑町手打方言の総合的記述。',
-        // 三輪萌々香
-        'miwa-role': '修士課程',
-        'miwa-name': '三輪 萌々香',
-        'miwa-research': '山口県下関市彦島方言の総合的記述。',
-        // 濱田悠太
-        'hamada-role': '学部',
-        'hamada-name': '濱田 悠太',
-        'hamada-research': '鹿児島県指宿市山川町方言の総合的記述。'
+        'page-description': '新しい方言研究を目指して'
+        // 個別メンバーの翻訳は定義しない（HTMLの元テキストをそのまま使用）
       },
       en: {
         'page-title': 'Members',
         'page-description': 'Toward new dialect research',
-        'section-professor': 'Faculty',
-        'section-postdoc': 'Postdoctoral Researchers',
-        'section-doctoral': 'Doctoral Students',
-        'section-master': "Master's Students",
-        'section-bachelor': 'Undergraduate Students',
-        'section-alumni': 'Alumni',
         'member-link': 'Profile →',
         // Shimoji
         'shimoji-role': 'Professor, Kyushu University',
