@@ -22,7 +22,8 @@
         'footer-affiliation': '九州大学大学院人文科学研究院<br>言語学講座',
         'footer-links': 'リンク',
         'footer-sitemap': 'サイトマップ',
-        'footer-copyright': '© 2025 下地理則研究室. All rights reserved.'
+        'footer-copyright': '© 2025 下地理則研究室. All rights reserved.',
+        'back-to-members': '← メンバー一覧に戻る'
       },
       en: {
         'site-title': "Michinori Shimoji's Lab",
@@ -39,7 +40,8 @@
         'footer-affiliation': 'Faculty of Humanities<br>Kyushu University',
         'footer-links': 'Links',
         'footer-sitemap': 'Site Map',
-        'footer-copyright': '© 2025 Shimoji Laboratory. All rights reserved.'
+        'footer-copyright': '© 2025 Shimoji Laboratory. All rights reserved.',
+        'back-to-members': '← Back to Members'
       }
     },
     
@@ -96,6 +98,22 @@
         'iwakuma-role': 'Master\'s Student',
         'iwakuma-name': 'Konan IWAKUMA',
         'iwakuma-research': 'Description of Miyako language and contact-induced varieties of Ryukyu Islands.'
+      }
+    },
+
+    // 深谷康佳プロフィールページ
+    'member-fukaya': {
+      ja: {
+        'fukaya-role': 'JSPS (PD)',
+        'fukaya-name': '深谷 康佳',
+        'fukaya-research': 'オーストロネシア語族マラヨポリネシア語派ケラビット語の総合的記述。辞書作成。',
+        'fukaya-pdf-fallback': 'PDFを表示できません。<a href="https://www.mshimoji.com/_files/ugd/88f9b7_a8fae396f5fc449492af06d6385b968a.pdf" target="_blank" rel="noopener">こちらからダウンロード</a>してください。'
+      },
+      en: {
+        'fukaya-role': 'JSPS Postdoctoral Fellow',
+        'fukaya-name': 'Yasuka FUKAYA',
+        'fukaya-research': 'Comprehensive description of Kelabit (Austronesian, Malayo-Polynesian). Lexicography.',
+        'fukaya-pdf-fallback': 'Cannot display PDF. <a href="https://www.mshimoji.com/_files/ugd/88f9b7_a8fae396f5fc449492af06d6385b968a.pdf" target="_blank" rel="noopener">Download here</a>.'
       }
     },
 

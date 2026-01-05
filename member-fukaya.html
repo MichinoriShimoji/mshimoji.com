@@ -34,8 +34,8 @@
         <li class="nav-item"><a href="prospective.html" class="nav-link" data-i18n="nav-prospective">大学院志望者へ</a></li>
         <li class="nav-item"><a href="https://note.com/lingfieldwork" class="nav-link" target="_blank" data-i18n="nav-essay">エッセイ</a></li>
       </ul>
-            <button id="langToggle" class="lang-toggle" onclick="toggleLang()" style="background:transparent;border:1px solid #333;color:#333;padding:0.3rem 0.6rem;border-radius:4px;cursor:pointer;font-size:0.85rem;margin-left:auto;">EN</button>
-      </div>
+      <button id="langToggle" class="lang-toggle" onclick="toggleLang()" style="background:transparent;border:1px solid #333;color:#333;padding:0.3rem 0.6rem;border-radius:4px;cursor:pointer;font-size:0.85rem;margin-left:auto;">EN</button>
+    </div>
   </nav>
 
   <!-- メインコンテンツ -->
@@ -46,9 +46,9 @@
           <img src="images/fukaya.jpg" alt="深谷康佳" style="width:120px;height:150px;object-fit:cover;border-radius:8px;">
         </div>
         <div style="flex:1;min-width:200px;">
-          <span class="member-role" style="display:inline-block;margin-bottom:var(--spacing-xs);">JSPS (PD)</span>
-          <h2 style="font-family:var(--font-serif);font-size:1.3rem;color:var(--color-primary-dark);margin-bottom:var(--spacing-xs);">深谷 康佳</h2>
-          <p style="color:var(--color-text-light);font-size:0.9rem;">オーストロネシア語族マラヨポリネシア語派ケラビット語の総合的記述。辞書作成。</p>
+          <span class="member-role" style="display:inline-block;margin-bottom:var(--spacing-xs);" data-i18n="fukaya-role">JSPS (PD)</span>
+          <h2 style="font-family:var(--font-serif);font-size:1.3rem;color:var(--color-primary-dark);margin-bottom:var(--spacing-xs);" data-i18n="fukaya-name">深谷 康佳</h2>
+          <p style="color:var(--color-text-light);font-size:0.9rem;" data-i18n="fukaya-research">オーストロネシア語族マラヨポリネシア語派ケラビット語の総合的記述。辞書作成。</p>
         </div>
       </div>
       
@@ -57,7 +57,7 @@
           data="https://www.mshimoji.com/_files/ugd/88f9b7_a8fae396f5fc449492af06d6385b968a.pdf" 
           type="application/pdf"
           style="width:100%;height:700px;">
-          <p style="padding:var(--spacing-lg);text-align:center;">
+          <p style="padding:var(--spacing-lg);text-align:center;" data-i18n="fukaya-pdf-fallback">
             PDFを表示できません。<a href="https://www.mshimoji.com/_files/ugd/88f9b7_a8fae396f5fc449492af06d6385b968a.pdf" target="_blank" rel="noopener">こちらからダウンロード</a>してください。
           </p>
         </object>
@@ -65,7 +65,7 @@
     </section>
 
     <div style="margin-top:var(--spacing-xl);">
-      <a href="members.html" class="btn btn-outline">← メンバー一覧に戻る</a>
+      <a href="members.html" class="btn btn-outline" data-i18n="back-to-members">← メンバー一覧に戻る</a>
     </div>
   </main>
 
@@ -73,17 +73,17 @@
   <footer class="site-footer">
     <div class="footer-content">
       <div class="footer-section">
-        <h3>下地理則の研究室</h3>
-        <p>九州大学大学院人文科学研究院<br>言語学講座</p>
+        <h3 data-i18n="site-title">下地理則の研究室</h3>
+        <p data-i18n="footer-affiliation">九州大学大学院人文科学研究院<br>言語学講座</p>
       </div>
       <div class="footer-section">
-        <h3>リンク</h3>
+        <h3 data-i18n="footer-links">リンク</h3>
         <a href="https://kyushu-u.academia.edu/MichinoriShimoji" target="_blank" rel="noopener">Academia.edu</a>
         <a href="https://researchmap.jp/read0122330" target="_blank" rel="noopener">Researchmap</a>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>&copy; 2025 下地理則研究室. All rights reserved.</p>
+      <p data-i18n="footer-copyright">&copy; 2025 下地理則研究室. All rights reserved.</p>
     </div>
   </footer>
 
