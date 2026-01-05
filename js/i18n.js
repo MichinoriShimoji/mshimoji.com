@@ -94,7 +94,7 @@
         'miwa-name': 'Haruka MIWA',
         'miwa-research': 'Information structure in Korean.',
         'iwakuma-role': 'Master\'s Student',
-        'iwakuma-name': 'Watao IWAKUMA',
+        'iwakuma-name': 'Konan IWAKUMA',
         'iwakuma-research': 'Description of Miyako language and contact-induced varieties of Ryukyu Islands.'
       }
     },
