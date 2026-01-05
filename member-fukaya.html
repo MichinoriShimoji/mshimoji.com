@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>">
   <style>
-    /* 言語切り替え */
     .en { display: none; }
     body.lang-en .ja { display: none; }
     body.lang-en .en { display: inline; }
@@ -18,21 +17,19 @@
   </style>
 </head>
 <body>
-  <!-- ヘッダー -->
   <header class="site-header">
     <div class="header-content">
       <a href="index.html" class="site-title">
         <span class="ja">下地理則の研究室</span>
-        <span class="en">Shimoji Lab</span>
+        <span class="en">Michinori Shimoji's Lab</span>
       </a>
       <p class="site-subtitle">
         <span class="ja">日琉諸語の総合的記述研究 | 九州大学言語学講座</span>
-        <span class="en">Descriptive Studies of Japonic Languages | Kyushu University</span>
+        <span class="en">Comprehensive Descriptive Studies of Japonic Languages | Kyushu University Linguistics</span>
       </p>
     </div>
   </header>
 
-  <!-- ナビゲーション -->
   <nav class="main-nav">
     <div class="nav-container">
       <button class="mobile-menu-btn" aria-label="メニュー" onclick="toggleMenu()">
@@ -53,7 +50,6 @@
     </div>
   </nav>
 
-  <!-- メインコンテンツ -->
   <main class="main-content">
     <section class="section" style="padding-top:var(--spacing-md);">
       <div style="display:flex;gap:var(--spacing-lg);flex-wrap:wrap;align-items:flex-start;margin-bottom:var(--spacing-lg);">
@@ -97,13 +93,12 @@
     </div>
   </main>
 
-  <!-- フッター -->
   <footer class="site-footer">
     <div class="footer-content">
       <div class="footer-section">
         <h3>
           <span class="ja">下地理則の研究室</span>
-          <span class="en">Shimoji Lab</span>
+          <span class="en">Michinori Shimoji's Lab</span>
         </h3>
         <p>
           <span class="ja">九州大学大学院人文科学研究院<br>言語学講座</span>
@@ -143,7 +138,6 @@
       }
     }
     
-    // ページ読み込み時に言語設定を復元
     (function() {
       if (localStorage.getItem('lang') === 'en') {
         document.body.classList.add('lang-en');
