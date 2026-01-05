@@ -7,38 +7,49 @@
   <title>岩隈航男 | 下地理則の研究室</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>">
+  <style>
+    .en { display: none; }
+    body.lang-en .ja { display: none; }
+    body.lang-en .en { display: inline; }
+    body.lang-en p.en, body.lang-en div.en, body.lang-en h1.en, body.lang-en h2.en, body.lang-en h3.en, body.lang-en span.en { display: block; }
+    body.lang-en a.en { display: inline-block; }
+    .lang-toggle { background: transparent; border: 1px solid #333; color: #333; padding: 0.3rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; margin-left: auto; }
+  </style>
 </head>
 <body>
-  <!-- ヘッダー -->
   <header class="site-header">
     <div class="header-content">
-      <a href="index.html" class="site-title" data-i18n="site-title">下地理則の研究室</a>
-      <p class="site-subtitle" data-i18n="site-subtitle">日琉諸語の総合的記述研究 | 九州大学言語学講座</p>
+      <a href="index.html" class="site-title">
+        <span class="ja">下地理則の研究室</span>
+        <span class="en">Michinori Shimoji's Lab</span>
+      </a>
+      <p class="site-subtitle">
+        <span class="ja">日琉諸語の総合的記述研究 | 九州大学言語学講座</span>
+        <span class="en">Comprehensive Descriptive Studies of Japonic Languages | Kyushu University Linguistics</span>
+      </p>
     </div>
   </header>
 
-  <!-- ナビゲーション -->
   <nav class="main-nav">
     <div class="nav-container">
       <button class="mobile-menu-btn" aria-label="メニュー" onclick="toggleMenu()">
         <span class="hamburger"></span>
       </button>
       <ul class="nav-list" id="navList">
-        <li class="nav-item"><a href="index.html" class="nav-link" data-i18n="nav-home">HOME</a></li>
-        <li class="nav-item"><a href="members.html" class="nav-link active" data-i18n="nav-members">メンバー</a></li>
-        <li class="nav-item"><a href="research.html" class="nav-link" data-i18n="nav-research">研究</a></li>
-        <li class="nav-item"><a href="teaching.html" class="nav-link" data-i18n="nav-teaching">授業</a></li>
-        <li class="nav-item"><a href="theses.html" class="nav-link" data-i18n="nav-theses">指導した学位論文</a></li>
-        <li class="nav-item"><a href="irabu.html" class="nav-link" data-i18n="nav-irabu">伊良部島方言を知る</a></li>
-        <li class="nav-item"><a href="resources.html" class="nav-link" data-i18n="nav-resources">記述のリソース</a></li>
-        <li class="nav-item"><a href="prospective.html" class="nav-link" data-i18n="nav-prospective">大学院志望者へ</a></li>
-        <li class="nav-item"><a href="https://note.com/lingfieldwork" class="nav-link" target="_blank" data-i18n="nav-essay">エッセイ</a></li>
+        <li class="nav-item"><a href="index.html" class="nav-link">HOME</a></li>
+        <li class="nav-item"><a href="members.html" class="nav-link active"><span class="ja">メンバー</span><span class="en">Members</span></a></li>
+        <li class="nav-item"><a href="research.html" class="nav-link"><span class="ja">研究</span><span class="en">Research</span></a></li>
+        <li class="nav-item"><a href="teaching.html" class="nav-link"><span class="ja">授業</span><span class="en">Courses</span></a></li>
+        <li class="nav-item"><a href="theses.html" class="nav-link"><span class="ja">指導した学位論文</span><span class="en">Theses</span></a></li>
+        <li class="nav-item"><a href="irabu.html" class="nav-link"><span class="ja">伊良部島方言を知る</span><span class="en">Irabu Language</span></a></li>
+        <li class="nav-item"><a href="resources.html" class="nav-link"><span class="ja">記述のリソース</span><span class="en">Resources</span></a></li>
+        <li class="nav-item"><a href="prospective.html" class="nav-link"><span class="ja">大学院志望者へ</span><span class="en">Prospective Students</span></a></li>
+        <li class="nav-item"><a href="https://note.com/lingfieldwork" class="nav-link" target="_blank"><span class="ja">エッセイ</span><span class="en">Essays</span></a></li>
       </ul>
-            <button id="langToggle" class="lang-toggle" onclick="toggleLang()" style="background:transparent;border:1px solid #333;color:#333;padding:0.3rem 0.6rem;border-radius:4px;cursor:pointer;font-size:0.85rem;margin-left:auto;">EN</button>
-      </div>
+      <button id="langToggle" class="lang-toggle" onclick="toggleLang()">EN</button>
+    </div>
   </nav>
 
-  <!-- メインコンテンツ -->
   <main class="main-content">
     <section class="section" style="padding-top:var(--spacing-md);">
       <div style="display:flex;gap:var(--spacing-lg);flex-wrap:wrap;align-items:flex-start;margin-bottom:var(--spacing-lg);">
@@ -46,9 +57,18 @@
           <img src="images/iwakuma.png" alt="岩隈航男" style="width:120px;height:150px;object-fit:cover;border-radius:8px;">
         </div>
         <div style="flex:1;min-width:200px;">
-          <span class="member-role" style="display:inline-block;margin-bottom:var(--spacing-xs);">修士課程</span>
-          <h2 style="font-family:var(--font-serif);font-size:1.3rem;color:var(--color-primary-dark);margin-bottom:var(--spacing-xs);">岩隈 航男</h2>
-          <p style="color:var(--color-text-light);font-size:0.9rem;">宮古語と琉球列島の標準日本語変種の記述。</p>
+          <span class="member-role" style="display:inline-block;margin-bottom:var(--spacing-xs);">
+            <span class="ja">修士課程</span>
+            <span class="en">Master's Student</span>
+          </span>
+          <h2 style="font-family:var(--font-serif);font-size:1.3rem;color:var(--color-primary-dark);margin-bottom:var(--spacing-xs);">
+            <span class="ja">岩隈 航男</span>
+            <span class="en">Konan IWAKUMA</span>
+          </h2>
+          <p style="color:var(--color-text-light);font-size:0.9rem;">
+            <span class="ja">宮古語と琉球列島の標準日本語変種の記述。</span>
+            <span class="en">Description of Miyako language and contact-induced varieties of Ryukyu Islands.</span>
+          </p>
         </div>
       </div>
       
@@ -58,32 +78,44 @@
           type="application/pdf"
           style="width:100%;height:700px;">
           <p style="padding:var(--spacing-lg);text-align:center;">
-            PDFを表示できません。<a href="https://www.mshimoji.com/_files/ugd/88f9b7_6a736797045b44769e347fc688831c03.pdf" target="_blank" rel="noopener">こちらからダウンロード</a>してください。
+            <span class="ja">PDFを表示できません。<a href="https://www.mshimoji.com/_files/ugd/88f9b7_6a736797045b44769e347fc688831c03.pdf" target="_blank" rel="noopener">こちらからダウンロード</a>してください。</span>
+            <span class="en">Cannot display PDF. <a href="https://www.mshimoji.com/_files/ugd/88f9b7_6a736797045b44769e347fc688831c03.pdf" target="_blank" rel="noopener">Download here</a>.</span>
           </p>
         </object>
       </div>
     </section>
 
     <div style="margin-top:var(--spacing-xl);">
-      <a href="members.html" class="btn btn-outline">← メンバー一覧に戻る</a>
+      <a href="members.html" class="btn btn-outline">
+        <span class="ja">← メンバー一覧に戻る</span>
+        <span class="en">← Back to Members</span>
+      </a>
     </div>
   </main>
 
-  <!-- フッター -->
   <footer class="site-footer">
     <div class="footer-content">
       <div class="footer-section">
-        <h3>下地理則の研究室</h3>
-        <p>九州大学大学院人文科学研究院<br>言語学講座</p>
+        <h3>
+          <span class="ja">下地理則の研究室</span>
+          <span class="en">Michinori Shimoji's Lab</span>
+        </h3>
+        <p>
+          <span class="ja">九州大学大学院人文科学研究院<br>言語学講座</span>
+          <span class="en">Faculty of Humanities<br>Kyushu University</span>
+        </p>
       </div>
       <div class="footer-section">
-        <h3>リンク</h3>
+        <h3>
+          <span class="ja">リンク</span>
+          <span class="en">Links</span>
+        </h3>
         <a href="https://kyushu-u.academia.edu/MichinoriShimoji" target="_blank" rel="noopener">Academia.edu</a>
         <a href="https://researchmap.jp/read0122330" target="_blank" rel="noopener">Researchmap</a>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>&copy; 2025 下地理則研究室. All rights reserved.</p>
+      <p>&copy; 2025 <span class="ja">下地理則研究室</span><span class="en">Shimoji Laboratory</span>. All rights reserved.</p>
     </div>
   </footer>
 
@@ -91,7 +123,27 @@
     function toggleMenu() {
       document.getElementById('navList').classList.toggle('active');
     }
+    
+    function toggleLang() {
+      const body = document.body;
+      const btn = document.getElementById('langToggle');
+      if (body.classList.contains('lang-en')) {
+        body.classList.remove('lang-en');
+        btn.textContent = 'EN';
+        localStorage.setItem('lang', 'ja');
+      } else {
+        body.classList.add('lang-en');
+        btn.textContent = '日本語';
+        localStorage.setItem('lang', 'en');
+      }
+    }
+    
+    (function() {
+      if (localStorage.getItem('lang') === 'en') {
+        document.body.classList.add('lang-en');
+        document.getElementById('langToggle').textContent = '日本語';
+      }
+    })();
   </script>
-  <script src="js/i18n.js"></script>
 </body>
 </html>
