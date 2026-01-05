@@ -40,6 +40,35 @@
     .modal-thesis-item:last-child { border-bottom: none; }
     .modal-thesis-author { font-weight: 600; color: var(--color-primary, #2c5282); }
     .modal-thesis-title { margin-top: 0.25rem; }
+
+    /* 方言比較ボックス */
+    .comparison-control {
+      position: absolute;
+      bottom: 30px;
+      right: 10px;
+      z-index: 1000;
+      background: white;
+      border-radius: 8px;
+      padding: 8px 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #333;
+      transition: all 0.2s;
+      border: 2px solid #9b59b6;
+    }
+    .comparison-control:hover {
+      background: #9b59b6;
+      color: white;
+    }
+    .comparison-icon {
+      font-size: 1rem;
+    }
+
     .modal-thesis-type { display: inline-block; font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; margin-right: 0.5rem; }
     .type-ba { background: #e3f2fd; color: #1565c0; }
     .type-ma { background: #e8f5e9; color: #2e7d32; }
@@ -90,6 +119,10 @@
       <h2>📍 研究対象地域</h2>
       <p style="text-align:center; margin-bottom:1rem; color: var(--color-text-light);">マーカーをクリックすると該当論文を表示</p>
       <div id="map"></div>
+      <div class="comparison-control" onclick="openComparativeModal()">
+        <span class="comparison-icon">🔄</span>
+        <span>方言比較</span>
+      </div>
       <div class="map-legend">
         <div class="legend-item"><span class="legend-dot" style="background:#2ecc71"></span><span>九州</span></div>
         <div class="legend-item"><span class="legend-dot" style="background:#3498db"></span><span>本州・四国</span></div>
@@ -317,6 +350,54 @@
     function closeModal() {
       document.getElementById('thesisModal').classList.remove('active');
     }
+    
+    function openComparativeModal() {
+      const modal = document.getElementById('thesisModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalBody = document.getElementById('modalBody');
+      
+      modalTitle.textContent = '方言比較研究の論文';
+      
+      // 「諸方言」「通方言」「方言比較」「方言間」を含む論文を検索
+      const allItems = document.querySelectorAll('.thesis-list li');
+      const keywords = ['諸方言', '通方言', '方言比較', '方言間'];
+      let html = '';
+      
+      allItems.forEach(item => {
+        const fullText = item.textContent;
+        const hasKeyword = keywords.some(kw => fullText.includes(kw));
+        
+        if (hasKeyword) {
+          const author = item.querySelector('.thesis-author').textContent;
+          const titleMatch = fullText.match(/「(.*)」(.*)/);
+          const title = titleMatch ? titleMatch[1] : '';
+          const link = item.querySelector('a');
+          const type = item.dataset.type || 'BA';
+          
+          let typeLabel = '卒論';
+          let typeClass = 'type-ba';
+          if (type === 'MA') { typeLabel = '修論'; typeClass = 'type-ma'; }
+          if (type === 'PhD') { typeLabel = '博論'; typeClass = 'type-phd'; }
+          
+          html += '<div class="modal-thesis-item">';
+          html += '<span class="modal-thesis-type ' + typeClass + '">' + typeLabel + '</span>';
+          html += '<span class="modal-thesis-author">' + author + '</span>';
+          if (link) {
+            html += '<a href="' + link.href + '" class="modal-thesis-link" target="_blank">【download】</a>';
+          }
+          html += '<div class="modal-thesis-title">「' + title + '」' + (titleMatch && titleMatch[2] ? titleMatch[2].replace(/【?download】?/gi, '').trim() : '') + '</div>';
+          html += '</div>';
+        }
+      });
+      
+      if (html === '') {
+        html = '<p>該当する論文がありません。</p>';
+      }
+      
+      modalBody.innerHTML = html;
+      modal.classList.add('active');
+    }
+
     
     document.getElementById('thesisModal').addEventListener('click', function(e) {
       if (e.target === this) closeModal();
