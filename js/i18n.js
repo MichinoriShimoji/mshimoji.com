@@ -3,7 +3,7 @@
   // 現在の言語を取得（デフォルトは日本語）
   let currentLang = localStorage.getItem('lang') || 'ja';
   
-  // 翻訳データ（各ページで追加可能）
+  // 翻訳データ
   const translations = {
     // 共通要素
     common: {
@@ -60,64 +60,100 @@
     // メンバーページ
     members: {
       ja: {
-        // 日本語版はHTMLの元テキストを使用するため、ここでは定義しない
+        'page-title': 'メンバー',
+        'page-description': '新しい方言研究を目指して',
+        'member-link': '自己紹介詳細 →'
       },
       en: {
         'page-title': 'Members',
         'page-description': 'Toward new research of Japonic topolects',
         'member-link': 'Profile →',
-        // 下地理則
+        // メンバー情報（英語のみ - 日本語はHTMLのまま）
         'shimoji-role': 'Professor, Kyushu University',
-        'shimoji-name': 'Michinori Shimoji',
+        'shimoji-name': 'Michinori SHIMOJI',
         'shimoji-research': 'Comprehensive description of Ryukyuan languages and Kyushu dialects. Linguistic anthropology.',
-        // 深谷康佳
         'fukaya-role': 'JSPS (PD)',
-        'fukaya-name': 'Yasuka Fukaya',
+        'fukaya-name': 'Yasuka FUKAYA',
         'fukaya-research': 'Comprehensive description of Kelabit (Austronesian, Malayo-Polynesian). Lexicography.',
-        // Matthew Guay
         'guay-role': 'Doctoral Student / Associate Professor, Ryutsu Keizai University',
-        'guay-name': 'Matthew Guay',
+        'guay-name': 'Matthew GUAY',
         'guay-research': 'Comprehensive description of Southern Ryukyuan Yaeyama Aragusuku dialect. Linguistic anthropology.',
-        // 廣澤尚之
         'hirosawa-role': 'Doctoral Student / JSPS',
-        'hirosawa-name': 'Naoyuki Hirosawa',
+        'hirosawa-name': 'Naoyuki HIROSAWA',
         'hirosawa-research': 'Comprehensive description of Omae dialect, Shiiba Village, Miyazaki. Information structure in Japonic languages.',
-        // Max Monson
         'monson-role': 'Doctoral Student',
-        'monson-name': 'Max Monson',
+        'monson-name': 'Max MONSON',
         'monson-research': 'Comprehensive description of Fukaura Town, Tsugaru District, Aomori.',
-        // Marco Scotto di Clemente
         'marco-role': 'Doctoral Student',
-        'marco-name': 'Marco Scotto di Clemente',
+        'marco-name': 'Marco SCOTTO DI CLEMENTE',
         'marco-research': 'Comprehensive description of Ei Town dialect, Minamikyushu City, Kagoshima.',
-        // 濱田七海
         'hamada-role': 'Doctoral Student / JSPS',
-        'hamada-name': 'Nanami Hamada',
+        'hamada-name': 'Nanami HAMADA',
         'hamada-research': 'Comprehensive description of Northern Ryukyuan Amami Kikaijima dialect. Language revitalization.',
-        // 三輪春佳
-        'miwa-role': "Master's Student",
-        'miwa-name': 'Haruka Miwa',
+        'miwa-role': 'Master\'s Student',
+        'miwa-name': 'Haruka MIWA',
         'miwa-research': 'Information structure in Korean.',
-        // 岩隈航男
-        'iwakuma-role': "Master's Student",
-        'iwakuma-name': 'Konan Iwakuma',
+        'iwakuma-role': 'Master\'s Student',
+        'iwakuma-name': 'Watao IWAKUMA',
         'iwakuma-research': 'Description of Miyako language and contact-induced varieties of Ryukyu Islands.'
+      }
+    },
+
+    // 下地理則プロフィールページ
+    'member-shimoji': {
+      ja: {},
+      en: {
+        'page-title': 'Michinori SHIMOJI',
+        'page-description': 'SHIMOJI, Michinori, Ph.D.',
+        'shimoji-position': 'Professor, Graduate School, Kyushu University',
+        'shimoji-research-desc': 'Comprehensive description of Ryukyuan languages and Kyushu dialects. Linguistic anthropology.',
+        'shimoji-column-link': 'Research columns and more',
+        'shimoji-cv-link': 'CV and publications (as of September 2025)',
+        'shimoji-contact': 'Contact',
+        'section-employment': 'Employment History',
+        'section-education': 'Education',
+        'section-dissertation': 'Dissertation',
+        'section-awards': 'Awards',
+        'section-research': 'Research Areas',
+        'section-funding': 'Competitive Research Funding (as PI)',
+        'section-kakenhi': 'JSPS Grants-in-Aid',
+        'section-other-funding': 'Other Funding',
+        'section-hobbies': 'Hobbies',
+        'back-to-members': '← Back to Members',
+        // 職歴
+        'job-2024': 'Professor, Linguistics, Faculty of Humanities, Kyushu University',
+        'job-2012': 'Associate Professor, Linguistics, Faculty of Humanities, Kyushu University',
+        'job-2011': 'Visiting Associate Professor, National Institute for Japanese Language and Linguistics',
+        'job-2009': 'Lecturer, Faculty of International Communication, Gunma Prefectural Women\'s University',
+        'job-2008': 'Project Researcher, Research Institute for Languages and Cultures of Asia and Africa, Tokyo University of Foreign Studies',
+        // 学歴
+        'edu-phd': 'Department of Linguistics, Australian National University (Ph.D.)',
+        'edu-ma': 'Tokyo University of Foreign Studies, Graduate School (M.A.)',
+        'edu-ba': 'Tokyo Gakugei University, Faculty of Education (B.A.)',
+        // 受賞
+        'award-2020': 'JSPS Prize (Japan Society for the Promotion of Science)',
+        'award-2019': 'Kindaichi Kyosuke Memorial Prize',
+        'award-2018': 'Okinawa Research Encouragement Award (Okinawa Association)',
+        'award-2010': 'Stephen Wurm Prize for Best PhD Thesis (Australian National University)',
+        'award-2009': 'Nakasone Seizen Memorial Research Award (Okinawa Center of Language Study)',
+        // 研究領域
+        'research-area-1': '1. Comprehensive descriptive studies through fieldwork',
+        'research-area-2': '2. Cross-linguistic studies of Japanese and Ryukyuan',
+        'research-area-3': '3. General linguistics',
+        'research-ryukyuan': 'Ryukyuan languages:',
+        'research-japanese': 'Japanese dialects:',
+        // 趣味
+        'hobby-guitar': 'Guitar (Gibson SG\'61)'
       }
     },
 
     // 研究ページ
     research: {
       ja: {
-        'page-title': '研究',
-        'section-current': '進行中の研究プロジェクト',
-        'section-past': '過去の研究プロジェクト',
-        'section-publications': '業績一覧'
+        'page-title': '研究'
       },
       en: {
-        'page-title': 'Research',
-        'section-current': 'Ongoing Research Projects',
-        'section-past': 'Past Research Projects',
-        'section-publications': 'Publications'
+        'page-title': 'Research'
       }
     },
 
@@ -134,28 +170,10 @@
     // 学位論文ページ
     theses: {
       ja: {
-        'page-title': '指導した学位論文',
-        'section-map': '研究対象地域',
-        'map-instruction': 'マーカーをクリックすると該当論文を表示',
-        'section-bachelor': '卒業論文',
-        'section-master': '修士論文',
-        'section-doctoral': '博士論文',
-        'legend-kyushu': '九州',
-        'legend-honshu': '本州・四国',
-        'legend-ryukyu': '琉球',
-        'comparison-btn': '方言比較'
+        'page-title': '指導した学位論文'
       },
       en: {
-        'page-title': 'Theses Supervised',
-        'section-map': 'Research Locations',
-        'map-instruction': 'Click markers to view related theses',
-        'section-bachelor': "Bachelor's Theses",
-        'section-master': "Master's Theses",
-        'section-doctoral': 'Doctoral Dissertations',
-        'legend-kyushu': 'Kyushu',
-        'legend-honshu': 'Honshu/Shikoku',
-        'legend-ryukyu': 'Ryukyu',
-        'comparison-btn': 'Cross-dialectal'
+        'page-title': 'Theses Supervised'
       }
     },
 
