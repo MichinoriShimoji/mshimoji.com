@@ -51,7 +51,7 @@
         'hero-p3': '下地研究室の目指す「日琉諸語の総合的記述」のあり方について、読書案内や有用なリソースガイド付きのわかりやすいブックレットを用意しています。<a href="https://www.canva.com/design/DAF6CK2iCHo/7f-u1_Xb1LYXOl-Euc19Jw/view" target="_blank" rel="noopener">こちらからご覧ください</a>。'
       },
       en: {
-        'hero-p1': 'Michinori Shimoji's Lab (Kyushu University Linguistics) is the world\'s only lab focused on comprehensive descriptive studies of endangered Japonic languages. We share the belief that each regional language should not be viewed merely as a "dialect," but rather documented and described as an endangered language with its own unique system.',
+        'hero-p1': 'Michinori Shimoji\'s Lab (Kyushu University Linguistics) is the world\'s only lab focused on comprehensive descriptive studies of endangered Japonic languages. We share the belief that each regional language should not be viewed merely as a "dialect," but rather documented and described as an endangered language with its own unique system.',
         'hero-p2': 'In addition to systematically learning authentic descriptive linguistic methods for creating grammars, dictionaries, and discourse materials, we also aim to collaborate with speaker communities on language revitalization activities, and in the future, with NLP (Natural Language Processing).',
         'hero-p3': 'We have prepared an easy-to-understand booklet about the "comprehensive description of Japonic languages" that our laboratory aims for, complete with reading guides and useful resource guides. <a href="https://www.canva.com/design/DAF6CK2iCHo/7f-u1_Xb1LYXOl-Euc19Jw/view" target="_blank" rel="noopener">View it here</a>.'
       }
@@ -205,6 +205,9 @@
 
   // 言語切り替えボタンを追加
   function addLanguageButton() {
+    // 既にボタンがあればスキップ
+    if (document.getElementById('langToggle')) return;
+    
     const nav = document.querySelector('.nav-container') || document.querySelector('.main-nav');
     if (!nav) return;
 
@@ -256,3 +259,12 @@
     }
   };
 })();
+
+// グローバル関数として翻訳切り替えを公開
+function toggleLang() {
+  if (window.i18n && window.i18n.toggle) {
+    window.i18n.toggle();
+  } else {
+    alert('Translation system not loaded');
+  }
+}
