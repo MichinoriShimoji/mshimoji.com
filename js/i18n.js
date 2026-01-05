@@ -57,53 +57,51 @@
       }
     },
 
-    // メンバーページ - 日本語版は共通部分のみ、英語版のみ個別翻訳
+    // メンバーページ
     members: {
       ja: {
-        'page-title': 'メンバー',
-        'page-description': '新しい方言研究を目指して'
-        // 個別メンバーの翻訳は定義しない（HTMLの元テキストをそのまま使用）
+        // 日本語版はHTMLの元テキストを使用するため、ここでは定義しない
       },
       en: {
         'page-title': 'Members',
-        'page-description': 'Toward new dialect research',
+        'page-description': 'Toward new research of Japonic topolects',
         'member-link': 'Profile →',
-        // Shimoji
+        // 下地理則
         'shimoji-role': 'Professor, Kyushu University',
         'shimoji-name': 'Michinori Shimoji',
-        'shimoji-research': 'Comprehensive description of Ryukyuan and Kyushu dialects. Linguistic anthropology.',
-        // Fukaya
-        'fukaya-role': 'JSPS Postdoctoral Fellow',
+        'shimoji-research': 'Comprehensive description of Ryukyuan languages and Kyushu dialects. Linguistic anthropology.',
+        // 深谷康佳
+        'fukaya-role': 'JSPS (PD)',
         'fukaya-name': 'Yasuka Fukaya',
         'fukaya-research': 'Comprehensive description of Kelabit (Austronesian, Malayo-Polynesian). Lexicography.',
-        // Guay
-        'guay-role': 'Doctoral Student / Assoc. Prof., Ryutsu Keizai University',
+        // Matthew Guay
+        'guay-role': 'Doctoral Student / Associate Professor, Ryutsu Keizai University',
         'guay-name': 'Matthew Guay',
-        'guay-research': 'Comprehensive description of Aragusuku Yaeyama. Linguistic anthropology.',
-        // Marco
-        'marco-role': 'Doctoral Student',
-        'marco-name': 'Marco Scotto di Clemente',
-        'marco-research': 'Comprehensive description of Miyako (Ikema dialect).',
-        // Hirosawa
-        'hirosawa-role': 'Doctoral Student / JSPS Fellow',
+        'guay-research': 'Comprehensive description of Southern Ryukyuan Yaeyama Aragusuku dialect. Linguistic anthropology.',
+        // 廣澤尚之
+        'hirosawa-role': 'Doctoral Student / JSPS',
         'hirosawa-name': 'Naoyuki Hirosawa',
-        'hirosawa-research': 'Comprehensive description of Omae dialect, Shiiba Village, Miyazaki. Information structure in Japonic.',
-        // Iwakuma
-        'iwakuma-role': "Master's Student",
-        'iwakuma-name': 'Konan Iwakuma',
-        'iwakuma-research': 'Comprehensive description of Kuchinotsu dialect, Minamishimabara, Nagasaki.',
-        // Monson
+        'hirosawa-research': 'Comprehensive description of Omae dialect, Shiiba Village, Miyazaki. Information structure in Japonic languages.',
+        // Max Monson
         'monson-role': 'Doctoral Student',
         'monson-name': 'Max Monson',
-        'monson-research': 'Comprehensive description of Teuchi dialect, Shimokoshiki, Kagoshima.',
-        // Miwa
+        'monson-research': 'Comprehensive description of Fukaura Town, Tsugaru District, Aomori.',
+        // Marco Scotto di Clemente
+        'marco-role': 'Doctoral Student',
+        'marco-name': 'Marco Scotto di Clemente',
+        'marco-research': 'Comprehensive description of Ei Town dialect, Minamikyushu City, Kagoshima.',
+        // 濱田七海
+        'hamada-role': 'Doctoral Student / JSPS',
+        'hamada-name': 'Nanami Hamada',
+        'hamada-research': 'Comprehensive description of Northern Ryukyuan Amami Kikaijima dialect. Language revitalization.',
+        // 三輪春佳
         'miwa-role': "Master's Student",
         'miwa-name': 'Haruka Miwa',
-        'miwa-research': 'Comprehensive description of Hikoshima dialect, Shimonoseki, Yamaguchi.',
-        // Hamada
-        'hamada-role': 'Undergraduate Student',
-        'hamada-name': 'Nanami Hamada',
-        'hamada-research': 'Comprehensive description of Yamakawa dialect, Ibusuki, Kagoshima.'
+        'miwa-research': 'Information structure in Korean.',
+        // 岩隈航男
+        'iwakuma-role': "Master's Student",
+        'iwakuma-name': 'Konan Iwakuma',
+        'iwakuma-research': 'Description of Miyako language and contact-induced varieties of Ryukyu Islands.'
       }
     },
 

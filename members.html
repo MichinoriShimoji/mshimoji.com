@@ -12,8 +12,8 @@
   <!-- ヘッダー -->
   <header class="site-header">
     <div class="header-content">
-      <a href="index.html" class="site-title">下地理則の研究室</a>
-      <p class="site-subtitle">日琉諸語の総合的記述研究 | 九州大学言語学講座</p>
+      <a href="index.html" class="site-title" data-i18n="site-title">下地理則の研究室</a>
+      <p class="site-subtitle" data-i18n="site-subtitle">日琉諸語の総合的記述研究 | 九州大学言語学講座</p>
     </div>
   </header>
 
@@ -24,109 +24,108 @@
         <span class="hamburger"></span>
       </button>
       <ul class="nav-list" id="navList">
-        <li class="nav-item"><a href="index.html" class="nav-link">HOME</a></li>
-        <li class="nav-item"><a href="members.html" class="nav-link active">メンバー</a></li>
-        <li class="nav-item"><a href="research.html" class="nav-link">研究</a></li>
-        <li class="nav-item"><a href="teaching.html" class="nav-link">授業</a></li>
-        <li class="nav-item"><a href="theses.html" class="nav-link">指導した学位論文</a></li>
-        <li class="nav-item"><a href="irabu.html" class="nav-link">伊良部島方言を知る</a></li>
-        <li class="nav-item"><a href="resources.html" class="nav-link">記述のリソース</a></li>
-        <li class="nav-item"><a href="prospective.html" class="nav-link">大学院志望者へ</a></li>
-        <li class="nav-item"><a href="https://note.com/lingfieldwork" class="nav-link" target="_blank">エッセイ</a></li>
+        <li class="nav-item"><a href="index.html" class="nav-link" data-i18n="nav-home">HOME</a></li>
+        <li class="nav-item"><a href="members.html" class="nav-link active" data-i18n="nav-members">メンバー</a></li>
+        <li class="nav-item"><a href="research.html" class="nav-link" data-i18n="nav-research">研究</a></li>
+        <li class="nav-item"><a href="teaching.html" class="nav-link" data-i18n="nav-teaching">授業</a></li>
+        <li class="nav-item"><a href="theses.html" class="nav-link" data-i18n="nav-theses">指導した学位論文</a></li>
+        <li class="nav-item"><a href="irabu.html" class="nav-link" data-i18n="nav-irabu">伊良部島方言を知る</a></li>
+        <li class="nav-item"><a href="resources.html" class="nav-link" data-i18n="nav-resources">記述のリソース</a></li>
+        <li class="nav-item"><a href="prospective.html" class="nav-link" data-i18n="nav-prospective">大学院志望者へ</a></li>
+        <li class="nav-item"><a href="https://note.com/lingfieldwork" class="nav-link" target="_blank" data-i18n="nav-essay">エッセイ</a></li>
       </ul>
+      <button id="langToggle" class="lang-toggle" onclick="toggleLang()" style="background:transparent;border:1px solid #333;color:#333;padding:0.3rem 0.6rem;border-radius:4px;cursor:pointer;font-size:0.85rem;margin-left:auto;">EN</button>
     </div>
   </nav>
 
   <!-- メインコンテンツ -->
   <main class="main-content">
     <section class="page-hero">
-      <h1 class="page-title">メンバー</h1>
-      <p class="page-description">新しい方言研究を目指して</p>
+      <h1 class="page-title" data-i18n="page-title">メンバー</h1>
+      <p class="page-description" data-i18n="page-description">新しい方言研究を目指して</p>
     </section>
 
     <section class="section">
-      <h2 class="section-title">メンバー紹介（2025年4月1日現在）</h2>
-      
-      <div class="member-grid">
+      <div class="members-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:2rem;">
         <!-- 下地理則 -->
         <div class="member-card">
           <img src="images/shimoji.jpg" alt="下地理則" style="width:140px;height:180px;object-fit:cover;border-radius:8px;margin:0 auto var(--spacing-md);display:block;">
-          <span class="member-role">九州大学大学院教授</span>
-          <h3 class="member-name">下地 理則</h3>
-          <p class="member-research">琉球諸語、九州方言の総合的記述。言語人類学。</p>
-          <a href="member-shimoji.html" class="member-link">自己紹介詳細 →</a>
+          <span class="member-role" data-i18n="shimoji-role">九州大学大学院教授</span>
+          <h3 class="member-name" data-i18n="shimoji-name">下地 理則</h3>
+          <p class="member-research" data-i18n="shimoji-research">琉球諸語、九州方言の総合的記述。言語人類学。</p>
+          <a href="member-shimoji.html" class="member-link" data-i18n="member-link">自己紹介詳細 →</a>
         </div>
 
         <!-- 深谷康佳 -->
         <div class="member-card">
           <img src="images/fukaya.jpg" alt="深谷康佳" style="width:140px;height:180px;object-fit:cover;border-radius:8px;margin:0 auto var(--spacing-md);display:block;">
-          <span class="member-role">JSPS (PD)</span>
-          <h3 class="member-name">深谷 康佳</h3>
-          <p class="member-research">オーストロネシア語族マラヨポリネシア語派ケラビット語の総合的記述。辞書作成。</p>
-          <a href="member-fukaya.html" class="member-link">自己紹介詳細 →</a>
+          <span class="member-role" data-i18n="fukaya-role">JSPS (PD)</span>
+          <h3 class="member-name" data-i18n="fukaya-name">深谷 康佳</h3>
+          <p class="member-research" data-i18n="fukaya-research">オーストロネシア語族マラヨポリネシア語派ケラビット語の総合的記述。辞書作成。</p>
+          <a href="member-fukaya.html" class="member-link" data-i18n="member-link">自己紹介詳細 →</a>
         </div>
 
         <!-- Matthew Guay -->
         <div class="member-card">
           <img src="images/matt.jpg" alt="Matthew Guay" style="width:140px;height:180px;object-fit:cover;border-radius:8px;margin:0 auto var(--spacing-md);display:block;">
-          <span class="member-role">博士課程/流通経済大学准教授</span>
-          <h3 class="member-name">Matthew Guay</h3>
-          <p class="member-research">南琉球八重山語新城島方言の総合的記述。言語人類学。</p>
-          <a href="member-guay.html" class="member-link">自己紹介詳細 →</a>
+          <span class="member-role" data-i18n="guay-role">博士課程/流通経済大学准教授</span>
+          <h3 class="member-name" data-i18n="guay-name">Matthew Guay</h3>
+          <p class="member-research" data-i18n="guay-research">南琉球八重山語新城島方言の総合的記述。言語人類学。</p>
+          <a href="member-guay.html" class="member-link" data-i18n="member-link">自己紹介詳細 →</a>
         </div>
 
         <!-- 廣澤尚之 -->
         <div class="member-card">
           <img src="images/hirosawa.jpg" alt="廣澤尚之" style="width:140px;height:180px;object-fit:cover;border-radius:8px;margin:0 auto var(--spacing-md);display:block;">
-          <span class="member-role">博士課程/JSPS</span>
-          <h3 class="member-name">廣澤 尚之</h3>
-          <p class="member-research">宮崎県椎葉村尾前方言の総合的記述。日琉諸語の情報構造。</p>
-          <a href="member-hirosawa.html" class="member-link">自己紹介詳細 →</a>
+          <span class="member-role" data-i18n="hirosawa-role">博士課程/JSPS</span>
+          <h3 class="member-name" data-i18n="hirosawa-name">廣澤 尚之</h3>
+          <p class="member-research" data-i18n="hirosawa-research">宮崎県椎葉村尾前方言の総合的記述。日琉諸語の情報構造。</p>
+          <a href="member-hirosawa.html" class="member-link" data-i18n="member-link">自己紹介詳細 →</a>
         </div>
 
         <!-- Max Monson -->
         <div class="member-card">
           <img src="images/max.png" alt="Max Monson" style="width:140px;height:180px;object-fit:cover;border-radius:8px;margin:0 auto var(--spacing-md);display:block;">
-          <span class="member-role">博士課程</span>
-          <h3 class="member-name">Max Monson</h3>
-          <p class="member-research">青森県津軽郡深浦町の総合的記述。</p>
-          <a href="member-monson.html" class="member-link">自己紹介詳細 →</a>
+          <span class="member-role" data-i18n="monson-role">博士課程</span>
+          <h3 class="member-name" data-i18n="monson-name">Max Monson</h3>
+          <p class="member-research" data-i18n="monson-research">青森県津軽郡深浦町の総合的記述。</p>
+          <a href="member-monson.html" class="member-link" data-i18n="member-link">自己紹介詳細 →</a>
         </div>
 
         <!-- Marco Scotto di Clemente -->
         <div class="member-card">
           <img src="images/marco.jpg" alt="Marco Scotto di Clemente" style="width:140px;height:180px;object-fit:cover;border-radius:8px;margin:0 auto var(--spacing-md);display:block;">
-          <span class="member-role">博士課程</span>
-          <h3 class="member-name">Marco Scotto di Clemente</h3>
-          <p class="member-research">鹿児島県南九州市頴娃町方言の総合的記述。</p>
-          <a href="member-marco.html" class="member-link">自己紹介詳細 →</a>
+          <span class="member-role" data-i18n="marco-role">博士課程</span>
+          <h3 class="member-name" data-i18n="marco-name">Marco Scotto di Clemente</h3>
+          <p class="member-research" data-i18n="marco-research">鹿児島県南九州市頴娃町方言の総合的記述。</p>
+          <a href="member-marco.html" class="member-link" data-i18n="member-link">自己紹介詳細 →</a>
         </div>
 
         <!-- 濱田七海 -->
         <div class="member-card">
           <img src="images/hamada.jpg" alt="濱田七海" style="width:140px;height:180px;object-fit:cover;border-radius:8px;margin:0 auto var(--spacing-md);display:block;">
-          <span class="member-role">博士課程/JSPS</span>
-          <h3 class="member-name">濱田 七海</h3>
-          <p class="member-research">北琉球奄美語喜界島方言の総合的記述。言語再活性化。</p>
-          <a href="member-hamada.html" class="member-link">自己紹介詳細 →</a>
+          <span class="member-role" data-i18n="hamada-role">博士課程/JSPS</span>
+          <h3 class="member-name" data-i18n="hamada-name">濱田 七海</h3>
+          <p class="member-research" data-i18n="hamada-research">北琉球奄美語喜界島方言の総合的記述。言語再活性化。</p>
+          <a href="member-hamada.html" class="member-link" data-i18n="member-link">自己紹介詳細 →</a>
         </div>
 
         <!-- 三輪春佳 -->
         <div class="member-card">
           <img src="images/miwa.png" alt="三輪春佳" style="width:140px;height:180px;object-fit:cover;border-radius:8px;margin:0 auto var(--spacing-md);display:block;">
-          <span class="member-role">修士課程</span>
-          <h3 class="member-name">三輪 春佳</h3>
-          <p class="member-research">韓国語の情報構造。</p>
-          <a href="member-miwa.html" class="member-link">自己紹介詳細 →</a>
+          <span class="member-role" data-i18n="miwa-role">修士課程</span>
+          <h3 class="member-name" data-i18n="miwa-name">三輪 春佳</h3>
+          <p class="member-research" data-i18n="miwa-research">韓国語の情報構造。</p>
+          <a href="member-miwa.html" class="member-link" data-i18n="member-link">自己紹介詳細 →</a>
         </div>
 
         <!-- 岩隈航男 -->
         <div class="member-card">
           <img src="images/iwakuma.png" alt="岩隈航男" style="width:140px;height:180px;object-fit:cover;border-radius:8px;margin:0 auto var(--spacing-md);display:block;">
-          <span class="member-role">修士課程</span>
-          <h3 class="member-name">岩隈 航男</h3>
-          <p class="member-research">宮古語と琉球列島の標準日本語変種の記述。</p>
-          <a href="member-iwakuma.html" class="member-link">自己紹介詳細 →</a>
+          <span class="member-role" data-i18n="iwakuma-role">修士課程</span>
+          <h3 class="member-name" data-i18n="iwakuma-name">岩隈 航男</h3>
+          <p class="member-research" data-i18n="iwakuma-research">宮古語と琉球列島の標準日本語変種の記述。</p>
+          <a href="member-iwakuma.html" class="member-link" data-i18n="member-link">自己紹介詳細 →</a>
         </div>
       </div>
     </section>
@@ -136,10 +135,9 @@
   <footer class="site-footer">
     <div class="footer-content">
       <div class="footer-section">
-        <h3>下地理則の研究室</h3>
         <p>九州大学大学院人文科学研究院<br>言語学講座</p>
         <p style="margin-top: 1rem;">
-          <a href="/cdn-cgi/l/email-protection#3d4e50477d564448595c5413574d"><span class="__cf_email__" data-cfemail="20534d5a604b59554441490e4a50">[email&#160;protected]</span></a>
+          <a href="mailto:smz@kyudai.jp">smz [at] kyudai.jp</a>
         </p>
       </div>
       <div class="footer-section">
@@ -156,4 +154,16 @@
         <a href="teaching.html">授業</a>
       </div>
     </div>
-    <div class="
+    <div class="footer-bottom">
+      <p>&copy; 2025 下地理則研究室. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById('navList').classList.toggle('active');
+    }
+  </script>
+  <script src="js/i18n.js"></script>
+</body>
+</html>
