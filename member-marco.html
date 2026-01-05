@@ -7,22 +7,13 @@
   <title>Marco Scotto di Clemente | 下地理則の研究室</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>">
-<!-- Research Artisan Pro Script Tag Start -->
-<script type="text/javascript">
-  var _Ra = {};
-  _Ra.hId = '1';
-  _Ra.uCd = '26010500010465531600';  _Ra.exceptCrawler = true;
-  (function() {var s=document.getElementsByTagName('script')[0],js=document.createElement('script');js.type='text/javascript';js.async='async';js.src='https://analyze.pro.research-artisan.com/track/script.php';s.parentNode.insertBefore(js,s);})();
-</script>
-<noscript><p><img src="https://analyze.pro.research-artisan.com/track/tracker.php?ucd=26010500010465531600&amp;hid=1&amp;guid=ON" alt="" width="1" height="1" /></p></noscript>
-<!-- Research Artisan Pro Script Tag End -->
 </head>
 <body>
   <!-- ヘッダー -->
   <header class="site-header">
     <div class="header-content">
-      <a href="index.html" class="site-title">下地理則の研究室</a>
-      <p class="site-subtitle">琉球語と日本語方言の研究 | 九州大学言語学講座</p>
+      <a href="index.html" class="site-title" data-i18n="site-title">下地理則の研究室</a>
+      <p class="site-subtitle" data-i18n="site-subtitle">日琉諸語の総合的記述研究 | 九州大学言語学講座</p>
     </div>
   </header>
 
@@ -33,17 +24,17 @@
         <span class="hamburger"></span>
       </button>
       <ul class="nav-list" id="navList">
-        <li class="nav-item"><a href="index.html" class="nav-link">HOME</a></li>
-        <li class="nav-item"><a href="members.html" class="nav-link active">メンバー</a></li>
-        <li class="nav-item"><a href="research.html" class="nav-link">研究</a></li>
-        <li class="nav-item"><a href="teaching.html" class="nav-link">授業</a></li>
-        <li class="nav-item"><a href="theses.html" class="nav-link">指導した学位論文</a></li>
-        <li class="nav-item"><a href="irabu.html" class="nav-link">伊良部島方言を知る</a></li>
-        <li class="nav-item"><a href="resources.html" class="nav-link">方言記述のリソース</a></li>
-        <li class="nav-item"><a href="prospective.html" class="nav-link">大学院志望者へ</a></li>
-          <li class="nav-item"><a href="https://note.com/lingfieldwork" class="nav-link" target="_blank">エッセイ</a></li>
+        <li class="nav-item"><a href="index.html" class="nav-link" data-i18n="nav-home">HOME</a></li>
+        <li class="nav-item"><a href="members.html" class="nav-link active" data-i18n="nav-members">メンバー</a></li>
+        <li class="nav-item"><a href="research.html" class="nav-link" data-i18n="nav-research">研究</a></li>
+        <li class="nav-item"><a href="teaching.html" class="nav-link" data-i18n="nav-teaching">授業</a></li>
+        <li class="nav-item"><a href="theses.html" class="nav-link" data-i18n="nav-theses">指導した学位論文</a></li>
+        <li class="nav-item"><a href="irabu.html" class="nav-link" data-i18n="nav-irabu">伊良部島方言を知る</a></li>
+        <li class="nav-item"><a href="resources.html" class="nav-link" data-i18n="nav-resources">記述のリソース</a></li>
+        <li class="nav-item"><a href="prospective.html" class="nav-link" data-i18n="nav-prospective">大学院志望者へ</a></li>
       </ul>
-    </div>
+            <button id="langToggle" class="lang-toggle" onclick="toggleLang()" style="background:transparent;border:1px solid #333;color:#333;padding:0.3rem 0.6rem;border-radius:4px;cursor:pointer;font-size:0.85rem;margin-left:auto;">EN</button>
+      </div>
   </nav>
 
   <!-- メインコンテンツ -->
@@ -100,5 +91,6 @@
       document.getElementById('navList').classList.toggle('active');
     }
   </script>
+  <script src="js/i18n.js"></script>
 </body>
 </html>
