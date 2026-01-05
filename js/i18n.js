@@ -61,21 +61,97 @@
     members: {
       ja: {
         'page-title': 'メンバー',
+        'page-description': '新しい方言研究を目指して',
         'section-professor': '教員',
         'section-postdoc': 'ポスドク研究員',
         'section-doctoral': '博士課程',
         'section-master': '修士課程',
         'section-bachelor': '学部',
-        'section-alumni': '卒業生・修了生'
+        'section-alumni': '卒業生・修了生',
+        'member-link': '自己紹介詳細 →',
+        // 下地理則
+        'shimoji-role': '九州大学大学院教授',
+        'shimoji-name': '下地 理則',
+        'shimoji-research': '琉球諸語、九州方言の総合的記述。言語人類学。',
+        // 深谷康佳
+        'fukaya-role': 'JSPS (PD)',
+        'fukaya-name': '深谷 康佳',
+        'fukaya-research': 'オーストロネシア語族マラヨポリネシア語派ケラビット語の総合的記述。辞書作成。',
+        // Matthew Guay
+        'guay-role': '博士課程/流通経済大学准教授',
+        'guay-name': 'Matthew Guay',
+        'guay-research': '南琉球八重山語新城島方言の総合的記述。言語人類学。',
+        // Marco Marandola
+        'marco-role': '博士課程',
+        'marco-name': 'Marco Marandola',
+        'marco-research': '宮古語（池間方言）の総合的記述。',
+        // 廣澤尚之
+        'hirosawa-role': '博士課程/JSPS',
+        'hirosawa-name': '廣澤 尚之',
+        'hirosawa-research': '宮崎県椎葉村尾前方言の総合的記述。日琉諸語の情報構造。',
+        // 岩隈嘉斗
+        'iwakuma-role': '修士課程',
+        'iwakuma-name': '岩隈 嘉斗',
+        'iwakuma-research': '長崎県南島原市口之津方言の総合的記述。',
+        // Max Monson
+        'monson-role': '博士課程',
+        'monson-name': 'Max Monson',
+        'monson-research': '鹿児島県薩摩川内市下甑町手打方言の総合的記述。',
+        // 三輪萌々香
+        'miwa-role': '修士課程',
+        'miwa-name': '三輪 萌々香',
+        'miwa-research': '山口県下関市彦島方言の総合的記述。',
+        // 濱田悠太
+        'hamada-role': '学部',
+        'hamada-name': '濱田 悠太',
+        'hamada-research': '鹿児島県指宿市山川町方言の総合的記述。'
       },
       en: {
         'page-title': 'Members',
+        'page-description': 'Toward new dialect research',
         'section-professor': 'Faculty',
         'section-postdoc': 'Postdoctoral Researchers',
         'section-doctoral': 'Doctoral Students',
-        'section-master': 'Master\'s Students',
+        'section-master': "Master's Students",
         'section-bachelor': 'Undergraduate Students',
-        'section-alumni': 'Alumni'
+        'section-alumni': 'Alumni',
+        'member-link': 'Profile →',
+        // Shimoji
+        'shimoji-role': 'Professor, Kyushu University',
+        'shimoji-name': 'Michinori Shimoji',
+        'shimoji-research': 'Comprehensive description of Ryukyuan and Kyushu dialects. Linguistic anthropology.',
+        // Fukaya
+        'fukaya-role': 'JSPS Postdoctoral Fellow',
+        'fukaya-name': 'Yasuka Fukaya',
+        'fukaya-research': 'Comprehensive description of Kelabit (Austronesian, Malayo-Polynesian). Lexicography.',
+        // Guay
+        'guay-role': 'Doctoral Student / Assoc. Prof., Ryutsu Keizai University',
+        'guay-name': 'Matthew Guay',
+        'guay-research': 'Comprehensive description of Aragusuku Yaeyama. Linguistic anthropology.',
+        // Marco
+        'marco-role': 'Doctoral Student',
+        'marco-name': 'Marco Marandola',
+        'marco-research': 'Comprehensive description of Miyako (Ikema dialect).',
+        // Hirosawa
+        'hirosawa-role': 'Doctoral Student / JSPS Fellow',
+        'hirosawa-name': 'Naoyuki Hirosawa',
+        'hirosawa-research': 'Comprehensive description of Omae dialect, Shiiba Village, Miyazaki. Information structure in Japonic.',
+        // Iwakuma
+        'iwakuma-role': "Master's Student",
+        'iwakuma-name': 'Yoshito Iwakuma',
+        'iwakuma-research': 'Comprehensive description of Kuchinotsu dialect, Minamishimabara, Nagasaki.',
+        // Monson
+        'monson-role': 'Doctoral Student',
+        'monson-name': 'Max Monson',
+        'monson-research': 'Comprehensive description of Teuchi dialect, Shimokoshiki, Kagoshima.',
+        // Miwa
+        'miwa-role': "Master's Student",
+        'miwa-name': 'Momoka Miwa',
+        'miwa-research': 'Comprehensive description of Hikoshima dialect, Shimonoseki, Yamaguchi.',
+        // Hamada
+        'hamada-role': 'Undergraduate Student',
+        'hamada-name': 'Yuta Hamada',
+        'hamada-research': 'Comprehensive description of Yamakawa dialect, Ibusuki, Kagoshima.'
       }
     },
 
@@ -123,8 +199,8 @@
         'page-title': 'Theses Supervised',
         'section-map': 'Research Locations',
         'map-instruction': 'Click markers to view related theses',
-        'section-bachelor': 'Bachelor\'s Theses',
-        'section-master': 'Master\'s Theses',
+        'section-bachelor': "Bachelor's Theses",
+        'section-master': "Master's Theses",
         'section-doctoral': 'Doctoral Dissertations',
         'legend-kyushu': 'Kyushu',
         'legend-honshu': 'Honshu/Shikoku',
