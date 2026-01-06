@@ -27,8 +27,6 @@
     .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
     .highlight-location { background: #fff3cd; transition: background 0.3s; }
     .leaflet-container { background: #f0f4f8; }
-    
-    /* モーダル */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; }
     .modal-overlay.active { display: flex; }
     .modal-content { background: white; border-radius: 12px; max-width: 600px; width: 90%; max-height: 80vh; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
@@ -41,40 +39,22 @@
     .modal-thesis-item:last-child { border-bottom: none; }
     .modal-thesis-author { font-weight: 600; color: var(--color-primary, #2c5282); }
     .modal-thesis-title { margin-top: 0.25rem; }
-
-    /* 方言比較ボックス */
-    .comparison-control {
-      position: absolute;
-      bottom: 70px;
-      right: 10px;
-      z-index: 1000;
-      background: white;
-      border-radius: 8px;
-      padding: 8px 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: #333;
-      transition: all 0.2s;
-      border: 2px solid #9b59b6;
-    }
-    .comparison-control:hover {
-      background: #9b59b6;
-      color: white;
-    }
-    .comparison-icon {
-      font-size: 1rem;
-    }
-
+    .comparison-control { position: absolute; bottom: 70px; right: 10px; z-index: 1000; background: white; border-radius: 8px; padding: 8px 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 500; color: #333; transition: all 0.2s; border: 2px solid #9b59b6; }
+    .comparison-control:hover { background: #9b59b6; color: white; }
+    .comparison-icon { font-size: 1rem; }
     .modal-thesis-type { display: inline-block; font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; margin-right: 0.5rem; }
     .type-ba { background: #e3f2fd; color: #1565c0; }
     .type-ma { background: #e8f5e9; color: #2e7d32; }
     .type-phd { background: #fce4ec; color: #c2185b; }
     .modal-thesis-link { color: var(--color-accent, #e53e3e); font-size: 0.9rem; margin-left: 0.5rem; }
+    /* i18n styles */
+    .en { display: none; }
+    body.lang-en .ja { display: none; }
+    body.lang-en .en { display: block; }
+    body.lang-en .en-inline { display: inline; }
+    body.lang-en .ja-inline { display: none; }
+    .ja-inline { display: inline; }
+    .en-inline { display: none; }
   </style>
 </head>
 <body>
@@ -98,15 +78,14 @@
         <li class="nav-item"><a href="prospective.html" class="nav-link" data-i18n="nav-prospective">大学院志望者へ</a></li>
         <li class="nav-item"><a href="https://note.com/lingfieldwork" class="nav-link" target="_blank" data-i18n="nav-essay">エッセイ</a></li>
       </ul>
-            <button id="langToggle" class="lang-toggle" onclick="toggleLang()" style="background:transparent;border:1px solid #333;color:#333;padding:0.3rem 0.6rem;border-radius:4px;cursor:pointer;font-size:0.85rem;margin-left:auto;">EN</button>
-      </div>
+      <button id="langToggle" class="lang-toggle" onclick="toggleLang()" style="background:transparent;border:1px solid #333;color:#333;padding:0.3rem 0.6rem;border-radius:4px;cursor:pointer;font-size:0.85rem;margin-left:auto;">EN</button>
+    </div>
   </nav>
   
-  <!-- モーダル -->
   <div class="modal-overlay" id="thesisModal">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 id="modalTitle">論文一覧</h3>
+        <h3 id="modalTitle"><span class="ja-inline">論文一覧</span><span class="en-inline">Theses</span></h3>
         <button class="modal-close" onclick="closeModal()">&times;</button>
       </div>
       <div class="modal-body" id="modalBody"></div>
@@ -115,36 +94,36 @@
 
   <main class="main-content">
     <section class="page-hero">
-      <h1 class="page-title">指導した学位論文</h1>
-      <p class="page-description">卒業論文・修士論文・博士論文</p>
+      <h1 class="page-title" data-i18n="page-title">指導した学位論文</h1>
+      <p class="page-description"><span class="ja">卒業論文・修士論文・博士論文</span><span class="en">Bachelor's, Master's, and Doctoral Theses</span></p>
     </section>
     <section class="section map-section">
-      <h2>📍 研究対象地域</h2>
-      <p style="text-align:center; margin-bottom:1rem; color: var(--color-text-light);">マーカーをクリックすると該当論文を表示</p>
+      <h2 data-i18n="section-map">📍 研究対象地域</h2>
+      <p style="text-align:center; margin-bottom:1rem; color: var(--color-text-light);" data-i18n="map-instruction">マーカーをクリックすると該当論文を表示</p>
       <div class="map-container">
         <div id="map"></div>
         <div class="comparison-control" onclick="openComparativeModal()">
           <span class="comparison-icon">🔄</span>
-          <span>方言比較</span>
+          <span data-i18n="comparison-btn">方言比較</span>
         </div>
       </div>
       <div class="map-legend">
-        <div class="legend-item"><span class="legend-dot" style="background:#2ecc71"></span><span>九州</span></div>
-        <div class="legend-item"><span class="legend-dot" style="background:#3498db"></span><span>本州・四国</span></div>
-        <div class="legend-item"><span class="legend-dot" style="background:#e74c3c"></span><span>琉球</span></div>
-        <div class="legend-item"><span class="legend-dot" style="background:#f39c12"></span><span>台湾</span></div>
-        <div class="legend-item"><span class="legend-dot" style="background:#9b59b6"></span><span>北海道</span></div>
+        <div class="legend-item"><span class="legend-dot" style="background:#2ecc71"></span><span data-i18n="legend-kyushu">九州</span></div>
+        <div class="legend-item"><span class="legend-dot" style="background:#3498db"></span><span data-i18n="legend-honshu">本州・四国</span></div>
+        <div class="legend-item"><span class="legend-dot" style="background:#e74c3c"></span><span data-i18n="legend-ryukyu">琉球</span></div>
+        <div class="legend-item"><span class="legend-dot" style="background:#f39c12"></span><span><span class="ja-inline">台湾</span><span class="en-inline">Taiwan</span></span></div>
+        <div class="legend-item"><span class="legend-dot" style="background:#9b59b6"></span><span><span class="ja-inline">北海道</span><span class="en-inline">Hokkaido</span></span></div>
       </div>
     </section>
     <section class="section">
       <div class="link-card-grid">
-        <a href="#bachelor" class="link-card"><div class="link-card-icon">📘</div><div class="link-card-content"><div class="link-card-title">卒業論文</div><div class="link-card-desc">2012年度〜2024年度</div></div></a>
-        <a href="#master" class="link-card"><div class="link-card-icon">📗</div><div class="link-card-content"><div class="link-card-title">修士論文</div><div class="link-card-desc">2014年度〜2021年度</div></div></a>
-        <a href="#doctor" class="link-card"><div class="link-card-icon">📕</div><div class="link-card-content"><div class="link-card-title">博士論文</div><div class="link-card-desc">2021年〜2024年</div></div></a>
+        <a href="#bachelor" class="link-card"><div class="link-card-icon">📘</div><div class="link-card-content"><div class="link-card-title" data-i18n="section-bachelor">卒業論文</div><div class="link-card-desc">2012–2024</div></div></a>
+        <a href="#master" class="link-card"><div class="link-card-icon">📗</div><div class="link-card-content"><div class="link-card-title" data-i18n="section-master">修士論文</div><div class="link-card-desc">2014–2021</div></div></a>
+        <a href="#doctor" class="link-card"><div class="link-card-icon">📕</div><div class="link-card-content"><div class="link-card-title" data-i18n="section-doctoral">博士論文</div><div class="link-card-desc">2021–2024</div></div></a>
       </div>
     </section>
     <section class="section thesis-section" id="bachelor">
-      <h2>📘 卒業論文</h2>
+      <h2>📘 <span data-i18n="section-bachelor">卒業論文</span></h2>
       <div class="thesis-year">2024年度</div>
       <ul class="thesis-list">
         <li data-loc="okinawa" data-type="BA"><span class="thesis-author">首藤 蓮太郎</span>「沖縄県中南部地域で話されるウチナーヤマトグチにおける愛称語について」<a href="files/theses/2024_BA_shuto.pdf" class="thesis-download" target="_blank">【download】</a></li>
@@ -257,7 +236,7 @@
       </ul>
     </section>
     <section class="section thesis-section" id="master">
-      <h2>📗 修士論文</h2>
+      <h2>📗 <span data-i18n="section-master">修士論文</span></h2>
       <div class="thesis-year">2021年度</div>
       <ul class="thesis-list">
         <li data-loc="taiwan" data-type="MA"><span class="thesis-author">Lin Kaidi</span>「A basic description of Yilan Creole phonology: with a special focus on the Aohua dialect」<a href="files/theses/2021_MA_lin.pdf" class="thesis-download" target="_blank">【download】</a></li>
@@ -285,8 +264,8 @@
       </ul>
     </section>
     <section class="section thesis-section" id="doctor">
-      <h2>📕 博士論文</h2>
-      <div class="thesis-note">公開されている博士論文については、大学リポジトリの公開リンクからPDFに辿り着けるようになっています。</div>
+      <h2>📕 <span data-i18n="section-doctoral">博士論文</span></h2>
+      <div class="thesis-note"><span class="ja">公開されている博士論文については、大学リポジトリの公開リンクからPDFに辿り着けるようになっています。</span><span class="en">Published doctoral dissertations are available through the university repository links below.</span></div>
       <div class="thesis-year">2024年</div>
       <ul class="thesis-list">
         <li data-loc="yanagawa" data-type="PhD"><span class="thesis-author">松岡 葵</span>「福岡県柳川市方言の記述研究」（リポジトリ登録中）</li>
@@ -304,23 +283,34 @@
   </main>
   <footer class="site-footer">
     <div class="footer-content">
-      <div class="footer-section"><h3>下地理則の研究室</h3><p>九州大学大学院人文科学研究院<br>言語学講座</p><p style="margin-top: 1rem;">smz [at] kyudai.jp</p></div>
-      <div class="footer-section"><h3>リンク</h3><a href="https://kyushu-u.academia.edu/MichinoriShimoji" target="_blank" rel="noopener">Academia.edu</a><a href="https://researchmap.jp/read0122330" target="_blank" rel="noopener">Researchmap</a><a href="https://note.com/lingfieldwork" target="_blank" rel="noopener">note</a></div>
-      <div class="footer-section"><h3>サイトマップ</h3><a href="index.html" data-i18n="nav-home">HOME</a><a href="members.html" data-i18n="nav-members">メンバー</a><a href="research.html" data-i18n="nav-research">研究</a><a href="teaching.html" data-i18n="nav-teaching">授業</a></div>
+      <div class="footer-section"><h3 data-i18n="site-title">下地理則の研究室</h3><p data-i18n="footer-affiliation">九州大学大学院人文科学研究院<br>言語学講座</p><p style="margin-top: 1rem;">smz [at] kyudai.jp</p></div>
+      <div class="footer-section"><h3 data-i18n="footer-links">リンク</h3><a href="https://kyushu-u.academia.edu/MichinoriShimoji" target="_blank" rel="noopener">Academia.edu</a><a href="https://researchmap.jp/read0122330" target="_blank" rel="noopener">Researchmap</a><a href="https://note.com/lingfieldwork" target="_blank" rel="noopener">note</a></div>
+      <div class="footer-section"><h3 data-i18n="footer-sitemap">サイトマップ</h3><a href="index.html" data-i18n="nav-home">HOME</a><a href="members.html" data-i18n="nav-members">メンバー</a><a href="research.html" data-i18n="nav-research">研究</a><a href="teaching.html" data-i18n="nav-teaching">授業</a></div>
     </div>
-    <div class="footer-bottom"><p>&copy; 2025 下地理則研究室. All rights reserved.</p></div>
+    <div class="footer-bottom"><p data-i18n="footer-copyright">&copy; 2025 下地理則研究室. All rights reserved.</p></div>
   </footer>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
     function toggleMenu() { document.getElementById('navList').classList.toggle('active'); }
+    
+    // 言語設定を確認してbodyクラスを設定
+    document.addEventListener('DOMContentLoaded', function() {
+      const savedLang = localStorage.getItem('lang');
+      if (savedLang === 'en') {
+        document.body.classList.add('lang-en');
+      }
+    });
     
     // モーダル
     function openModal(name, loc) {
       const modal = document.getElementById('thesisModal');
       const modalTitle = document.getElementById('modalTitle');
       const modalBody = document.getElementById('modalBody');
+      const lang = localStorage.getItem('lang') || 'ja';
       
-      modalTitle.textContent = name + 'の論文';
+      modalTitle.innerHTML = lang === 'en' ? 
+        '<span class="en-inline" style="display:inline">Theses: ' + name + '</span>' : 
+        '<span class="ja-inline" style="display:inline">' + name + 'の論文</span>';
       
       const items = document.querySelectorAll('li[data-loc="' + loc + '"]');
       let html = '';
@@ -333,10 +323,10 @@
         const link = item.querySelector('a');
         const type = item.dataset.type || 'BA';
         
-        let typeLabel = '卒論';
+        let typeLabel = lang === 'en' ? 'BA' : '卒論';
         let typeClass = 'type-ba';
-        if (type === 'MA') { typeLabel = '修論'; typeClass = 'type-ma'; }
-        if (type === 'PhD') { typeLabel = '博論'; typeClass = 'type-phd'; }
+        if (type === 'MA') { typeLabel = lang === 'en' ? 'MA' : '修論'; typeClass = 'type-ma'; }
+        if (type === 'PhD') { typeLabel = lang === 'en' ? 'PhD' : '博論'; typeClass = 'type-phd'; }
         
         html += '<div class="modal-thesis-item">';
         html += '<span class="modal-thesis-type ' + typeClass + '">' + typeLabel + '</span>';
@@ -344,7 +334,7 @@
         if (link) {
           html += '<a href="' + link.href + '" class="modal-thesis-link" target="_blank">【download】</a>';
         }
-        html += '<div class="modal-thesis-title">「' + title + '」' + (titleMatch && titleMatch[2] ? titleMatch[2].replace(/【?download】?/gi, '').trim() : '') + '</div>';
+        html += '<div class="modal-thesis-title">「' + title + '」' + (titleMatch && titleMatch[2] ? titleMatch[2].replace(/【?download】?/gi, '').replace(/【?リポジトリへ】?/gi, '').trim() : '') + '</div>';
         html += '</div>';
       });
       
@@ -360,10 +350,12 @@
       const modal = document.getElementById('thesisModal');
       const modalTitle = document.getElementById('modalTitle');
       const modalBody = document.getElementById('modalBody');
+      const lang = localStorage.getItem('lang') || 'ja';
       
-      modalTitle.textContent = '方言比較研究の論文';
+      modalTitle.innerHTML = lang === 'en' ? 
+        '<span class="en-inline" style="display:inline">Cross-dialectal Studies</span>' : 
+        '<span class="ja-inline" style="display:inline">方言比較研究の論文</span>';
       
-      // 「諸方言」「通方言」「方言比較」「方言間」を含む論文を検索
       const allItems = document.querySelectorAll('.thesis-list li');
       const keywords = ['諸方言', '通方言', '方言比較', '方言間'];
       let html = '';
@@ -379,10 +371,10 @@
           const link = item.querySelector('a');
           const type = item.dataset.type || 'BA';
           
-          let typeLabel = '卒論';
+          let typeLabel = lang === 'en' ? 'BA' : '卒論';
           let typeClass = 'type-ba';
-          if (type === 'MA') { typeLabel = '修論'; typeClass = 'type-ma'; }
-          if (type === 'PhD') { typeLabel = '博論'; typeClass = 'type-phd'; }
+          if (type === 'MA') { typeLabel = lang === 'en' ? 'MA' : '修論'; typeClass = 'type-ma'; }
+          if (type === 'PhD') { typeLabel = lang === 'en' ? 'PhD' : '博論'; typeClass = 'type-phd'; }
           
           html += '<div class="modal-thesis-item">';
           html += '<span class="modal-thesis-type ' + typeClass + '">' + typeLabel + '</span>';
@@ -396,7 +388,7 @@
       });
       
       if (html === '') {
-        html = '<p>該当する論文がありません。</p>';
+        html = lang === 'en' ? '<p>No matching theses found.</p>' : '<p>該当する論文がありません。</p>';
       }
       
       modalBody.innerHTML = html;
@@ -421,39 +413,39 @@
 
     // 研究地点データ
     const locations = [
-      { lat: 43.06, lng: 141.35, name: '北海道', count: 1, color: '#9b59b6', loc: 'hokkaido' },
-      { lat: 40.86, lng: 141.12, name: '青森県野辺地', count: 1, color: '#3498db', loc: 'aomori' },
-      { lat: 36.22, lng: 136.15, name: '福井県三国町', count: 1, color: '#3498db', loc: 'fukui' },
-      { lat: 34.76, lng: 134.84, name: '兵庫県加古川市', count: 1, color: '#3498db', loc: 'hyogo' },
-      { lat: 34.66, lng: 133.93, name: '岡山県', count: 1, color: '#3498db', loc: 'okayama' },
-      { lat: 34.39, lng: 132.45, name: '広島県安芸', count: 1, color: '#3498db', loc: 'hiroshima' },
-      { lat: 33.91, lng: 132.22, name: '山口県周防大島', count: 1, color: '#3498db', loc: 'yamaguchi' },
-      { lat: 34.34, lng: 134.05, name: '香川県', count: 2, color: '#3498db', loc: 'kagawa' },
-      { lat: 34.07, lng: 134.55, name: '徳島県', count: 1, color: '#3498db', loc: 'tokushima' },
-      { lat: 33.84, lng: 132.77, name: '愛媛県', count: 2, color: '#3498db', loc: 'ehime' },
-      { lat: 33.69, lng: 130.98, name: '福岡県京都郡', count: 1, color: '#2ecc71', loc: 'fukuoka-kita' },
-      { lat: 33.59, lng: 130.40, name: '福岡市', count: 3, color: '#2ecc71', loc: 'fukuoka' },
-      { lat: 33.40, lng: 130.56, name: '福岡県小郡市', count: 1, color: '#2ecc71', loc: 'ogori' },
-      { lat: 33.16, lng: 130.41, name: '福岡県柳川市', count: 2, color: '#2ecc71', loc: 'yanagawa' },
-      { lat: 33.25, lng: 130.10, name: '佐賀県', count: 4, color: '#2ecc71', loc: 'saga' },
-      { lat: 32.75, lng: 129.87, name: '長崎市', count: 5, color: '#2ecc71', loc: 'nagasaki' },
-      { lat: 32.84, lng: 130.05, name: '長崎県諫早市', count: 2, color: '#2ecc71', loc: 'isahaya' },
-      { lat: 32.62, lng: 130.37, name: '長崎県島原', count: 3, color: '#2ecc71', loc: 'shimabara' },
-      { lat: 33.37, lng: 129.55, name: '長崎県平戸', count: 1, color: '#2ecc71', loc: 'hirado' },
-      { lat: 33.18, lng: 129.72, name: '長崎県佐世保', count: 1, color: '#2ecc71', loc: 'sasebo' },
-      { lat: 34.20, lng: 129.29, name: '長崎県対馬', count: 1, color: '#2ecc71', loc: 'tsushima' },
-      { lat: 32.70, lng: 128.84, name: '長崎県五島', count: 2, color: '#2ecc71', loc: 'goto' },
-      { lat: 32.79, lng: 130.74, name: '熊本県', count: 4, color: '#2ecc71', loc: 'kumamoto' },
-      { lat: 33.24, lng: 131.61, name: '大分県', count: 1, color: '#2ecc71', loc: 'oita' },
-      { lat: 32.47, lng: 131.14, name: '宮崎県椎葉村', count: 7, color: '#2ecc71', loc: 'shiiba' },
-      { lat: 31.72, lng: 131.07, name: '宮崎県都城市', count: 2, color: '#2ecc71', loc: 'miyakonojo' },
-      { lat: 31.91, lng: 131.42, name: '宮崎市', count: 2, color: '#2ecc71', loc: 'miyazaki' },
-      { lat: 31.59, lng: 130.56, name: '鹿児島市', count: 3, color: '#2ecc71', loc: 'kagoshima' },
-      { lat: 27.73, lng: 128.94, name: '徳之島', count: 1, color: '#e74c3c', loc: 'tokunoshima' },
-      { lat: 26.21, lng: 127.68, name: '沖縄本島', count: 2, color: '#e74c3c', loc: 'okinawa' },
-      { lat: 24.80, lng: 125.28, name: '宮古島', count: 4, color: '#e74c3c', loc: 'miyako' },
-      { lat: 24.34, lng: 124.16, name: '八重山諸島', count: 3, color: '#e74c3c', loc: 'yaeyama' },
-      { lat: 24.76, lng: 121.75, name: '台湾・宜蘭', count: 1, color: '#f39c12', loc: 'taiwan' }
+      { lat: 43.06, lng: 141.35, name: '北海道', nameEn: 'Hokkaido', count: 1, color: '#9b59b6', loc: 'hokkaido' },
+      { lat: 40.86, lng: 141.12, name: '青森県野辺地', nameEn: 'Noheji, Aomori', count: 1, color: '#3498db', loc: 'aomori' },
+      { lat: 36.22, lng: 136.15, name: '福井県三国町', nameEn: 'Mikuni, Fukui', count: 1, color: '#3498db', loc: 'fukui' },
+      { lat: 34.76, lng: 134.84, name: '兵庫県加古川市', nameEn: 'Kakogawa, Hyogo', count: 1, color: '#3498db', loc: 'hyogo' },
+      { lat: 34.66, lng: 133.93, name: '岡山県', nameEn: 'Okayama', count: 1, color: '#3498db', loc: 'okayama' },
+      { lat: 34.39, lng: 132.45, name: '広島県安芸', nameEn: 'Aki, Hiroshima', count: 1, color: '#3498db', loc: 'hiroshima' },
+      { lat: 33.91, lng: 132.22, name: '山口県周防大島', nameEn: 'Suoshima, Yamaguchi', count: 1, color: '#3498db', loc: 'yamaguchi' },
+      { lat: 34.34, lng: 134.05, name: '香川県', nameEn: 'Kagawa', count: 2, color: '#3498db', loc: 'kagawa' },
+      { lat: 34.07, lng: 134.55, name: '徳島県', nameEn: 'Tokushima', count: 1, color: '#3498db', loc: 'tokushima' },
+      { lat: 33.84, lng: 132.77, name: '愛媛県', nameEn: 'Ehime', count: 2, color: '#3498db', loc: 'ehime' },
+      { lat: 33.69, lng: 130.98, name: '福岡県京都郡', nameEn: 'Miyako, Fukuoka', count: 1, color: '#2ecc71', loc: 'fukuoka-kita' },
+      { lat: 33.59, lng: 130.40, name: '福岡市', nameEn: 'Fukuoka City', count: 3, color: '#2ecc71', loc: 'fukuoka' },
+      { lat: 33.40, lng: 130.56, name: '福岡県小郡市', nameEn: 'Ogori, Fukuoka', count: 1, color: '#2ecc71', loc: 'ogori' },
+      { lat: 33.16, lng: 130.41, name: '福岡県柳川市', nameEn: 'Yanagawa, Fukuoka', count: 2, color: '#2ecc71', loc: 'yanagawa' },
+      { lat: 33.25, lng: 130.10, name: '佐賀県', nameEn: 'Saga', count: 4, color: '#2ecc71', loc: 'saga' },
+      { lat: 32.75, lng: 129.87, name: '長崎市', nameEn: 'Nagasaki City', count: 5, color: '#2ecc71', loc: 'nagasaki' },
+      { lat: 32.84, lng: 130.05, name: '長崎県諫早市', nameEn: 'Isahaya, Nagasaki', count: 2, color: '#2ecc71', loc: 'isahaya' },
+      { lat: 32.62, lng: 130.37, name: '長崎県島原', nameEn: 'Shimabara, Nagasaki', count: 3, color: '#2ecc71', loc: 'shimabara' },
+      { lat: 33.37, lng: 129.55, name: '長崎県平戸', nameEn: 'Hirado, Nagasaki', count: 1, color: '#2ecc71', loc: 'hirado' },
+      { lat: 33.18, lng: 129.72, name: '長崎県佐世保', nameEn: 'Sasebo, Nagasaki', count: 1, color: '#2ecc71', loc: 'sasebo' },
+      { lat: 34.20, lng: 129.29, name: '長崎県対馬', nameEn: 'Tsushima, Nagasaki', count: 1, color: '#2ecc71', loc: 'tsushima' },
+      { lat: 32.70, lng: 128.84, name: '長崎県五島', nameEn: 'Goto Islands, Nagasaki', count: 2, color: '#2ecc71', loc: 'goto' },
+      { lat: 32.79, lng: 130.74, name: '熊本県', nameEn: 'Kumamoto', count: 4, color: '#2ecc71', loc: 'kumamoto' },
+      { lat: 33.24, lng: 131.61, name: '大分県', nameEn: 'Oita', count: 1, color: '#2ecc71', loc: 'oita' },
+      { lat: 32.47, lng: 131.14, name: '宮崎県椎葉村', nameEn: 'Shiiba, Miyazaki', count: 7, color: '#2ecc71', loc: 'shiiba' },
+      { lat: 31.72, lng: 131.07, name: '宮崎県都城市', nameEn: 'Miyakonojo, Miyazaki', count: 2, color: '#2ecc71', loc: 'miyakonojo' },
+      { lat: 31.91, lng: 131.42, name: '宮崎市', nameEn: 'Miyazaki City', count: 2, color: '#2ecc71', loc: 'miyazaki' },
+      { lat: 31.59, lng: 130.56, name: '鹿児島市', nameEn: 'Kagoshima City', count: 3, color: '#2ecc71', loc: 'kagoshima' },
+      { lat: 27.73, lng: 128.94, name: '徳之島', nameEn: 'Tokunoshima', count: 1, color: '#e74c3c', loc: 'tokunoshima' },
+      { lat: 26.21, lng: 127.68, name: '沖縄本島', nameEn: 'Okinawa Main Island', count: 2, color: '#e74c3c', loc: 'okinawa' },
+      { lat: 24.80, lng: 125.28, name: '宮古島', nameEn: 'Miyako Islands', count: 4, color: '#e74c3c', loc: 'miyako' },
+      { lat: 24.34, lng: 124.16, name: '八重山諸島', nameEn: 'Yaeyama Islands', count: 3, color: '#e74c3c', loc: 'yaeyama' },
+      { lat: 24.76, lng: 121.75, name: '台湾・宜蘭', nameEn: 'Yilan, Taiwan', count: 1, color: '#f39c12', loc: 'taiwan' }
     ];
 
     // マーカー追加
@@ -469,10 +461,17 @@
       }).addTo(map);
 
       marker.on('click', function() {
-        openModal(loc.name, loc.loc);
+        const lang = localStorage.getItem('lang') || 'ja';
+        const displayName = lang === 'en' ? loc.nameEn : loc.name;
+        openModal(displayName, loc.loc);
       });
       
-      marker.bindTooltip(loc.name + ' (' + loc.count + '件)', {
+      marker.bindTooltip(function() {
+        const lang = localStorage.getItem('lang') || 'ja';
+        const displayName = lang === 'en' ? loc.nameEn : loc.name;
+        const countLabel = lang === 'en' ? ' theses' : '件';
+        return displayName + ' (' + loc.count + countLabel + ')';
+      }, {
         permanent: false,
         direction: 'top',
         offset: [0, -10]
@@ -480,5 +479,22 @@
     });
   </script>
   <script src="js/i18n.js"></script>
+  <script>
+    // i18n.jsロード後、toggleLangをオーバーライドしてbodyクラスも切り替え
+    (function() {
+      const originalToggle = window.i18n ? window.i18n.toggle : null;
+      if (originalToggle) {
+        window.i18n.toggle = function() {
+          originalToggle();
+          const lang = localStorage.getItem('lang') || 'ja';
+          if (lang === 'en') {
+            document.body.classList.add('lang-en');
+          } else {
+            document.body.classList.remove('lang-en');
+          }
+        };
+      }
+    })();
+  </script>
 </body>
 </html>
