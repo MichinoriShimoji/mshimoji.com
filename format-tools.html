@@ -148,22 +148,21 @@
       margin: 0;
       line-height: 1.7;
     }
+    /* i18n styles */
+    .en { display: none; }
+    body.lang-en .ja { display: none; }
+    body.lang-en .en { display: block; }
+    body.lang-en .en-inline { display: inline; }
+    body.lang-en .ja-inline { display: none; }
+    .ja-inline { display: inline; }
+    .en-inline { display: none; }
   </style>
-<!-- Research Artisan Pro Script Tag Start -->
-<script type="text/javascript">
-  var _Ra = {};
-  _Ra.hId = '1';
-  _Ra.uCd = '26010500010465531600';  _Ra.exceptCrawler = true;
-  (function() {var s=document.getElementsByTagName('script')[0],js=document.createElement('script');js.type='text/javascript';js.async='async';js.src='https://analyze.pro.research-artisan.com/track/script.php';s.parentNode.insertBefore(js,s);})();
-</script>
-<noscript><p><img src="https://analyze.pro.research-artisan.com/track/tracker.php?ucd=26010500010465531600&amp;hid=1&amp;guid=ON" alt="" width="1" height="1" /></p></noscript>
-<!-- Research Artisan Pro Script Tag End -->
 </head>
 <body>
   <header class="site-header">
     <div class="header-content">
-      <a href="index.html" class="site-title">下地理則の研究室</a>
-      <p class="site-subtitle">琉球語と日本語方言の研究 | 九州大学言語学講座</p>
+      <a href="index.html" class="site-title" data-i18n="site-title">下地理則の研究室</a>
+      <p class="site-subtitle" data-i18n="site-subtitle">日琉諸語の総合的記述研究 | 九州大学言語学講座</p>
     </div>
   </header>
 
@@ -173,49 +172,52 @@
         <span class="hamburger"></span>
       </button>
       <ul class="nav-list" id="navList">
-        <li class="nav-item"><a href="index.html" class="nav-link">HOME</a></li>
-        <li class="nav-item"><a href="members.html" class="nav-link">メンバー</a></li>
-        <li class="nav-item"><a href="research.html" class="nav-link">研究</a></li>
-        <li class="nav-item"><a href="teaching.html" class="nav-link">授業</a></li>
-        <li class="nav-item"><a href="theses.html" class="nav-link">指導した学位論文</a></li>
-        <li class="nav-item"><a href="irabu.html" class="nav-link">伊良部島方言を知る</a></li>
-        <li class="nav-item"><a href="resources.html" class="nav-link active">方言記述のリソース</a></li>
-        <li class="nav-item"><a href="prospective.html" class="nav-link">大学院志望者へ</a></li>
-          <li class="nav-item"><a href="https://note.com/lingfieldwork" class="nav-link" target="_blank">エッセイ</a></li>
+        <li class="nav-item"><a href="index.html" class="nav-link" data-i18n="nav-home">HOME</a></li>
+        <li class="nav-item"><a href="members.html" class="nav-link" data-i18n="nav-members">メンバー</a></li>
+        <li class="nav-item"><a href="research.html" class="nav-link" data-i18n="nav-research">研究</a></li>
+        <li class="nav-item"><a href="teaching.html" class="nav-link" data-i18n="nav-teaching">授業</a></li>
+        <li class="nav-item"><a href="theses.html" class="nav-link" data-i18n="nav-theses">指導した学位論文</a></li>
+        <li class="nav-item"><a href="irabu.html" class="nav-link" data-i18n="nav-irabu">伊良部島方言を知る</a></li>
+        <li class="nav-item"><a href="resources.html" class="nav-link active" data-i18n="nav-resources">記述のリソース</a></li>
+        <li class="nav-item"><a href="prospective.html" class="nav-link" data-i18n="nav-prospective">大学院志望者へ</a></li>
+        <li class="nav-item"><a href="https://note.com/lingfieldwork" class="nav-link" target="_blank" data-i18n="nav-essay">エッセイ</a></li>
       </ul>
+      <button id="langToggle" class="lang-toggle" onclick="toggleLang()" style="background:transparent;border:1px solid #333;color:#333;padding:0.3rem 0.6rem;border-radius:4px;cursor:pointer;font-size:0.85rem;margin-left:auto;">EN</button>
     </div>
   </nav>
 
   <main class="main-content">
     <section class="page-hero">
-      <h1 class="page-title">例文提示フォーマットツール</h1>
-      <p class="page-description">Interlinear Glossed Textへの自動変換ツール</p>
+      <h1 class="page-title"><span class="ja">例文提示フォーマットツール</span><span class="en">Tools for Formatting Interlinear Glossed Text</span></h1>
+      <p class="page-description"><span class="ja">Interlinear Glossed Textへの自動変換ツール</span><span class="en">Automatic conversion tools for Interlinear Glossed Text</span></p>
     </section>
 
     <section class="section">
-      <a href="glossing.html" class="back-link">← グロスづけ支援に戻る</a>
+      <a href="glossing.html" class="back-link"><span class="ja-inline">← グロスづけ支援に戻る</span><span class="en-inline">← Back to Glossing Support</span></a>
       
       <div class="section-intro">
-        <p>エクセルで、あるいはELANファイルで管理している例文データを、一般的な例文提示フォーマット（Interlinear Glossed Text）に自動で整えてくれるツールを紹介します。開発は下地理則。</p>
+        <p class="ja">エクセルで、あるいはELANファイルで管理している例文データを、一般的な例文提示フォーマット（Interlinear Glossed Text）に自動で整えてくれるツールを紹介します。開発は下地理則。</p>
+        <p class="en">We introduce tools that automatically format example data managed in Excel or ELAN files into the standard Interlinear Glossed Text (IGT) format. Developed by Michinori Shimoji.</p>
       </div>
 
       <div class="tool-card">
         <h3>🛠️ IGT Builder</h3>
-        <p>エクセルファイルに (1) 方言テクスト、(2) 形態素ごとのグロス、(3) 全文訳を書いて管理しておけば、あとはエクセルをアップロードするだけで綺麗なIGT形式にしてWordで吐き出します。画像保存もできるのでPPT資料などにも便利です。</p>
+        <p class="ja">エクセルファイルに (1) 方言テクスト、(2) 形態素ごとのグロス、(3) 全文訳を書いて管理しておけば、あとはエクセルをアップロードするだけで綺麗なIGT形式にしてWordで吐き出します。画像保存もできるのでPPT資料などにも便利です。</p>
+        <p class="en">If you manage your data in Excel with (1) dialect text, (2) morpheme-by-morpheme glosses, and (3) free translations, simply upload the file to get cleanly formatted IGT output in Word. You can also save as images for use in PowerPoint presentations.</p>
         
         <div class="tool-links">
-          <a href="https://michinorishimoji.github.io/igtbuilder/" class="tool-link" target="_blank" rel="noopener">IGT Builderを使う</a>
-          <a href="https://note.com/lingfieldwork/n/n4cfe40d52597" class="tool-link secondary" target="_blank" rel="noopener">使い方の解説記事</a>
+          <a href="https://michinorishimoji.github.io/igtbuilder/" class="tool-link" target="_blank" rel="noopener"><span class="ja-inline">IGT Builderを使う</span><span class="en-inline">Use IGT Builder</span></a>
+          <a href="https://note.com/lingfieldwork/n/n4cfe40d52597" class="tool-link secondary" target="_blank" rel="noopener"><span class="ja-inline">使い方の解説記事</span><span class="en-inline">How-to Guide</span></a>
         </div>
 
         <div class="download-section">
-          <h4>📥 テンプレートファイル</h4>
+          <h4><span class="ja-inline">📥 テンプレートファイル</span><span class="en-inline">📥 Template Files</span></h4>
           <div class="download-links">
             <a href="files/igt3_template.xlsx" class="download-link" download>
-              <span>📄</span> 3行IGT用テンプレート
+              <span>📄</span> <span class="ja-inline">3行IGT用テンプレート</span><span class="en-inline">3-line IGT Template</span>
             </a>
             <a href="files/igt4_template.xlsx" class="download-link" download>
-              <span>📄</span> 4行IGT用テンプレート
+              <span>📄</span> <span class="ja-inline">4行IGT用テンプレート</span><span class="en-inline">4-line IGT Template</span>
             </a>
           </div>
         </div>
@@ -223,24 +225,25 @@
 
       <div class="tool-card">
         <h3>🔧 eaftox</h3>
-        <p>ELANのeafファイルにある例文データを文単位に自動で切り出し、音声ファイルも同時に切り出し、文ごとにLaTeXのgb4eスタイルのリストとtxtファイルのIGT形式リストを吐き出します。普段LaTeXを使う人はeaftoxが便利です。</p>
+        <p class="ja">ELANのeafファイルにある例文データを文単位に自動で切り出し、音声ファイルも同時に切り出し、文ごとにLaTeXのgb4eスタイルのリストとtxtファイルのIGT形式リストを吐き出します。普段LaTeXを使う人はeaftoxが便利です。</p>
+        <p class="en">Automatically extracts example data from ELAN .eaf files sentence by sentence, along with corresponding audio clips, and outputs LaTeX gb4e-style lists and IGT-formatted .txt files for each sentence. Ideal for LaTeX users.</p>
         
         <div class="tool-links">
-          <a href="https://huggingface.co/spaces/mchnr/eaftox_general" class="tool-link" target="_blank" rel="noopener">eaftoxを使う</a>
-          <a href="https://note.com/lingfieldwork/n/nb2eb90735124" class="tool-link secondary" target="_blank" rel="noopener">使い方の解説記事</a>
+          <a href="https://huggingface.co/spaces/mchnr/eaftox_general" class="tool-link" target="_blank" rel="noopener"><span class="ja-inline">eaftoxを使う</span><span class="en-inline">Use eaftox</span></a>
+          <a href="https://note.com/lingfieldwork/n/nb2eb90735124" class="tool-link secondary" target="_blank" rel="noopener"><span class="ja-inline">使い方の解説記事</span><span class="en-inline">How-to Guide</span></a>
         </div>
 
         <div class="video-section">
-          <h4>🎬 動画解説</h4>
+          <h4><span class="ja-inline">🎬 動画解説</span><span class="en-inline">🎬 Video Tutorials</span></h4>
           <div class="video-links">
             <a href="https://youtu.be/NNW2wkHzgZI" class="video-link" target="_blank" rel="noopener">
-              <span>▶️</span> 3行IGT
+              <span>▶️</span> <span class="ja-inline">3行IGT</span><span class="en-inline">3-line IGT</span>
             </a>
             <a href="https://youtu.be/bE-nyYU-cpI" class="video-link" target="_blank" rel="noopener">
-              <span>▶️</span> 4行IGT
+              <span>▶️</span> <span class="ja-inline">4行IGT</span><span class="en-inline">4-line IGT</span>
             </a>
             <a href="https://youtu.be/DH_kwuOksnE" class="video-link" target="_blank" rel="noopener">
-              <span>▶️</span> 3行簡易
+              <span>▶️</span> <span class="ja-inline">3行簡易</span><span class="en-inline">3-line Simple</span>
             </a>
           </div>
         </div>
@@ -252,26 +255,26 @@
   <footer class="site-footer">
     <div class="footer-content">
       <div class="footer-section">
-        <h3>下地理則の研究室</h3>
-        <p>九州大学大学院人文科学研究院<br>言語学講座</p>
+        <h3 data-i18n="site-title">下地理則の研究室</h3>
+        <p data-i18n="footer-affiliation">九州大学大学院人文科学研究院<br>言語学講座</p>
         <p style="margin-top: 1rem;">smz [at] kyudai.jp</p>
       </div>
       <div class="footer-section">
-        <h3>リンク</h3>
+        <h3 data-i18n="footer-links">リンク</h3>
         <a href="https://kyushu-u.academia.edu/MichinoriShimoji" target="_blank" rel="noopener">Academia.edu</a>
         <a href="https://researchmap.jp/read0122330" target="_blank" rel="noopener">Researchmap</a>
         <a href="https://note.com/lingfieldwork" target="_blank" rel="noopener">note</a>
       </div>
       <div class="footer-section">
-        <h3>サイトマップ</h3>
-        <a href="index.html">HOME</a>
-        <a href="members.html">メンバー</a>
-        <a href="research.html">研究</a>
-        <a href="teaching.html">授業</a>
+        <h3 data-i18n="footer-sitemap">サイトマップ</h3>
+        <a href="index.html" data-i18n="nav-home">HOME</a>
+        <a href="members.html" data-i18n="nav-members">メンバー</a>
+        <a href="research.html" data-i18n="nav-research">研究</a>
+        <a href="teaching.html" data-i18n="nav-teaching">授業</a>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>&copy; 2025 下地理則研究室. All rights reserved.</p>
+      <p data-i18n="footer-copyright">&copy; 2025 下地理則研究室. All rights reserved.</p>
     </div>
   </footer>
 
@@ -279,6 +282,41 @@
     function toggleMenu() {
       document.getElementById('navList').classList.toggle('active');
     }
+    
+    // 言語設定を確認してbodyクラスを設定
+    document.addEventListener('DOMContentLoaded', function() {
+      const savedLang = localStorage.getItem('lang');
+      if (savedLang === 'en') {
+        document.body.classList.add('lang-en');
+      }
+    });
   </script>
+  <script src="js/i18n.js"></script>
+  <script>
+    // i18n.jsロード後、toggleLangをオーバーライドしてbodyクラスも切り替え
+    (function() {
+      const originalToggle = window.i18n ? window.i18n.toggle : null;
+      if (originalToggle) {
+        window.i18n.toggle = function() {
+          originalToggle();
+          const lang = localStorage.getItem('lang') || 'ja';
+          if (lang === 'en') {
+            document.body.classList.add('lang-en');
+          } else {
+            document.body.classList.remove('lang-en');
+          }
+        };
+      }
+    })();
+  </script>
+<!-- Research Artisan Pro Script Tag Start -->
+<script type="text/javascript">
+  var _Ra = {};
+  _Ra.hId = '1';
+  _Ra.uCd = '26010500010465531600';
+  (function() {var s=document.getElementsByTagName('script')[0],js=document.createElement('script');js.type='text/javascript';js.async='async';js.src='https://analyze.pro.research-artisan.com/track/script.php';s.parentNode.insertBefore(js,s);})();
+</script>
+<noscript><p><img src="https://analyze.pro.research-artisan.com/track/tracker.php?ucd=26010500010465531600&amp;hid=1&amp;guid=ON" alt="" width="1" height="1" /></p></noscript>
+<!-- Research Artisan Pro Script Tag End   -->
 </body>
 </html>
