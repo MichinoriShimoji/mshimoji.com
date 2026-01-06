@@ -7,57 +7,75 @@
   <title>大学院志望者へ | 下地理則の研究室</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>">
+  <style>
+    /* i18n styles */
+    .en { display: none; }
+    body.lang-en .ja { display: none; }
+    body.lang-en .en { display: block; }
+    body.lang-en .en-inline { display: inline; }
+    body.lang-en .ja-inline { display: none; }
+    .ja-inline { display: inline; }
+    .en-inline { display: none; }
+  </style>
 </head>
 <body>
-  <!-- ヘッダー -->
   <header class="site-header">
     <div class="header-content">
-      <a href="index.html" class="site-title">下地理則の研究室</a>
-      <p class="site-subtitle">琉球語と日本語方言の研究 | 九州大学言語学講座</p>
+      <a href="index.html" class="site-title" data-i18n="site-title">下地理則の研究室</a>
+      <p class="site-subtitle" data-i18n="site-subtitle">日琉諸語の総合的記述研究 | 九州大学言語学講座</p>
     </div>
   </header>
 
-  <!-- ナビゲーション -->
   <nav class="main-nav">
     <div class="nav-container">
       <button class="mobile-menu-btn" aria-label="メニュー" onclick="toggleMenu()">
         <span class="hamburger"></span>
       </button>
       <ul class="nav-list" id="navList">
-        <li class="nav-item"><a href="index.html" class="nav-link">HOME</a></li>
-        <li class="nav-item"><a href="members.html" class="nav-link">メンバー</a></li>
-        <li class="nav-item"><a href="research.html" class="nav-link">研究</a></li>
-        <li class="nav-item"><a href="teaching.html" class="nav-link">授業</a></li>
-        <li class="nav-item"><a href="theses.html" class="nav-link">指導した学位論文</a></li>
-        <li class="nav-item"><a href="irabu.html" class="nav-link">伊良部島方言を知る</a></li>
-        <li class="nav-item"><a href="resources.html" class="nav-link">記述のリソース</a></li>
-        <li class="nav-item"><a href="prospective.html" class="nav-link active">大学院志望者へ</a></li>
+        <li class="nav-item"><a href="index.html" class="nav-link" data-i18n="nav-home">HOME</a></li>
+        <li class="nav-item"><a href="members.html" class="nav-link" data-i18n="nav-members">メンバー</a></li>
+        <li class="nav-item"><a href="research.html" class="nav-link" data-i18n="nav-research">研究</a></li>
+        <li class="nav-item"><a href="teaching.html" class="nav-link" data-i18n="nav-teaching">授業</a></li>
+        <li class="nav-item"><a href="theses.html" class="nav-link" data-i18n="nav-theses">指導した学位論文</a></li>
+        <li class="nav-item"><a href="irabu.html" class="nav-link" data-i18n="nav-irabu">伊良部島方言を知る</a></li>
+        <li class="nav-item"><a href="resources.html" class="nav-link" data-i18n="nav-resources">記述のリソース</a></li>
+        <li class="nav-item"><a href="prospective.html" class="nav-link active" data-i18n="nav-prospective">大学院志望者へ</a></li>
         <li class="nav-item"><a href="https://note.com/lingfieldwork" class="nav-link" target="_blank" data-i18n="nav-essay">エッセイ</a></li>
       </ul>
+      <button id="langToggle" class="lang-toggle" onclick="toggleLang()" style="background:transparent;border:1px solid #333;color:#333;padding:0.3rem 0.6rem;border-radius:4px;cursor:pointer;font-size:0.85rem;margin-left:auto;">EN</button>
     </div>
   </nav>
 
-  <!-- メインコンテンツ -->
   <main class="main-content">
     <section class="page-hero">
-      <h1 class="page-title">大学院志望者へ</h1>
-      <p class="page-description">新しい方言研究を一緒に目指す仲間を求めています</p>
+      <h1 class="page-title" data-i18n="nav-prospective">大学院志望者へ</h1>
+      <p class="page-description"><span class="ja">新しい方言研究を一緒に目指す仲間を求めています</span><span class="en">Seeking colleagues to pursue new directions in dialect research</span></p>
     </section>
 
     <!-- セクション1 -->
     <div class="numbered-section">
       <div class="numbered-section-number">01</div>
       <div class="numbered-section-content">
-        <h3>「学びたいこと」と「指導できること」のミスマッチを防ぐために</h3>
-        <p>
+        <h3><span class="ja-inline">「学びたいこと」と「指導できること」のミスマッチを防ぐために</span><span class="en-inline">Avoiding Mismatches Between What You Want to Learn and What I Can Teach</span></h3>
+        <p class="ja">
           あなたの関心や計画が、以下の項目にあてはまるほど、下地研で学ぶのに適しています。もし、すべて満たすなら、迷わず下地研にどうぞ。もし、全くあてはまらないなら、下地研で学ぶメリットは全くないと言え、他の研究室を探すことを強く勧めます。
         </p>
-        <ul style="margin-top:var(--spacing-sm);margin-left:var(--spacing-md);color:var(--color-text-light);">
+        <p class="en">
+          The more your interests and plans match the following criteria, the better suited you are to study in the Shimoji Lab. If you meet all of them, don't hesitate to apply. If none apply to you, there would be no benefit in joining our lab, and I strongly recommend looking for another laboratory.
+        </p>
+        <ul class="ja" style="margin-top:var(--spacing-sm);margin-left:var(--spacing-md);color:var(--color-text-light);">
           <li>①琉球語や国内の方言を対象にする。</li>
           <li>②現地調査でデータを得るフィールド言語学的方法論を好む。</li>
           <li>③総合的な記述（記述文法、辞書など）を行いたいと考えている。</li>
           <li>④当該語族の研究を超えて、通言語的な視点をもって研究したい。</li>
           <li>⑤英語が得意か、少なくとも英語で書かれた文献を読む意欲がある。</li>
+        </ul>
+        <ul class="en" style="margin-top:var(--spacing-sm);margin-left:var(--spacing-md);color:var(--color-text-light);">
+          <li>① You focus on Ryukyuan languages or dialects within Japan.</li>
+          <li>② You prefer field linguistics methodology involving data collection through fieldwork.</li>
+          <li>③ You want to produce comprehensive descriptions (descriptive grammars, dictionaries, etc.).</li>
+          <li>④ You want to conduct research with a cross-linguistic perspective, beyond just this language family.</li>
+          <li>⑤ You are proficient in English, or at least willing to read literature written in English.</li>
         </ul>
       </div>
     </div>
@@ -66,21 +84,34 @@
     <div class="numbered-section">
       <div class="numbered-section-number">02</div>
       <div class="numbered-section-content">
-        <h3>下地研で君が受ける研究指導の実際</h3>
-        <p>
+        <h3><span class="ja-inline">下地研で君が受ける研究指導の実際</span><span class="en-inline">What Research Supervision Looks Like in the Shimoji Lab</span></h3>
+        <p class="ja">
           指導体制は、①レギュラーな（毎週ベースの）指導と、②共同調査での実地指導、③研究会参加による研修からなります。このほか、自主的な勉強会を企画している学生もいます。
         </p>
-        <p style="margin-top:var(--spacing-sm);">
+        <p class="en">
+          The supervision system consists of: ① Regular (weekly) instruction, ② Hands-on training through joint fieldwork, and ③ Training through participation in research meetings. In addition, some students organize their own study groups.
+        </p>
+        <p class="ja" style="margin-top:var(--spacing-sm);">
           ①は、院ゼミ（言語学講座のほかの教員の研究室とも合同）、院演習（基本的に下地研の学生と、聴講生）、論文指導（下地研で修士・博士論文を書く段階に入った学生の個人指導）です。
         </p>
-        <p style="margin-top:var(--spacing-sm);">
+        <p class="en" style="margin-top:var(--spacing-sm);">
+          ① includes: Graduate seminars (jointly with other linguistics faculty labs), graduate exercises (primarily for Shimoji Lab students and auditors), and thesis supervision (individual guidance for students writing their master's or doctoral dissertations).
+        </p>
+        <p class="ja" style="margin-top:var(--spacing-sm);">
           ②は、下地の競争的資金の調査の研究協力者として共同で調査し、その成果を学会に公表していく実戦的なものであり、これまで合計40人以上が参加しています。
         </p>
-        <p style="margin-top:var(--spacing-sm);">
+        <p class="en" style="margin-top:var(--spacing-sm);">
+          ② involves participating as research collaborators in fieldwork funded by competitive grants, with practical experience presenting findings at academic conferences. More than 40 people have participated so far.
+        </p>
+        <p class="ja" style="margin-top:var(--spacing-sm);">
           ③は、下地研が、研究上の人脈をフルに使って企画する研究会で発表してもらい、研究者との交流を図るものです。もちろん、既存の学会にエントリーする場合もあります。
         </p>
+        <p class="en" style="margin-top:var(--spacing-sm);">
+          ③ involves presenting at research meetings organized using our full research network, facilitating interaction with researchers. Of course, students also present at established conferences.
+        </p>
         <p style="margin-top:var(--spacing-sm);">
-          直近の年度の授業とフィールドワークについては<a href="teaching.html">授業のページ</a>も参照してください。
+          <span class="ja">直近の年度の授業とフィールドワークについては<a href="teaching.html">授業のページ</a>も参照してください。</span>
+          <span class="en">Please also see the <a href="teaching.html">Teaching page</a> for information about recent courses and fieldwork.</span>
         </p>
       </div>
     </div>
@@ -89,12 +120,18 @@
     <div class="numbered-section">
       <div class="numbered-section-number">03</div>
       <div class="numbered-section-content">
-        <h3>新しい方言研究を一緒に目指す仲間を求めています</h3>
-        <p>
+        <h3><span class="ja-inline">新しい方言研究を一緒に目指す仲間を求めています</span><span class="en-inline">Seeking Colleagues to Pursue New Directions in Dialect Research</span></h3>
+        <p class="ja">
           下地研では、日本語の方言や琉球語の記述研究を通して、新しい方言研究の方向性を常に模索していくような仲間を求めています。具体的には、１つの方言を独立した言語体系として扱い、記述文法や辞書、談話集を作っていくこと、そのようなしっかりした土台の元に、方言同士を比較していく方言類型論的研究、さらに、これらの全ての研究において、常に通言語的な観点を持ち込んで、個別性と普遍性をバランスよく追求していく研究を目指しています。
         </p>
-        <p style="margin-top:var(--spacing-sm);">
+        <p class="en">
+          The Shimoji Lab seeks colleagues who, through descriptive research on Japanese dialects and Ryukyuan languages, constantly explore new directions in dialect research. Specifically, we aim to treat each dialect as an independent linguistic system, creating descriptive grammars, dictionaries, and discourse collections. Based on this solid foundation, we pursue dialectal typological research comparing dialects, always bringing cross-linguistic perspectives to all research and balancing the pursuit of particularity and universality.
+        </p>
+        <p class="ja" style="margin-top:var(--spacing-sm);">
           そのような取り組みを行う上で、下地研には、教員も学生も同じ立場で、古臭い上下関係などなく、チームとして自由に発言し、学び合い、協力する文化があります。そのような文化を求め、また一緒に作っていく学生を歓迎します。
+        </p>
+        <p class="en" style="margin-top:var(--spacing-sm);">
+          In pursuing these goals, the Shimoji Lab has a culture where faculty and students stand as equals, free from outdated hierarchies, speaking freely as a team, learning from each other, and cooperating. We welcome students who seek such a culture and want to help build it.
         </p>
       </div>
     </div>
@@ -103,12 +140,18 @@
     <div class="numbered-section">
       <div class="numbered-section-number">04</div>
       <div class="numbered-section-content">
-        <h3>研究者になりたい学生を歓迎します</h3>
-        <p>
+        <h3><span class="ja-inline">研究者になりたい学生を歓迎します</span><span class="en-inline">We Welcome Students Who Want to Become Researchers</span></h3>
+        <p class="ja">
           下地研では、研究者になろうと考えている学生を受け入れます。大学院進学の動機は、このほかにも例えば高校教員の専修免許の取得や、修士課程の期間を使っての就活などがありえますが、下地研では博士課程への進学を予定している学生のみを受け入れます。
         </p>
-        <p style="margin-top:var(--spacing-sm);">
+        <p class="en">
+          The Shimoji Lab accepts students who intend to become researchers. While there are other motivations for graduate study—such as obtaining an advanced teaching license or job hunting during the master's program—the Shimoji Lab only accepts students who plan to continue to the doctoral program.
+        </p>
+        <p class="ja" style="margin-top:var(--spacing-sm);">
           それは、教員が持っている研究リソース（研究指導の時間、調査旅費の補助、学振申請に関する指導、共同研究など業績づくりの機会、研究人脈の構築）を効率的に集中投下するためです。言い換えれば、下地研に入る学生に対する研究者養成のための指導体制は整っています。丁寧な研究指導と調査旅費の支援、共同発表、研究コミュニティの紹介などの研究リソースを使って、自立した研究者を育てていきます。
+        </p>
+        <p class="en" style="margin-top:var(--spacing-sm);">
+          This is to efficiently concentrate the research resources available to faculty (time for supervision, travel funding for fieldwork, guidance on JSPS fellowship applications, opportunities for building track records through collaborative research, and building research networks). In other words, the supervision system for training researchers is well established for students joining the Shimoji Lab. Using research resources such as careful supervision, fieldwork travel support, collaborative presentations, and introductions to the research community, we nurture independent researchers.
         </p>
       </div>
     </div>
@@ -117,18 +160,30 @@
     <div class="numbered-section">
       <div class="numbered-section-number">05</div>
       <div class="numbered-section-content">
-        <h3>どんな準備が必要か</h3>
-        <p>
+        <h3><span class="ja-inline">どんな準備が必要か</span><span class="en-inline">What Preparation Is Needed</span></h3>
+        <p class="ja">
           下地研で学ぶためには、九州大学大学院人文科学府（言語学）の入学試験に合格する必要があります。国内にいる学生なら、ゲストとして授業に参加したり、実習（調査）に参加して下地研の雰囲気を感じることもできます。遠慮なく連絡をとるようにしてください。
         </p>
-        <p style="margin-top:var(--spacing-sm);">
+        <p class="en">
+          To study in the Shimoji Lab, you must pass the entrance examination for the Graduate School of Humanities at Kyushu University (Linguistics). Students in Japan can participate in classes as guests or join fieldwork training to get a feel for the lab atmosphere. Please don't hesitate to contact us.
+        </p>
+        <p class="ja" style="margin-top:var(--spacing-sm);">
           なお、留学生の場合は、まず研究生からスタートして、授業をとりながら実力をつけ、院試の準備をするというパターンがほとんどです。
         </p>
-        <p style="margin-top:var(--spacing-sm);">
-          国内学生であれ留学生であれ、下地研で学びたいと考えたら、まずは上記の「学びたいことと指導できることのミスマッチを防ぐために」で示した５項目をよく読み、４つ以上当てはまる場合に限り、メール(<a href="mailto:smz@kyudai.jp">smz [at] kyudai.jp</a>)で連絡をとり、研究計画について相談するようにしてください。
+        <p class="en" style="margin-top:var(--spacing-sm);">
+          For international students, the typical pattern is to start as a research student, build skills while taking classes, and prepare for the entrance examination.
         </p>
-        <p style="margin-top:var(--spacing-sm);color:var(--color-accent);">
+        <p class="ja" style="margin-top:var(--spacing-sm);">
+          国内学生であれ留学生であれ、下地研で学びたいと考えたら、まずは上記の「学びたいことと指導できることのミスマッチを防ぐために」で示した５項目をよく読み、４つ以上当てはまる場合に限り、メール(smz [at] kyudai.jp)で連絡をとり、研究計画について相談するようにしてください。
+        </p>
+        <p class="en" style="margin-top:var(--spacing-sm);">
+          Whether you are a domestic or international student, if you want to study in the Shimoji Lab, first carefully read the five criteria listed above under "Avoiding Mismatches." Only if four or more criteria apply to you should you contact me by email (smz [at] kyudai.jp) to discuss your research plans.
+        </p>
+        <p class="ja" style="margin-top:var(--spacing-sm);color:var(--color-accent);">
           毎年、２０件〜３０件の問い合わせを受けますが、私から積極的にコンタクトをとるのは全て４項目以上を満たす計画を提示する学生に対してです。
+        </p>
+        <p class="en" style="margin-top:var(--spacing-sm);color:var(--color-accent);">
+          I receive 20–30 inquiries each year, but I proactively follow up only with students who present plans meeting four or more of the criteria.
         </p>
       </div>
     </div>
@@ -136,41 +191,39 @@
     <!-- お問い合わせ -->
     <section class="section">
       <div style="background:var(--color-sea-foam);padding:var(--spacing-xl);border-radius:12px;text-align:center;">
-        <h3 style="font-family:var(--font-serif);color:var(--color-primary-dark);margin-bottom:var(--spacing-md);">お問い合わせ</h3>
+        <h3 style="font-family:var(--font-serif);color:var(--color-primary-dark);margin-bottom:var(--spacing-md);"><span class="ja-inline">お問い合わせ</span><span class="en-inline">Contact</span></h3>
         <p style="color:var(--color-text-light);margin-bottom:var(--spacing-md);">
-          大学院進学についてのご相談は、メールでお気軽にご連絡ください。
+          <span class="ja">大学院進学についてのご相談は、メールでお気軽にご連絡ください。</span>
+          <span class="en">For inquiries about graduate admission, please feel free to contact me by email.</span>
         </p>
         <a href="mailto:smz@kyudai.jp" class="btn btn-primary">smz [at] kyudai.jp</a>
       </div>
     </section>
   </main>
 
-  <!-- フッター -->
   <footer class="site-footer">
     <div class="footer-content">
       <div class="footer-section">
-        <h3>下地理則の研究室</h3>
-        <p>九州大学大学院人文科学研究院<br>言語学講座</p>
-        <p style="margin-top: 1rem;">
-          <a href="mailto:smz@kyudai.jp">smz [at] kyudai.jp</a>
-        </p>
+        <h3 data-i18n="site-title">下地理則の研究室</h3>
+        <p data-i18n="footer-affiliation">九州大学大学院人文科学研究院<br>言語学講座</p>
+        <p style="margin-top: 1rem;">smz [at] kyudai.jp</p>
       </div>
       <div class="footer-section">
-        <h3>リンク</h3>
+        <h3 data-i18n="footer-links">リンク</h3>
         <a href="https://kyushu-u.academia.edu/MichinoriShimoji" target="_blank" rel="noopener">Academia.edu</a>
         <a href="https://researchmap.jp/read0122330" target="_blank" rel="noopener">Researchmap</a>
         <a href="https://note.com/lingfieldwork" target="_blank" rel="noopener">note</a>
       </div>
       <div class="footer-section">
-        <h3>サイトマップ</h3>
-        <a href="index.html">HOME</a>
-        <a href="members.html">メンバー</a>
-        <a href="research.html">研究</a>
-        <a href="teaching.html">授業</a>
+        <h3 data-i18n="footer-sitemap">サイトマップ</h3>
+        <a href="index.html" data-i18n="nav-home">HOME</a>
+        <a href="members.html" data-i18n="nav-members">メンバー</a>
+        <a href="research.html" data-i18n="nav-research">研究</a>
+        <a href="teaching.html" data-i18n="nav-teaching">授業</a>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>&copy; 2025 下地理則研究室. All rights reserved.</p>
+      <p data-i18n="footer-copyright">&copy; 2025 下地理則研究室. All rights reserved.</p>
     </div>
   </footer>
 
@@ -178,22 +231,33 @@
     function toggleMenu() {
       document.getElementById('navList').classList.toggle('active');
     }
-  </script>
-
-
-    <div class="footer-bottom">
-      <p>&copy; 2025 下地理則研究室. All rights reserved.</p>
-    </div>
-  </footer>
-
-  <script>
-    function toggleMenu() {
-      document.getElementById('navList').classList.toggle('active');
-    }
+    
+    // 言語設定を確認してbodyクラスを設定
+    document.addEventListener('DOMContentLoaded', function() {
+      const savedLang = localStorage.getItem('lang');
+      if (savedLang === 'en') {
+        document.body.classList.add('lang-en');
+      }
+    });
   </script>
   <script src="js/i18n.js"></script>
-
-
+  <script>
+    // i18n.jsロード後、toggleLangをオーバーライドしてbodyクラスも切り替え
+    (function() {
+      const originalToggle = window.i18n ? window.i18n.toggle : null;
+      if (originalToggle) {
+        window.i18n.toggle = function() {
+          originalToggle();
+          const lang = localStorage.getItem('lang') || 'ja';
+          if (lang === 'en') {
+            document.body.classList.add('lang-en');
+          } else {
+            document.body.classList.remove('lang-en');
+          }
+        };
+      }
+    })();
+  </script>
 <!-- Research Artisan Pro Script Tag Start -->
 <script type="text/javascript">
   var _Ra = {};
