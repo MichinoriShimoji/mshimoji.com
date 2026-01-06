@@ -57,147 +57,148 @@
       background: #fef3c7;
       color: #92400e;
     }
+    /* i18n styles */
+    .en { display: none; }
+    body.lang-en .ja { display: none; }
+    body.lang-en .en { display: block; }
+    body.lang-en .en-inline { display: inline; }
+    body.lang-en .ja-inline { display: none; }
+    .ja-inline { display: inline; }
+    .en-inline { display: none; }
   </style>
-<!-- Research Artisan Pro Script Tag Start -->
-<script type="text/javascript">
-  var _Ra = {};
-  _Ra.hId = '1';
-  _Ra.uCd = '26010500010465531600';  _Ra.exceptCrawler = true;
-  (function() {var s=document.getElementsByTagName('script')[0],js=document.createElement('script');js.type='text/javascript';js.async='async';js.src='https://analyze.pro.research-artisan.com/track/script.php';s.parentNode.insertBefore(js,s);})();
-</script>
-<noscript><p><img src="https://analyze.pro.research-artisan.com/track/tracker.php?ucd=26010500010465531600&amp;hid=1&amp;guid=ON" alt="" width="1" height="1" /></p></noscript>
-<!-- Research Artisan Pro Script Tag End -->
 </head>
 <body>
-  <!-- ヘッダー -->
   <header class="site-header">
     <div class="header-content">
-      <a href="index.html" class="site-title">下地理則の研究室</a>
-      <p class="site-subtitle">琉球語と日本語方言の研究 | 九州大学言語学講座</p>
+      <a href="index.html" class="site-title" data-i18n="site-title">下地理則の研究室</a>
+      <p class="site-subtitle" data-i18n="site-subtitle">日琉諸語の総合的記述研究 | 九州大学言語学講座</p>
     </div>
   </header>
 
-  <!-- ナビゲーション -->
   <nav class="main-nav">
     <div class="nav-container">
       <button class="mobile-menu-btn" aria-label="メニュー" onclick="toggleMenu()">
         <span class="hamburger"></span>
       </button>
       <ul class="nav-list" id="navList">
-        <li class="nav-item"><a href="index.html" class="nav-link">HOME</a></li>
-        <li class="nav-item"><a href="members.html" class="nav-link">メンバー</a></li>
-        <li class="nav-item"><a href="research.html" class="nav-link">研究</a></li>
-        <li class="nav-item"><a href="teaching.html" class="nav-link">授業</a></li>
-        <li class="nav-item"><a href="theses.html" class="nav-link">指導した学位論文</a></li>
-        <li class="nav-item"><a href="irabu.html" class="nav-link">伊良部島方言を知る</a></li>
-        <li class="nav-item"><a href="resources.html" class="nav-link">方言記述のリソース</a></li>
-        <li class="nav-item"><a href="prospective.html" class="nav-link">大学院志望者へ</a></li>
-          <li class="nav-item"><a href="https://note.com/lingfieldwork" class="nav-link" target="_blank">エッセイ</a></li>
+        <li class="nav-item"><a href="index.html" class="nav-link" data-i18n="nav-home">HOME</a></li>
+        <li class="nav-item"><a href="members.html" class="nav-link" data-i18n="nav-members">メンバー</a></li>
+        <li class="nav-item"><a href="research.html" class="nav-link" data-i18n="nav-research">研究</a></li>
+        <li class="nav-item"><a href="teaching.html" class="nav-link" data-i18n="nav-teaching">授業</a></li>
+        <li class="nav-item"><a href="theses.html" class="nav-link" data-i18n="nav-theses">指導した学位論文</a></li>
+        <li class="nav-item"><a href="irabu.html" class="nav-link active" data-i18n="nav-irabu">伊良部島方言を知る</a></li>
+        <li class="nav-item"><a href="resources.html" class="nav-link" data-i18n="nav-resources">記述のリソース</a></li>
+        <li class="nav-item"><a href="prospective.html" class="nav-link" data-i18n="nav-prospective">大学院志望者へ</a></li>
+        <li class="nav-item"><a href="https://note.com/lingfieldwork" class="nav-link" target="_blank" data-i18n="nav-essay">エッセイ</a></li>
       </ul>
+      <button id="langToggle" class="lang-toggle" onclick="toggleLang()" style="background:transparent;border:1px solid #333;color:#333;padding:0.3rem 0.6rem;border-radius:4px;cursor:pointer;font-size:0.85rem;margin-left:auto;">EN</button>
     </div>
   </nav>
 
-  <!-- メインコンテンツ -->
   <main class="main-content">
     <section class="page-hero">
-      <h1 class="page-title">談話データ</h1>
-      <p class="page-description">伊良部島方言の自然談話コレクション</p>
+      <h1 class="page-title"><span class="ja">談話データ</span><span class="en">Discourse Data</span></h1>
+      <p class="page-description"><span class="ja">伊良部島方言の自然談話コレクション</span><span class="en">Natural Discourse Collection in the Irabu Language</span></p>
     </section>
 
     <section class="section">
-      <div class="text-content">
-        <p>
-          私自身が収集して書き起こした自然談話を紹介します。各テキストはGitHub Pagesで公開しており、音声・テキストの生ファイル・メタデータはZenodoのリポジトリからダウンロードできます。
-        </p>
-        <p style="margin-top:1rem;">
-          <a href="irabu.html">← 伊良部島方言を知る に戻る</a>
-        </p>
-      </div>
+      <p class="ja" style="line-height:1.8; text-align:justify;">
+        私自身が収集して書き起こした自然談話を紹介します。各テキストはGitHub Pagesで公開しており、音声・テキストの生ファイル・メタデータはZenodoのリポジトリからダウンロードできます。
+      </p>
+      <p class="en" style="line-height:1.8; text-align:justify;">
+        Here I introduce natural discourse texts that I collected and transcribed myself. Each text is published on GitHub Pages, and audio files, raw text files, and metadata can be downloaded from the Zenodo repository.
+      </p>
+      <p style="margin-top:1rem;">
+        <a href="irabu.html"><span class="ja-inline">← 伊良部島方言を知る に戻る</span><span class="en-inline">← Back to Irabu Language Resources</span></a>
+      </p>
     </section>
 
     <section class="section">
       <div class="discourse-card">
-        <h3>1 / 借金取りと貧乏人</h3>
-        <p>道徳的な教訓を教えるjugatarと呼ばれるジャンルの昔話。伊良部島にいる貧乏な男と、宮古島からやってきた借金取りのやり取りから、カッとなることを戒める教訓を学ぶ。</p>
+        <h3><span class="ja-inline">1 / 借金取りと貧乏人</span><span class="en-inline">1 / The Debt Collector and the Poor Man</span></h3>
+        <p class="ja">道徳的な教訓を教えるjugatarと呼ばれるジャンルの昔話。伊良部島にいる貧乏な男と、宮古島からやってきた借金取りのやり取りから、カッとなることを戒める教訓を学ぶ。</p>
+        <p class="en">A folktale of the genre called <em>jugatar</em> that teaches moral lessons. From the interaction between a poor man on Irabu Island and a debt collector from Miyako Island, we learn the lesson of not losing one's temper.</p>
         <div class="discourse-links">
-          <a href="https://michinorishimoji.github.io/text_syakkintori/" target="_blank" class="btn-text">テキストを見る</a>
+          <a href="https://michinorishimoji.github.io/text_syakkintori/" target="_blank" class="btn-text"><span class="ja-inline">テキストを見る</span><span class="en-inline">View Text</span></a>
           <a href="https://zenodo.org/records/16599540" target="_blank" class="btn-zenodo">Zenodo</a>
         </div>
       </div>
 
       <div class="discourse-card">
-        <h3>2 / ウズヌシュウのサメ退治</h3>
-        <p>宮古と伊良部の間にある海峡（pžarabasi）に現れる人喰いサメを退治したウズヌシュウの話。</p>
+        <h3><span class="ja-inline">2 / ウズヌシュウのサメ退治</span><span class="en-inline">2 / Uzunusjuu's Shark Slaying</span></h3>
+        <p class="ja">宮古と伊良部の間にある海峡（pžarabasi）に現れる人喰いサメを退治したウズヌシュウの話。</p>
+        <p class="en">The story of Uzunusjuu, who slew a man-eating shark that appeared in the strait (<em>pžarabasi</em>) between Miyako and Irabu.</p>
         <div class="discourse-links">
-          <a href="https://michinorishimoji.github.io/text_uzunusjuu/" target="_blank" class="btn-text">テキストを見る</a>
+          <a href="https://michinorishimoji.github.io/text_uzunusjuu/" target="_blank" class="btn-text"><span class="ja-inline">テキストを見る</span><span class="en-inline">View Text</span></a>
           <a href="https://zenodo.org/records/16612130" target="_blank" class="btn-zenodo">Zenodo</a>
         </div>
       </div>
 
       <div class="discourse-card">
-        <h3>3 / ユナイタマ伝説</h3>
-        <p><a href="https://miyako-island.net/beach_and_spot/beach_spot_014/" target="_blank">通り池</a>の成り立ちに関する壮大な物語。1771年の明和の大津波という実際の災害に着想のヒントを得たと思われる。</p>
+        <h3><span class="ja-inline">3 / ユナイタマ伝説</span><span class="en-inline">3 / The Legend of Yunaitama</span></h3>
+        <p class="ja"><a href="https://miyako-island.net/beach_and_spot/beach_spot_014/" target="_blank">通り池</a>の成り立ちに関する壮大な物語。1771年の明和の大津波という実際の災害に着想のヒントを得たと思われる。</p>
+        <p class="en">A grand narrative about the formation of <a href="https://miyako-island.net/beach_and_spot/beach_spot_014/" target="_blank">Tōri-ike (Through Pond)</a>. It appears to have been inspired by the actual disaster of the Great Meiwa Tsunami of 1771.</p>
         <div class="discourse-links">
-          <a href="https://michinorishimoji.github.io/text_yunaitama/" target="_blank" class="btn-text">テキストを見る</a>
+          <a href="https://michinorishimoji.github.io/text_yunaitama/" target="_blank" class="btn-text"><span class="ja-inline">テキストを見る</span><span class="en-inline">View Text</span></a>
           <a href="https://zenodo.org/records/16613426" target="_blank" class="btn-zenodo">Zenodo</a>
         </div>
       </div>
 
       <div class="discourse-card">
-        <h3>4 / 継子台</h3>
-        <p><a href="https://miyako-island.net/beach_and_spot/beach_spot_014/" target="_blank">通り池</a>の近くに継子台と呼ばれる岩場があるが、この場所がなぜそう呼ばれるようになったかについて語る、悲しい物語。</p>
+        <h3><span class="ja-inline">4 / 継子台</span><span class="en-inline">4 / Mamakudai (The Stepchild's Platform)</span></h3>
+        <p class="ja"><a href="https://miyako-island.net/beach_and_spot/beach_spot_014/" target="_blank">通り池</a>の近くに継子台と呼ばれる岩場があるが、この場所がなぜそう呼ばれるようになったかについて語る、悲しい物語。</p>
+        <p class="en">Near <a href="https://miyako-island.net/beach_and_spot/beach_spot_014/" target="_blank">Tōri-ike</a>, there is a rocky area called Mamakudai. This sad story tells why the place came to be called by this name.</p>
         <div class="discourse-links">
-          <a href="https://michinorishimoji.github.io/text_mamakudai/" target="_blank" class="btn-text">テキストを見る</a>
+          <a href="https://michinorishimoji.github.io/text_mamakudai/" target="_blank" class="btn-text"><span class="ja-inline">テキストを見る</span><span class="en-inline">View Text</span></a>
           <a href="https://zenodo.org/records/16614598" target="_blank" class="btn-zenodo">Zenodo</a>
         </div>
       </div>
 
       <div class="discourse-card">
-        <h3>5 / ヌーシ御嶽のタマミガ</h3>
-        <p>伊良部島の字伊良部に<a href="https://miyakojimabunkazai.jp/bunkazaiinfo571/" target="_blank">ヌーシ御嶽</a>がある。航海の守神であるタマミガ（女性の名前）が祀られている。タマミガがまだ人間だった頃に遡って展開される、父と母と娘の物語。</p>
+        <h3><span class="ja-inline">5 / ヌーシ御嶽のタマミガ</span><span class="en-inline">5 / Tamamiga of Nūshi Utaki</span></h3>
+        <p class="ja">伊良部島の字伊良部に<a href="https://miyakojimabunkazai.jp/bunkazaiinfo571/" target="_blank">ヌーシ御嶽</a>がある。航海の守神であるタマミガ（女性の名前）が祀られている。タマミガがまだ人間だった頃に遡って展開される、父と母と娘の物語。</p>
+        <p class="en">In the Irabu district of Irabu Island, there is <a href="https://miyakojimabunkazai.jp/bunkazaiinfo571/" target="_blank">Nūshi Utaki (sacred site)</a>. Tamamiga (a woman's name), the guardian deity of navigation, is enshrined there. This is a story of a father, mother, and daughter, going back to when Tamamiga was still human.</p>
         <div class="discourse-links">
-          <a href="https://michinorishimoji.github.io/text_tamamiga/" target="_blank" class="btn-text">テキストを見る</a>
+          <a href="https://michinorishimoji.github.io/text_tamamiga/" target="_blank" class="btn-text"><span class="ja-inline">テキストを見る</span><span class="en-inline">View Text</span></a>
           <a href="https://zenodo.org/records/16615395" target="_blank" class="btn-zenodo">Zenodo</a>
         </div>
       </div>
 
       <div class="discourse-card">
-        <h3>6 / 戦争時代の思い出</h3>
-        <p>太平洋戦争末期、宮古島は米軍の上陸こそなかったものの、当時の住民の数を遥かに超える日本兵たちの上陸があった（<a href="https://www.soumu.go.jp/main_sosiki/daijinkanbou/sensai/situation/state/okinawa_02.html" target="_blank">当時の状況はこちら</a>）。兵站の軽視という日本軍の杜撰さから、住民の食糧の無心、強奪などさまざまな問題があり、宮古島は飢餓状態で苦しんだという。当時10代の若者だった話者の記憶の語り。</p>
+        <h3><span class="ja-inline">6 / 戦争時代の思い出</span><span class="en-inline">6 / Memories of Wartime</span></h3>
+        <p class="ja">太平洋戦争末期、宮古島は米軍の上陸こそなかったものの、当時の住民の数を遥かに超える日本兵たちの上陸があった（<a href="https://www.soumu.go.jp/main_sosiki/daijinkanbou/sensai/situation/state/okinawa_02.html" target="_blank">当時の状況はこちら</a>）。兵站の軽視という日本軍の杜撰さから、住民の食糧の無心、強奪などさまざまな問題があり、宮古島は飢餓状態で苦しんだという。当時10代の若者だった話者の記憶の語り。</p>
+        <p class="en">At the end of the Pacific War, although U.S. forces never landed on Miyako Island, Japanese soldiers arrived in numbers far exceeding the local population (<a href="https://www.soumu.go.jp/main_sosiki/daijinkanbou/sensai/situation/state/okinawa_02.html" target="_blank">see the situation at that time</a>). Due to the Japanese military's neglect of logistics, various problems arose including begging and plundering of residents' food, and Miyako Island suffered from starvation. This is a narrative of memories by a speaker who was a teenager at the time.</p>
         <div class="discourse-links">
-          <a href="https://michinorishimoji.github.io/text_knmemoriesofwartime/" target="_blank" class="btn-text">テキストを見る</a>
+          <a href="https://michinorishimoji.github.io/text_knmemoriesofwartime/" target="_blank" class="btn-text"><span class="ja-inline">テキストを見る</span><span class="en-inline">View Text</span></a>
           <a href="https://zenodo.org/records/16890468" target="_blank" class="btn-zenodo">Zenodo</a>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- フッター -->
   <footer class="site-footer">
     <div class="footer-content">
       <div class="footer-section">
-        <h3>下地理則の研究室</h3>
-        <p>九州大学大学院人文科学研究院<br>言語学講座</p>
-        <p style="margin-top: 1rem;">
-          smz [at] kyudai.jp
-        </p>
+        <h3 data-i18n="site-title">下地理則の研究室</h3>
+        <p data-i18n="footer-affiliation">九州大学大学院人文科学研究院<br>言語学講座</p>
+        <p style="margin-top: 1rem;">smz [at] kyudai.jp</p>
       </div>
       <div class="footer-section">
-        <h3>リンク</h3>
+        <h3 data-i18n="footer-links">リンク</h3>
         <a href="https://kyushu-u.academia.edu/MichinoriShimoji" target="_blank" rel="noopener">Academia.edu</a>
         <a href="https://researchmap.jp/read0122330" target="_blank" rel="noopener">Researchmap</a>
         <a href="https://note.com/lingfieldwork" target="_blank" rel="noopener">note</a>
       </div>
       <div class="footer-section">
-        <h3>サイトマップ</h3>
-        <a href="index.html">HOME</a>
-        <a href="members.html">メンバー</a>
-        <a href="research.html">研究</a>
-        <a href="irabu.html">伊良部島方言を知る</a>
+        <h3 data-i18n="footer-sitemap">サイトマップ</h3>
+        <a href="index.html" data-i18n="nav-home">HOME</a>
+        <a href="members.html" data-i18n="nav-members">メンバー</a>
+        <a href="research.html" data-i18n="nav-research">研究</a>
+        <a href="teaching.html" data-i18n="nav-teaching">授業</a>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>&copy; 2025 下地理則研究室. All rights reserved.</p>
+      <p data-i18n="footer-copyright">&copy; 2025 下地理則研究室. All rights reserved.</p>
     </div>
   </footer>
 
@@ -205,6 +206,41 @@
     function toggleMenu() {
       document.getElementById('navList').classList.toggle('show');
     }
+    
+    // 言語設定を確認してbodyクラスを設定
+    document.addEventListener('DOMContentLoaded', function() {
+      const savedLang = localStorage.getItem('lang');
+      if (savedLang === 'en') {
+        document.body.classList.add('lang-en');
+      }
+    });
   </script>
+  <script src="js/i18n.js"></script>
+  <script>
+    // i18n.jsロード後、toggleLangをオーバーライドしてbodyクラスも切り替え
+    (function() {
+      const originalToggle = window.i18n ? window.i18n.toggle : null;
+      if (originalToggle) {
+        window.i18n.toggle = function() {
+          originalToggle();
+          const lang = localStorage.getItem('lang') || 'ja';
+          if (lang === 'en') {
+            document.body.classList.add('lang-en');
+          } else {
+            document.body.classList.remove('lang-en');
+          }
+        };
+      }
+    })();
+  </script>
+<!-- Research Artisan Pro Script Tag Start -->
+<script type="text/javascript">
+  var _Ra = {};
+  _Ra.hId = '1';
+  _Ra.uCd = '26010500010465531600';
+  (function() {var s=document.getElementsByTagName('script')[0],js=document.createElement('script');js.type='text/javascript';js.async='async';js.src='https://analyze.pro.research-artisan.com/track/script.php';s.parentNode.insertBefore(js,s);})();
+</script>
+<noscript><p><img src="https://analyze.pro.research-artisan.com/track/tracker.php?ucd=26010500010465531600&amp;hid=1&amp;guid=ON" alt="" width="1" height="1" /></p></noscript>
+<!-- Research Artisan Pro Script Tag End   -->
 </body>
 </html>
