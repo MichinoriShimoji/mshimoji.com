@@ -114,6 +114,14 @@
     .pub-section.hidden {
       display: none;
     }
+    /* i18n styles */
+    .en { display: none; }
+    body.lang-en .ja { display: none; }
+    body.lang-en .en { display: block; }
+    body.lang-en .en-inline { display: inline; }
+    body.lang-en .ja-inline { display: none; }
+    .ja-inline { display: inline; }
+    .en-inline { display: none; }
   </style>
 </head>
 <body>
@@ -140,58 +148,62 @@
         <li class="nav-item"><a href="prospective.html" class="nav-link" data-i18n="nav-prospective">大学院志望者へ</a></li>
         <li class="nav-item"><a href="https://note.com/lingfieldwork" class="nav-link" target="_blank" data-i18n="nav-essay">エッセイ</a></li>
       </ul>
-            <button id="langToggle" class="lang-toggle" onclick="toggleLang()" style="background:transparent;border:1px solid #333;color:#333;padding:0.3rem 0.6rem;border-radius:4px;cursor:pointer;font-size:0.85rem;margin-left:auto;">EN</button>
-      </div>
+      <button id="langToggle" class="lang-toggle" onclick="toggleLang()" style="background:transparent;border:1px solid #333;color:#333;padding:0.3rem 0.6rem;border-radius:4px;cursor:pointer;font-size:0.85rem;margin-left:auto;">EN</button>
+    </div>
   </nav>
 
   <main class="main-content">
     <section class="page-hero">
-      <h1 class="page-title">業績一覧</h1>
+      <h1 class="page-title"><span class="ja">業績一覧</span><span class="en">Publications</span></h1>
       <p class="page-description">Publications</p>
     </section>
 
     <section class="section">
       <div class="text-content">
         <p>
-          主要な業績を掲載しています。完全なリストは
+          <span class="ja">主要な業績を掲載しています。完全なリストは
           <a href="https://kyushu-u.academia.edu/MichinoriShimoji" target="_blank" rel="noopener">Academia.edu</a>
           または
           <a href="https://researchmap.jp/read0122330" target="_blank" rel="noopener">researchmap</a>
-          をご覧ください。
+          をご覧ください。</span>
+          <span class="en">Selected publications are listed below. For a complete list, please visit
+          <a href="https://kyushu-u.academia.edu/MichinoriShimoji" target="_blank" rel="noopener">Academia.edu</a>
+          or
+          <a href="https://researchmap.jp/read0122330" target="_blank" rel="noopener">researchmap</a>.</span>
         </p>
-        <a href="publications.pdf" class="download-btn" download>📄 PDF版をダウンロード</a>
+        <a href="publications.pdf" class="download-btn" download><span class="ja-inline">📄 PDF版をダウンロード</span><span class="en-inline">📄 Download PDF</span></a>
       </div>
 
       <!-- ジャンルフィルター -->
       <div class="type-filter-box">
         <div class="type-filters">
-          <button class="type-filter-btn active" data-type="all" onclick="toggleType('all')">すべて</button>
-          <button class="type-filter-btn" data-type="thesis" onclick="toggleType('thesis')">🎓 博士論文</button>
-          <button class="type-filter-btn" data-type="book" onclick="toggleType('book')">📚 著書</button>
-          <button class="type-filter-btn" data-type="translation" onclick="toggleType('translation')">🔄 翻訳</button>
-          <button class="type-filter-btn" data-type="chapter" onclick="toggleType('chapter')">📄 書籍所収</button>
-          <button class="type-filter-btn" data-type="paper" onclick="toggleType('paper')">📝 学術誌論文</button>
-          <button class="type-filter-btn" data-type="bulletin" onclick="toggleType('bulletin')">📋 紀要論文</button>
-          <button class="type-filter-btn" data-type="other" onclick="toggleType('other')">✏️ その他</button>
-          <button class="type-filter-btn" data-type="presentation" onclick="toggleType('presentation')">🎤 学会発表</button>
-          <button class="type-filter-btn" data-type="workshop" onclick="toggleType('workshop')">💬 研究会発表</button>
-          <button class="type-filter-btn" data-type="lecture" onclick="toggleType('lecture')">🎙️ 講演</button>
+          <button class="type-filter-btn active" data-type="all" onclick="toggleType('all')"><span class="ja-inline">すべて</span><span class="en-inline">All</span></button>
+          <button class="type-filter-btn" data-type="thesis" onclick="toggleType('thesis')"><span class="ja-inline">🎓 博士論文</span><span class="en-inline">🎓 Dissertation</span></button>
+          <button class="type-filter-btn" data-type="book" onclick="toggleType('book')"><span class="ja-inline">📚 著書</span><span class="en-inline">📚 Books</span></button>
+          <button class="type-filter-btn" data-type="translation" onclick="toggleType('translation')"><span class="ja-inline">🔄 翻訳</span><span class="en-inline">🔄 Translations</span></button>
+          <button class="type-filter-btn" data-type="chapter" onclick="toggleType('chapter')"><span class="ja-inline">📄 書籍所収</span><span class="en-inline">📄 Book Chapters</span></button>
+          <button class="type-filter-btn" data-type="paper" onclick="toggleType('paper')"><span class="ja-inline">📝 学術誌論文</span><span class="en-inline">📝 Journal Articles</span></button>
+          <button class="type-filter-btn" data-type="bulletin" onclick="toggleType('bulletin')"><span class="ja-inline">📋 紀要論文</span><span class="en-inline">📋 Bulletin Articles</span></button>
+          <button class="type-filter-btn" data-type="other" onclick="toggleType('other')"><span class="ja-inline">✏️ その他</span><span class="en-inline">✏️ Other Writings</span></button>
+          <button class="type-filter-btn" data-type="presentation" onclick="toggleType('presentation')"><span class="ja-inline">🎤 学会発表</span><span class="en-inline">🎤 Conference Presentations</span></button>
+          <button class="type-filter-btn" data-type="workshop" onclick="toggleType('workshop')"><span class="ja-inline">💬 研究会発表</span><span class="en-inline">💬 Workshop Presentations</span></button>
+          <button class="type-filter-btn" data-type="lecture" onclick="toggleType('lecture')"><span class="ja-inline">🎙️ 講演</span><span class="en-inline">🎙️ Invited Lectures</span></button>
         </div>
         <div class="result-count" id="resultCount"></div>
       </div>
 
       <div class="pub-section" data-type="thesis">
-        <h3>🎓 博士論文 Dissertation</h3>
+        <h3><span class="ja-inline">🎓 博士論文 Dissertation</span><span class="en-inline">🎓 Dissertation</span></h3>
         <div class="pub-item" data-year="2008" data-type="thesis" data-title="A grammar of Irabu, a Southern Ryukyuan language">
           <span class="year-label">2008</span>
           <span class="title">A grammar of Irabu, a Southern Ryukyuan language</span>
           <div class="details">Shimoji, Michinori. 609pp</div>
-          <div class="pub-links"><a href="https://www.academia.edu/123987119/" target="_blank">Academia.edu</a> <a href="https://kup.or.jp/booklist/hu/1195.html" target="_blank">出版社</a></div>
+          <div class="pub-links"><a href="https://www.academia.edu/123987119/" target="_blank">Academia.edu</a> <a href="https://kup.or.jp/booklist/hu/1195.html" target="_blank"><span class="ja-inline">出版社</span><span class="en-inline">Publisher</span></a></div>
         </div>
       </div>
 
       <div class="pub-section" data-type="book">
-        <h3>📚 著書・編著 Books</h3>
+        <h3><span class="ja-inline">📚 著書・編著 Books</span><span class="en-inline">📚 Books</span></h3>
         <div class="pub-item" data-year="2026" data-type="book" data-title="日琉諸語における情報構造と文法現象">
           <span class="year-label">2026</span>
           <span class="title">日琉諸語における情報構造と文法現象</span>
@@ -202,7 +214,7 @@
           <span class="year-label">2022</span>
           <span class="title">An introduction to the Japonic languages</span>
           <div class="details">Shimoji, Michinori. ed.. Brill</div>
-          <div class="pub-links"><a href="https://www.amazon.co.jp/dp/9004518886" target="_blank">Amazon</a> <a href="https://brill.com/display/title/62978" target="_blank">出版社</a></div>
+          <div class="pub-links"><a href="https://www.amazon.co.jp/dp/9004518886" target="_blank">Amazon</a> <a href="https://brill.com/display/title/62978" target="_blank"><span class="ja-inline">出版社</span><span class="en-inline">Publisher</span></a></div>
         </div>
         <div class="pub-item" data-year="2022" data-type="book" data-title="椎葉村方言語彙集">
           <span class="year-label">2022</span>
@@ -226,13 +238,13 @@
           <span class="year-label">2018</span>
           <span class="title">南琉球宮古語伊良部島方言</span>
           <div class="details">下地理則(2018)，くろしお出版，東京</div>
-          <div class="pub-links"><a href="https://www.amazon.co.jp/dp/4874247601" target="_blank">Amazon</a> <a href="https://www.9640.jp/book_view/?760" target="_blank">出版社</a></div>
+          <div class="pub-links"><a href="https://www.amazon.co.jp/dp/4874247601" target="_blank">Amazon</a> <a href="https://www.9640.jp/book_view/?760" target="_blank"><span class="ja-inline">出版社</span><span class="en-inline">Publisher</span></a></div>
         </div>
         <div class="pub-item" data-year="2017" data-type="book" data-title="A grammar of Irabu, a Southern Ryukyuan language">
           <span class="year-label">2017</span>
           <span class="title">A grammar of Irabu, a Southern Ryukyuan language</span>
           <div class="details">Shimoji, Michinori. Fukuoka: Kyushu University Press</div>
-          <div class="pub-links"><a href="https://www.academia.edu/123987119/" target="_blank">Academia.edu</a> <a href="https://kup.or.jp/booklist/hu/1195.html" target="_blank">出版社</a></div>
+          <div class="pub-links"><a href="https://www.academia.edu/123987119/" target="_blank">Academia.edu</a> <a href="https://kup.or.jp/booklist/hu/1195.html" target="_blank"><span class="ja-inline">出版社</span><span class="en-inline">Publisher</span></a></div>
         </div>
         <div class="pub-item" data-year="2016" data-type="book" data-title="尾前調査班 中間報告書―宮崎県椎葉村尾前方言簡易語彙集と文法概説―">
           <span class="year-label">2016</span>
@@ -244,13 +256,13 @@
           <span class="year-label">2015</span>
           <span class="title">Handbook of the Ryukyuan Languages, De Gruyter Mouton, Berlin and New York.</span>
           <div class="details">Heinrich, Patrick, Shinsho Miyara and Michinori Shimoji, eds</div>
-          <div class="pub-links"><a href="https://www.amazon.com/dp/1614511616" target="_blank">Amazon</a> <a href="https://www.degruyter.com/document/doi/10.1515/9781614511151/html" target="_blank">出版社</a></div>
+          <div class="pub-links"><a href="https://www.amazon.com/dp/1614511616" target="_blank">Amazon</a> <a href="https://www.degruyter.com/document/doi/10.1515/9781614511151/html" target="_blank"><span class="ja-inline">出版社</span><span class="en-inline">Publisher</span></a></div>
         </div>
         <div class="pub-item" data-year="2014" data-type="book" data-title="琉球諸語の保持を目指して">
           <span class="year-label">2014</span>
           <span class="title">琉球諸語の保持を目指して</span>
           <div class="details">下地理則・パトリックハインリッヒ編(2014)，ココ出版，東京</div>
-          <div class="pub-links"><a href="https://www.amazon.co.jp/dp/4904595505" target="_blank">Amazon</a> <a href="https://cocopb.com/books/978-4-904595-50-3/" target="_blank">出版社</a></div>
+          <div class="pub-links"><a href="https://www.amazon.co.jp/dp/4904595505" target="_blank">Amazon</a> <a href="https://cocopb.com/books/978-4-904595-50-3/" target="_blank"><span class="ja-inline">出版社</span><span class="en-inline">Publisher</span></a></div>
         </div>
         <div class="pub-item" data-year="2011" data-type="book" data-title="琉球諸語記録保存の基礎">
           <span class="year-label">2011</span>
@@ -267,7 +279,7 @@
       </div>
 
       <div class="pub-section" data-type="translation">
-        <h3>🔄 翻訳 Translations</h3>
+        <h3><span class="ja-inline">🔄 翻訳 Translations</span><span class="en-inline">🔄 Translations</span></h3>
         <div class="pub-item" data-year="2019" data-type="translation" data-title="言語はどのように変化するのか">
           <span class="year-label">2019</span>
           <span class="title">言語はどのように変化するのか</span>
@@ -277,7 +289,7 @@
       </div>
 
       <div class="pub-section" data-type="chapter">
-        <h3>📄 書籍所収論文 Book Chapters</h3>
+        <h3><span class="ja-inline">📄 書籍所収論文 Book Chapters</span><span class="en-inline">📄 Book Chapters</span></h3>
         <div class="pub-item" data-year="2026" data-type="chapter" data-title="現代日本語における無生物主語他動詞文の容認性について">
           <span class="year-label">2026</span>
           <span class="title">現代日本語における無生物主語他動詞文の容認性について</span>
@@ -317,8 +329,8 @@
         <div class="pub-item" data-year="2022" data-type="chapter" data-title="Number in Japonic Family">
           <span class="year-label">2022</span>
           <span class="title">Number in Japonic Family</span>
-          <div class="details">Shimoji, Michinori. In Acquaviva, Paolo and　Michael Daniel, eds., Number in the world’s languages: a comparative handbook, 505-528,  Berlin/New York: Mouton de Gruyter</div>
-          <div class="pub-links"><a href="https://www.academia.edu/40853747/" target="_blank">Academia.edu</a> <a href="https://www.degruyter.com/document/doi/10.1515/9783110622713-015/html" target="_blank">出版社</a></div>
+          <div class="details">Shimoji, Michinori. In Acquaviva, Paolo and　Michael Daniel, eds., Number in the world's languages: a comparative handbook, 505-528,  Berlin/New York: Mouton de Gruyter</div>
+          <div class="pub-links"><a href="https://www.academia.edu/40853747/" target="_blank">Academia.edu</a> <a href="https://www.degruyter.com/document/doi/10.1515/9783110622713-015/html" target="_blank"><span class="ja-inline">出版社</span><span class="en-inline">Publisher</span></a></div>
         </div>
         <div class="pub-item" data-year="2022" data-type="chapter" data-title="日本語の格表現">
           <span class="year-label">2022</span>
@@ -395,7 +407,7 @@
       </div>
 
       <div class="pub-section" data-type="paper">
-        <h3>📝 学術誌論文 Journal Articles</h3>
+        <h3><span class="ja-inline">📝 学術誌論文 Journal Articles</span><span class="en-inline">📝 Journal Articles</span></h3>
         <div class="pub-item" data-year="2025" data-type="paper" data-title="低資源言語におけるテキスト自動解析とグロスづけの自動化：伊良部島方言のケーススタディ">
           <span class="year-label">2025</span>
           <span class="title">低資源言語におけるテキスト自動解析とグロスづけの自動化：伊良部島方言のケーススタディ</span>
@@ -477,7 +489,7 @@
       </div>
 
       <div class="pub-section" data-type="bulletin">
-        <h3>📋 紀要論文 Bulletin Articles</h3>
+        <h3><span class="ja-inline">📋 紀要論文 Bulletin Articles</span><span class="en-inline">📋 Bulletin Articles</span></h3>
         <div class="pub-item" data-year="2025" data-type="bulletin" data-title="南琉球宮古語伊良部島方言における音節構造とモーラ構造">
           <span class="year-label">2025</span>
           <span class="title">南琉球宮古語伊良部島方言における音節構造とモーラ構造</span>
@@ -553,7 +565,7 @@
       </div>
 
       <div class="pub-section" data-type="other">
-        <h3>✏️ その他著作 Other Writings</h3>
+        <h3><span class="ja-inline">✏️ その他著作 Other Writings</span><span class="en-inline">✏️ Other Writings</span></h3>
         <div class="pub-item" data-year="2019" data-type="other" data-title="明解方言学辞典">
           <span class="year-label">2019</span>
           <span class="title">明解方言学辞典</span>
@@ -593,7 +605,7 @@
       </div>
 
       <div class="pub-section" data-type="presentation">
-        <h3>🎤 学会発表 Conference Presentations</h3>
+        <h3><span class="ja-inline">🎤 学会発表 Conference Presentations</span><span class="en-inline">🎤 Conference Presentations</span></h3>
         <div class="pub-item" data-year="2024" data-type="presentation" data-title="「文節」概念を超えて：都城方言の韻律記述試論">
           <span class="year-label">2024</span>
           <span class="title">「文節」概念を超えて：都城方言の韻律記述試論</span>
@@ -618,9 +630,9 @@
           <div class="details">下地理則(2018)第107回日本方言研究会，岐阜大学，2018年10月</div>
           
         </div>
-        <div class="pub-item" data-year="2018" data-type="presentation" data-title="I’m afraid of thunder: the dative stimulus construction in Japanese dialects, Approaches to Endangered Languages in Japan and Northeast Asia: Description, Documentation and Revitalization, NINJAL, 2018年8月．">
+        <div class="pub-item" data-year="2018" data-type="presentation" data-title="I'm afraid of thunder: the dative stimulus construction in Japanese dialects, Approaches to Endangered Languages in Japan and Northeast Asia: Description, Documentation and Revitalization, NINJAL, 2018年8月．">
           <span class="year-label">2018</span>
-          <span class="title">I’m afraid of thunder: the dative stimulus construction in Japanese dialects, Approaches to Endangered Languages in Japan and Northeast Asia: Description, Documentation and Revitalization, NINJAL, 2018年8月．</span>
+          <span class="title">I'm afraid of thunder: the dative stimulus construction in Japanese dialects, Approaches to Endangered Languages in Japan and Northeast Asia: Description, Documentation and Revitalization, NINJAL, 2018年8月．</span>
           <div class="details">Matsuoka, Aoi, Hiroshi Miyaoka, and Michinori Shimoji</div>
           <div class="pub-links"><a href="https://www.academia.edu/38381210/" target="_blank">Academia.edu</a></div>
         </div>
@@ -645,7 +657,7 @@
         <div class="pub-item" data-year="2015" data-type="presentation" data-title="焦点化と格標示">
           <span class="year-label">2015</span>
           <span class="title">焦点化と格標示</span>
-          <div class="details">下地理則(2015)第151回日本言語学会，ワークショップ「日本語方言のケースマーキングのとりたて性と分裂自動詞性」，名古屋大学，2015年11月．</div>
+          <div class="details">下地理則(2015)第151回日本言語学会，ワークショップ「日本語方言のケースマーキングのとりたて性と分裂自動詞性」，名古屋大学，2015年11月．</div>
           <div class="pub-links"><a href="https://www.academia.edu/31526127/" target="_blank">Academia.edu</a></div>
         </div>
         <div class="pub-item" data-year="2013" data-type="presentation" data-title="パラダイムと使用頻度">
@@ -660,9 +672,9 @@
           <div class="details">下地理則(2012)，第148回変異理論研究会「方言・少数言語の世代継承と辞書」，千葉大学，2012年5月．</div>
           
         </div>
-        <div class="pub-item" data-year="2011" data-type="presentation" data-title="“Growing grammars, grammar writers, and grammar-writing tradition”, The 2nd International Conference on Language Documentation and Conservation, ICLDC, University of Hawaii, 2011年2月．">
+        <div class="pub-item" data-year="2011" data-type="presentation" data-title=""Growing grammars, grammar writers, and grammar-writing tradition", The 2nd International Conference on Language Documentation and Conservation, ICLDC, University of Hawaii, 2011年2月．">
           <span class="year-label">2011</span>
-          <span class="title">“Growing grammars, grammar writers, and grammar-writing tradition”, The 2nd International Conference on Language Documentation and Conservation, ICLDC, University of Hawaii, 2011年2月．</span>
+          <span class="title">"Growing grammars, grammar writers, and grammar-writing tradition", The 2nd International Conference on Language Documentation and Conservation, ICLDC, University of Hawaii, 2011年2月．</span>
           <div class="details">Aso, Reiko, Yuto Niinaga, and Michinori Shimoji</div>
           
         </div>
@@ -678,9 +690,9 @@
           <div class="details">松尾慎・パトリックハインリッヒ・岡典栄・下地理則・オストハイダテーヤ・浜田麻里・岩田一成・布尾勝一郎(2010)，第26回社会言語科学会ワークショップ，大阪大学，2010年9月．</div>
           
         </div>
-        <div class="pub-item" data-year="2009" data-type="presentation" data-title="“Property concepts in Irabu Ryukyuan, International Symposium of Grammar Writing”, ILCAA, Tokyo University of Foreign Studies, 2009年12月．">
+        <div class="pub-item" data-year="2009" data-type="presentation" data-title=""Property concepts in Irabu Ryukyuan, International Symposium of Grammar Writing", ILCAA, Tokyo University of Foreign Studies, 2009年12月．">
           <span class="year-label">2009</span>
-          <span class="title">“Property concepts in Irabu Ryukyuan, International Symposium of Grammar Writing”, ILCAA, Tokyo University of Foreign Studies, 2009年12月．</span>
+          <span class="title">"Property concepts in Irabu Ryukyuan, International Symposium of Grammar Writing", ILCAA, Tokyo University of Foreign Studies, 2009年12月．</span>
           <div class="details">Shimoji, Michinori</div>
           
         </div>
@@ -690,9 +702,9 @@
           <div class="details">下地理則(2009)，第138回日本言語学会，神田外国語大学，2009年6月．</div>
           
         </div>
-        <div class="pub-item" data-year="2009" data-type="presentation" data-title="“Reference grammar as basis for language revitalization”, The first Inter-national Conference on Language Documentation and Conservation, the University of Hawaii, 2009年3月．">
+        <div class="pub-item" data-year="2009" data-type="presentation" data-title=""Reference grammar as basis for language revitalization", The first Inter-national Conference on Language Documentation and Conservation, the University of Hawaii, 2009年3月．">
           <span class="year-label">2009</span>
-          <span class="title">“Reference grammar as basis for language revitalization”, The first Inter-national Conference on Language Documentation and Conservation, the University of Hawaii, 2009年3月．</span>
+          <span class="title">"Reference grammar as basis for language revitalization", The first Inter-national Conference on Language Documentation and Conservation, the University of Hawaii, 2009年3月．</span>
           <div class="details">Shimoji, Michinori</div>
           
         </div>
@@ -708,9 +720,9 @@
           <div class="details">下地理則(2007)，第135回日本言語学会，信州大学，2007年11月．</div>
           
         </div>
-        <div class="pub-item" data-year="2007" data-type="presentation" data-title="“Ryukyuan meets the world's languages: Irabu Ryukyuan in a typological perspective”, The 21st Pacific Science Congress, Okinawa Convention Center, 2007年6月．">
+        <div class="pub-item" data-year="2007" data-type="presentation" data-title=""Ryukyuan meets the world's languages: Irabu Ryukyuan in a typological perspective", The 21st Pacific Science Congress, Okinawa Convention Center, 2007年6月．">
           <span class="year-label">2007</span>
-          <span class="title">“Ryukyuan meets the world&#x27;s languages: Irabu Ryukyuan in a typological perspective”, The 21st Pacific Science Congress, Okinawa Convention Center, 2007年6月．</span>
+          <span class="title">"Ryukyuan meets the world&#x27;s languages: Irabu Ryukyuan in a typological perspective", The 21st Pacific Science Congress, Okinawa Convention Center, 2007年6月．</span>
           <div class="details">Shimoji, Michinori</div>
           
         </div>
@@ -720,16 +732,16 @@
           <div class="details">下地理則(2007)，2007年日本語学会春季大会，関西大学，2007年5月．</div>
           
         </div>
-        <div class="pub-item" data-year="2007" data-type="presentation" data-title="“Describing an endangered language in Japan: Irabu Ryukyuan, a Southern Ryukyuan language of the Japonic langauge group”, The 3rd Oxford-Kobe Linguistics Seminar, Kobe University, 2007年4月．">
+        <div class="pub-item" data-year="2007" data-type="presentation" data-title=""Describing an endangered language in Japan: Irabu Ryukyuan, a Southern Ryukyuan language of the Japonic langauge group", The 3rd Oxford-Kobe Linguistics Seminar, Kobe University, 2007年4月．">
           <span class="year-label">2007</span>
-          <span class="title">“Describing an endangered language in Japan: Irabu Ryukyuan, a Southern Ryukyuan language of the Japonic langauge group”, The 3rd Oxford-Kobe Linguistics Seminar, Kobe University, 2007年4月．</span>
+          <span class="title">"Describing an endangered language in Japan: Irabu Ryukyuan, a Southern Ryukyuan language of the Japonic langauge group", The 3rd Oxford-Kobe Linguistics Seminar, Kobe University, 2007年4月．</span>
           <div class="details">Shimoji, Michinori</div>
           
         </div>
       </div>
 
       <div class="pub-section" data-type="workshop">
-        <h3>💬 研究会発表 Workshop Presentations</h3>
+        <h3><span class="ja-inline">💬 研究会発表 Workshop Presentations</span><span class="en-inline">💬 Workshop Presentations</span></h3>
         <div class="pub-item" data-year="2018" data-type="workshop" data-title="琉球諸語の代名詞双数形：類型と歴史">
           <span class="year-label">2018</span>
           <span class="title">琉球諸語の代名詞双数形：類型と歴史</span>
@@ -808,9 +820,9 @@
           <div class="details">下地理則(2016)，「日本の消滅危機言語・方言の記録とドキュメンテーションの作成」研究発表会，2016年9月</div>
           
         </div>
-        <div class="pub-item" data-year="2016" data-type="workshop" data-title="“Split intransitivity in Yonaguni Ryukyuan”, Language Variation and Change Research Forum, Kyushu University, 2016年5月．">
+        <div class="pub-item" data-year="2016" data-type="workshop" data-title=""Split intransitivity in Yonaguni Ryukyuan", Language Variation and Change Research Forum, Kyushu University, 2016年5月．">
           <span class="year-label">2016</span>
-          <span class="title">“Split intransitivity in Yonaguni Ryukyuan”, Language Variation and Change Research Forum, Kyushu University, 2016年5月．</span>
+          <span class="title">"Split intransitivity in Yonaguni Ryukyuan", Language Variation and Change Research Forum, Kyushu University, 2016年5月．</span>
           <div class="details">Shimoji, Michinori</div>
           
         </div>
@@ -826,9 +838,9 @@
           <div class="details">下地理則(2015)，東京外国語大学アジア・アフリカ言語文化研究所共同研究プロジェクト「複雑系としての言語：運用に基づく文法理論の可能性」（研究代表：中山俊秀），東京外国語大学アジア・アフリカ言語文化研究所，2015年12月．</div>
           
         </div>
-        <div class="pub-item" data-year="2015" data-type="workshop" data-title="“Kakarimusubi in the Irabu dialect of Ryukyuan”, International Workshop: Kakarimusubi from a Comparative Perspective, NINJAL, 2015年9月．">
+        <div class="pub-item" data-year="2015" data-type="workshop" data-title=""Kakarimusubi in the Irabu dialect of Ryukyuan", International Workshop: Kakarimusubi from a Comparative Perspective, NINJAL, 2015年9月．">
           <span class="year-label">2015</span>
-          <span class="title">“Kakarimusubi in the Irabu dialect of Ryukyuan”, International Workshop: Kakarimusubi from a Comparative Perspective, NINJAL, 2015年9月．</span>
+          <span class="title">"Kakarimusubi in the Irabu dialect of Ryukyuan", International Workshop: Kakarimusubi from a Comparative Perspective, NINJAL, 2015年9月．</span>
           <div class="details">Shimoji, Michinori</div>
           
         </div>
@@ -866,11 +878,11 @@
           <span class="year-label">2014</span>
           <span class="title">南琉球語宮古伊良部島方言の準動詞</span>
           <div class="details">下地理則(2014)，東京外国語大学アジア・アフリカ言語文化研究所共同研究プロジェクト「準動詞に関する通言語学的研究」，東京外国語大学アジア・アフリカ言語文化研究所，2014年6月．</div>
-          <div class="pub-links"><a href="https://www.amazon.co.jp/dp/4874247601" target="_blank">Amazon</a> <a href="https://www.9640.jp/book_view/?760" target="_blank">出版社</a></div>
+          <div class="pub-links"><a href="https://www.amazon.co.jp/dp/4874247601" target="_blank">Amazon</a> <a href="https://www.9640.jp/book_view/?760" target="_blank"><span class="ja-inline">出版社</span><span class="en-inline">Publisher</span></a></div>
         </div>
-        <div class="pub-item" data-year="2014" data-type="workshop" data-title="“Dual in Ryukyuan: typology and diachrony”, Language Variation and Change Research Forum, Kyushu University, 2014年5月．">
+        <div class="pub-item" data-year="2014" data-type="workshop" data-title=""Dual in Ryukyuan: typology and diachrony", Language Variation and Change Research Forum, Kyushu University, 2014年5月．">
           <span class="year-label">2014</span>
-          <span class="title">“Dual in Ryukyuan: typology and diachrony”, Language Variation and Change Research Forum, Kyushu University, 2014年5月．</span>
+          <span class="title">"Dual in Ryukyuan: typology and diachrony", Language Variation and Change Research Forum, Kyushu University, 2014年5月．</span>
           <div class="details">Shimoji, Michinori</div>
           
         </div>
@@ -973,12 +985,12 @@
         <div class="pub-item" data-year="2010" data-type="workshop" data-title="言語の構造的多様性と言語理論―「語">
           <span class="year-label">2010</span>
           <span class="title">言語の構造的多様性と言語理論―「語</span>
-          <div class="details">Shimoji, Michinori (2010) “Those annoying auxiliaries: Irabu auxiliary verb construction in morphology-syntax interface” ,の内部構造と統語機能を中心に」研究会，東京外国語大学アジア・アフリカ言語文化研究所，2010年3月．</div>
+          <div class="details">Shimoji, Michinori (2010) "Those annoying auxiliaries: Irabu auxiliary verb construction in morphology-syntax interface" ,の内部構造と統語機能を中心に」研究会，東京外国語大学アジア・アフリカ言語文化研究所，2010年3月．</div>
           
         </div>
-        <div class="pub-item" data-year="2010" data-type="workshop" data-title="“Miyako language vitality and endangerment”, 2nd Workshop on Ryukyuan Heritage Languages, ILCAA, Tokyo University of Foreign Studies, 2010年3月．">
+        <div class="pub-item" data-year="2010" data-type="workshop" data-title=""Miyako language vitality and endangerment", 2nd Workshop on Ryukyuan Heritage Languages, ILCAA, Tokyo University of Foreign Studies, 2010年3月．">
           <span class="year-label">2010</span>
-          <span class="title">“Miyako language vitality and endangerment”, 2nd Workshop on Ryukyuan Heritage Languages, ILCAA, Tokyo University of Foreign Studies, 2010年3月．</span>
+          <span class="title">"Miyako language vitality and endangerment", 2nd Workshop on Ryukyuan Heritage Languages, ILCAA, Tokyo University of Foreign Studies, 2010年3月．</span>
           <div class="details">Shimoji, Michinori</div>
           
         </div>
@@ -1046,12 +1058,12 @@
           <span class="year-label">2006</span>
           <span class="title">南琉球語宮古伊良部島方言の文法概説</span>
           <div class="details">下地理則(2006)，沖縄言語研究センター定例研究会，沖縄大学，2006年4月．</div>
-          <div class="pub-links"><a href="https://www.amazon.co.jp/dp/4874247601" target="_blank">Amazon</a> <a href="https://www.9640.jp/book_view/?760" target="_blank">出版社</a></div>
+          <div class="pub-links"><a href="https://www.amazon.co.jp/dp/4874247601" target="_blank">Amazon</a> <a href="https://www.9640.jp/book_view/?760" target="_blank"><span class="ja-inline">出版社</span><span class="en-inline">Publisher</span></a></div>
         </div>
       </div>
 
       <div class="pub-section" data-type="lecture">
-        <h3>🎙️ 講演 Invited Lectures</h3>
+        <h3><span class="ja-inline">🎙️ 講演 Invited Lectures</span><span class="en-inline">🎙️ Invited Lectures</span></h3>
         <div class="pub-item" data-year="2019" data-type="lecture" data-title="方言を研究するとは？">
           <span class="year-label">2019</span>
           <span class="title">方言を研究するとは？</span>
@@ -1062,17 +1074,17 @@
           <span class="year-label">2019</span>
           <span class="title">シリーズ記述文法1 南琉球宮古語伊良部島方言</span>
           <div class="details">下地理則(2019)「刊行記念イベント：これから記述文法を執筆する人のために」，東京外国語大学アジア・アフリカ言語文化研究所，2019年3月．</div>
-          <div class="pub-links"><a href="https://www.academia.edu/40375798/" target="_blank">Academia.edu</a> <a href="https://www.amazon.co.jp/dp/4874247601" target="_blank">Amazon</a> <a href="https://www.9640.jp/book_view/?760" target="_blank">出版社</a></div>
+          <div class="pub-links"><a href="https://www.academia.edu/40375798/" target="_blank">Academia.edu</a> <a href="https://www.amazon.co.jp/dp/4874247601" target="_blank">Amazon</a> <a href="https://www.9640.jp/book_view/?760" target="_blank"><span class="ja-inline">出版社</span><span class="en-inline">Publisher</span></a></div>
         </div>
         <div class="pub-item" data-year="2019" data-type="lecture" data-title="シリーズ記述文法1 南琉球宮古語伊良部島方言">
           <span class="year-label">2019</span>
           <span class="title">シリーズ記述文法1 南琉球宮古語伊良部島方言</span>
           <div class="details">下地理則(2019)「刊行記念イベント：「文法を記述する」とは」，荻窪カフェ6次元，2019年3月．</div>
-          <div class="pub-links"><a href="https://www.amazon.co.jp/dp/4874247601" target="_blank">Amazon</a> <a href="https://www.9640.jp/book_view/?760" target="_blank">出版社</a></div>
+          <div class="pub-links"><a href="https://www.amazon.co.jp/dp/4874247601" target="_blank">Amazon</a> <a href="https://www.9640.jp/book_view/?760" target="_blank"><span class="ja-inline">出版社</span><span class="en-inline">Publisher</span></a></div>
         </div>
-        <div class="pub-item" data-year="2018" data-type="lecture" data-title="“Ryukyuan Languages from a Typological Perspective with a Special Focus on Marked Nominativity”, Approaches to Endangered Languages in Japan and Northeast Asia: Description, Documentation and Revitalization, NINJAL, 2018年8月．">
+        <div class="pub-item" data-year="2018" data-type="lecture" data-title=""Ryukyuan Languages from a Typological Perspective with a Special Focus on Marked Nominativity", Approaches to Endangered Languages in Japan and Northeast Asia: Description, Documentation and Revitalization, NINJAL, 2018年8月．">
           <span class="year-label">2018</span>
-          <span class="title">“Ryukyuan Languages from a Typological Perspective with a Special Focus on Marked Nominativity”, Approaches to Endangered Languages in Japan and Northeast Asia: Description, Documentation and Revitalization, NINJAL, 2018年8月．</span>
+          <span class="title">"Ryukyuan Languages from a Typological Perspective with a Special Focus on Marked Nominativity", Approaches to Endangered Languages in Japan and Northeast Asia: Description, Documentation and Revitalization, NINJAL, 2018年8月．</span>
           <div class="details">Shimoji, Michinori</div>
           
         </div>
@@ -1144,18 +1156,18 @@
   <footer class="site-footer">
     <div class="footer-content">
       <div class="footer-section">
-        <h3>下地理則の研究室</h3>
-        <p>九州大学大学院人文科学研究院<br>言語学講座</p>
+        <h3 data-i18n="site-title">下地理則の研究室</h3>
+        <p data-i18n="footer-affiliation">九州大学大学院人文科学研究院<br>言語学講座</p>
         <p style="margin-top: 1rem;">smz [at] kyudai.jp</p>
       </div>
       <div class="footer-section">
-        <h3>リンク</h3>
+        <h3 data-i18n="footer-links">リンク</h3>
         <a href="https://kyushu-u.academia.edu/MichinoriShimoji" target="_blank" rel="noopener">Academia.edu</a>
         <a href="https://researchmap.jp/read0122330" target="_blank" rel="noopener">Researchmap</a>
         <a href="https://note.com/lingfieldwork" target="_blank" rel="noopener">note</a>
       </div>
       <div class="footer-section">
-        <h3>サイトマップ</h3>
+        <h3 data-i18n="footer-sitemap">サイトマップ</h3>
         <a href="index.html" data-i18n="nav-home">HOME</a>
         <a href="members.html" data-i18n="nav-members">メンバー</a>
         <a href="research.html" data-i18n="nav-research">研究</a>
@@ -1163,7 +1175,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <p>&copy; 2025 下地理則研究室. All rights reserved.</p>
+      <p data-i18n="footer-copyright">&copy; 2025 下地理則研究室. All rights reserved.</p>
     </div>
   </footer>
 
@@ -1176,6 +1188,11 @@
     let currentType = 'all';
     
     document.addEventListener('DOMContentLoaded', function() {
+      // 言語設定を確認してbodyクラスを設定
+      const savedLang = localStorage.getItem('lang');
+      if (savedLang === 'en') {
+        document.body.classList.add('lang-en');
+      }
       updateResultCount();
     });
 
@@ -1220,13 +1237,33 @@
         count = total;
       }
       const el = document.getElementById('resultCount');
+      const lang = localStorage.getItem('lang') || 'ja';
       if (count === total) {
-        el.textContent = `全 ${total} 件`;
+        el.textContent = lang === 'en' ? `Total: ${total} items` : `全 ${total} 件`;
       } else {
-        el.textContent = `${count} 件 / ${total} 件`;
+        el.textContent = lang === 'en' ? `${count} / ${total} items` : `${count} 件 / ${total} 件`;
       }
     }
   </script>
   <script src="js/i18n.js"></script>
+  <script>
+    // i18n.jsロード後、toggleLangをオーバーライドしてbodyクラスも切り替え
+    (function() {
+      const originalToggle = window.i18n ? window.i18n.toggle : null;
+      if (originalToggle) {
+        window.i18n.toggle = function() {
+          originalToggle();
+          // body classを切り替え
+          const lang = localStorage.getItem('lang') || 'ja';
+          if (lang === 'en') {
+            document.body.classList.add('lang-en');
+          } else {
+            document.body.classList.remove('lang-en');
+          }
+          updateResultCount();
+        };
+      }
+    })();
+  </script>
 </body>
 </html>
