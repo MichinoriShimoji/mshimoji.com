@@ -73,22 +73,21 @@
       margin: 0;
       line-height: 1.7;
     }
+    /* i18n styles */
+    .en { display: none; }
+    body.lang-en .ja { display: none; }
+    body.lang-en .en { display: block; }
+    body.lang-en .en-inline { display: inline; }
+    body.lang-en .ja-inline { display: none; }
+    .ja-inline { display: inline; }
+    .en-inline { display: none; }
   </style>
-<!-- Research Artisan Pro Script Tag Start -->
-<script type="text/javascript">
-  var _Ra = {};
-  _Ra.hId = '1';
-  _Ra.uCd = '26010500010465531600';  _Ra.exceptCrawler = true;
-  (function() {var s=document.getElementsByTagName('script')[0],js=document.createElement('script');js.type='text/javascript';js.async='async';js.src='https://analyze.pro.research-artisan.com/track/script.php';s.parentNode.insertBefore(js,s);})();
-</script>
-<noscript><p><img src="https://analyze.pro.research-artisan.com/track/tracker.php?ucd=26010500010465531600&amp;hid=1&amp;guid=ON" alt="" width="1" height="1" /></p></noscript>
-<!-- Research Artisan Pro Script Tag End -->
 </head>
 <body>
   <header class="site-header">
     <div class="header-content">
-      <a href="index.html" class="site-title">下地理則の研究室</a>
-      <p class="site-subtitle">琉球語と日本語方言の研究 | 九州大学言語学講座</p>
+      <a href="index.html" class="site-title" data-i18n="site-title">下地理則の研究室</a>
+      <p class="site-subtitle" data-i18n="site-subtitle">日琉諸語の総合的記述研究 | 九州大学言語学講座</p>
     </div>
   </header>
 
@@ -98,67 +97,75 @@
         <span class="hamburger"></span>
       </button>
       <ul class="nav-list" id="navList">
-        <li class="nav-item"><a href="index.html" class="nav-link">HOME</a></li>
-        <li class="nav-item"><a href="members.html" class="nav-link">メンバー</a></li>
-        <li class="nav-item"><a href="research.html" class="nav-link">研究</a></li>
-        <li class="nav-item"><a href="teaching.html" class="nav-link">授業</a></li>
-        <li class="nav-item"><a href="theses.html" class="nav-link">指導した学位論文</a></li>
-        <li class="nav-item"><a href="irabu.html" class="nav-link">伊良部島方言を知る</a></li>
-        <li class="nav-item"><a href="resources.html" class="nav-link active">記述のリソース</a></li>
-        <li class="nav-item"><a href="prospective.html" class="nav-link">大学院志望者へ</a></li>
-          <li class="nav-item"><a href="https://note.com/lingfieldwork" class="nav-link" target="_blank">エッセイ</a></li>
+        <li class="nav-item"><a href="index.html" class="nav-link" data-i18n="nav-home">HOME</a></li>
+        <li class="nav-item"><a href="members.html" class="nav-link" data-i18n="nav-members">メンバー</a></li>
+        <li class="nav-item"><a href="research.html" class="nav-link" data-i18n="nav-research">研究</a></li>
+        <li class="nav-item"><a href="teaching.html" class="nav-link" data-i18n="nav-teaching">授業</a></li>
+        <li class="nav-item"><a href="theses.html" class="nav-link" data-i18n="nav-theses">指導した学位論文</a></li>
+        <li class="nav-item"><a href="irabu.html" class="nav-link" data-i18n="nav-irabu">伊良部島方言を知る</a></li>
+        <li class="nav-item"><a href="resources.html" class="nav-link active" data-i18n="nav-resources">記述のリソース</a></li>
+        <li class="nav-item"><a href="prospective.html" class="nav-link" data-i18n="nav-prospective">大学院志望者へ</a></li>
+        <li class="nav-item"><a href="https://note.com/lingfieldwork" class="nav-link" target="_blank" data-i18n="nav-essay">エッセイ</a></li>
       </ul>
+      <button id="langToggle" class="lang-toggle" onclick="toggleLang()" style="background:transparent;border:1px solid #333;color:#333;padding:0.3rem 0.6rem;border-radius:4px;cursor:pointer;font-size:0.85rem;margin-left:auto;">EN</button>
     </div>
   </nav>
 
   <main class="main-content">
     <section class="page-hero">
-      <h1 class="page-title">ドキュメンテーション・グロスづけ支援</h1>
-      <p class="page-description">例文提示法、グロスづけの方法、便利なツールの紹介</p>
+      <h1 class="page-title"><span class="ja">ドキュメンテーション・グロスづけ支援</span><span class="en">Documentation & Glossing Support</span></h1>
+      <p class="page-description"><span class="ja">例文提示法、グロスづけの方法、便利なツールの紹介</span><span class="en">Example presentation, glossing methods, and useful tools</span></p>
     </section>
 
     <section class="section">
-      <a href="resources.html" class="back-link">← 記述のリソースに戻る</a>
+      <a href="resources.html" class="back-link"><span class="ja-inline">← 記述のリソースに戻る</span><span class="en-inline">← Back to Resources</span></a>
       
       <div class="section-intro">
-        <p>言語データの記録・保存（ドキュメンテーション）に関する解説や、例文の提示法、グロスづけの方法などを紹介しています。Leipzig Glossing Rulesに準拠したグロスづけの方法や、作業を効率化する便利なツールも含まれています。</p>
+        <p class="ja">言語データの記録・保存（ドキュメンテーション）に関する解説や、例文の提示法、グロスづけの方法などを紹介しています。Leipzig Glossing Rulesに準拠したグロスづけの方法や、作業を効率化する便利なツールも含まれています。</p>
+        <p class="en">This page introduces explanations on recording and preserving language data (documentation), example presentation methods, and glossing techniques. It includes glossing methods based on the Leipzig Glossing Rules and useful tools to streamline your work.</p>
       </div>
 
       <div class="resource-card">
-        <h3>📚 例文提示・グロスづけの背景知識を得る</h3>
-        <p>「方言研究における例文提示法について」『方言の研究』6号。方言研究における例文の提示方法やグロスづけの基本的な考え方について解説した論文です。</p>
-        <a href="https://www.academia.edu/41601269/" class="card-link" target="_blank" rel="noopener">論文を読む（Academia.edu）</a>
+        <h3><span class="ja-inline">📚 例文提示・グロスづけの背景知識を得る</span><span class="en-inline">📚 Background Knowledge on Example Presentation & Glossing</span></h3>
+        <p class="ja">「方言研究における例文提示法について」『方言の研究』6号。方言研究における例文の提示方法やグロスづけの基本的な考え方について解説した論文です。</p>
+        <p class="en">"On Example Presentation in Dialect Research" published in <em>Studies in Dialects</em> Vol. 6. A paper explaining basic approaches to example presentation and glossing in dialect research.</p>
+        <a href="https://www.academia.edu/41601269/" class="card-link" target="_blank" rel="noopener"><span class="ja-inline">論文を読む（Academia.edu）</span><span class="en-inline">Read the paper (Academia.edu)</span></a>
       </div>
 
       <div class="resource-card">
-        <h3>📖 Leipzig Glossing Rulesの解説</h3>
-        <p>例文提示とグロスの付け方について、国際的な標準であるLeipzig Glossing Rulesに基づいて実践的に解説しています。</p>
-        <a href="https://note.com/lingfieldwork/n/nb8776ec7db93" class="card-link" target="_blank" rel="noopener">note記事を読む</a>
+        <h3><span class="ja-inline">📖 Leipzig Glossing Rulesの解説</span><span class="en-inline">📖 Guide to the Leipzig Glossing Rules</span></h3>
+        <p class="ja">例文提示とグロスの付け方について、国際的な標準であるLeipzig Glossing Rulesに基づいて実践的に解説しています。</p>
+        <p class="en">A practical guide to example presentation and glossing based on the international standard Leipzig Glossing Rules.</p>
+        <a href="https://note.com/lingfieldwork/n/nb8776ec7db93" class="card-link" target="_blank" rel="noopener"><span class="ja-inline">note記事を読む</span><span class="en-inline">Read the article (note)</span></a>
       </div>
 
       <div class="resource-card">
         <h3>🔍 SearchGloss</h3>
-        <p>方言グロスリスト（ゼミOB宮岡大氏作成）のデータをもとにした検索アプリです。文法用語からグロス、グロスから文法用語が簡単に検索できます。開発は下地理則（九州大学）。</p>
-        <a href="https://michinorishimoji.github.io/searchgloss/" class="card-link" target="_blank" rel="noopener">SearchGlossを使う</a>
-        <a href="https://docs.google.com/spreadsheets/d/14wKM61WaLz34-Dcj3Q_vFUmrwqu5Do7VeQu-It8wZVU/edit?gid=267816193#gid=267816193" class="card-link" target="_blank" rel="noopener">グロスリスト（元データ）</a>
+        <p class="ja">方言グロスリスト（ゼミOB宮岡大氏作成）のデータをもとにした検索アプリです。文法用語からグロス、グロスから文法用語が簡単に検索できます。開発は下地理則（九州大学）。</p>
+        <p class="en">A search app based on the dialect gloss list (compiled by lab alumnus Dai Miyaoka). Easily search from grammatical terms to glosses or vice versa. Developed by Michinori Shimoji (Kyushu University).</p>
+        <a href="https://michinorishimoji.github.io/searchgloss/" class="card-link" target="_blank" rel="noopener"><span class="ja-inline">SearchGlossを使う</span><span class="en-inline">Use SearchGloss</span></a>
+        <a href="https://docs.google.com/spreadsheets/d/14wKM61WaLz34-Dcj3Q_vFUmrwqu5Do7VeQu-It8wZVU/edit?gid=267816193#gid=267816193" class="card-link" target="_blank" rel="noopener"><span class="ja-inline">グロスリスト（元データ）</span><span class="en-inline">Gloss List (source data)</span></a>
       </div>
 
       <div class="resource-card">
-        <h3>⚙️ 例文提示フォーマットに自動で整えたい</h3>
-        <p>ベタ打ちで例文提示用のフォーマット（1行めが方言テキスト、2行めにグロス、3行目に全文訳など）を整えるのは骨が折れる作業で、しかもミスも多く、また時間の無駄です。この作業を自動で行えるツールを紹介しています。</p>
-        <a href="format-tools.html" class="card-link">ツールの紹介を見る</a>
+        <h3><span class="ja-inline">⚙️ 例文提示フォーマットに自動で整えたい</span><span class="en-inline">⚙️ Auto-format Example Presentations</span></h3>
+        <p class="ja">ベタ打ちで例文提示用のフォーマット（1行めが方言テキスト、2行めにグロス、3行目に全文訳など）を整えるのは骨が折れる作業で、しかもミスも多く、また時間の無駄です。この作業を自動で行えるツールを紹介しています。</p>
+        <p class="en">Manually formatting examples (dialect text on line 1, gloss on line 2, translation on line 3, etc.) is tedious, error-prone, and time-consuming. We introduce tools that automate this process.</p>
+        <a href="format-tools.html" class="card-link"><span class="ja-inline">ツールの紹介を見る</span><span class="en-inline">View Tools</span></a>
       </div>
 
       <div class="resource-card">
-        <h3>🎬 ELANの自然談話データから談話ギャラリーページ(HTML)を作る</h3>
-        <p>ELANの注釈データと音声データを使って、誰でも見やすく使いやすい談話ギャラリーページを作れるツールを紹介します。</p>
-        <a href="https://note.com/lingfieldwork/n/n7e0299ed494a" class="card-link" target="_blank" rel="noopener">note記事を読む</a>
+        <h3><span class="ja-inline">🎬 ELANの自然談話データから談話ギャラリーページ(HTML)を作る</span><span class="en-inline">🎬 Create Discourse Gallery Pages from ELAN Data</span></h3>
+        <p class="ja">ELANの注釈データと音声データを使って、誰でも見やすく使いやすい談話ギャラリーページを作れるツールを紹介します。</p>
+        <p class="en">We introduce tools for creating user-friendly discourse gallery pages using ELAN annotation data and audio files.</p>
+        <a href="https://note.com/lingfieldwork/n/n7e0299ed494a" class="card-link" target="_blank" rel="noopener"><span class="ja-inline">note記事を読む</span><span class="en-inline">Read the article (note)</span></a>
       </div>
 
       <div class="resource-card">
-        <h3>📔 ELANの自然談話データから形態素辞書(HTML)を作る</h3>
-        <p>ELANの注釈データと音声データを使って、談話データに生じるすべての形態素を品詞ごとに分け、その形態素が生じる例文も自動で引っ張ってきて音声付きで再生できる簡易形態素辞書を作るツールを紹介します。</p>
-        <a href="https://note.com/lingfieldwork/n/ncccf87239433" class="card-link" target="_blank" rel="noopener">note記事を読む</a>
+        <h3><span class="ja-inline">📔 ELANの自然談話データから形態素辞書(HTML)を作る</span><span class="en-inline">📔 Create Morpheme Dictionaries from ELAN Data</span></h3>
+        <p class="ja">ELANの注釈データと音声データを使って、談話データに生じるすべての形態素を品詞ごとに分け、その形態素が生じる例文も自動で引っ張ってきて音声付きで再生できる簡易形態素辞書を作るツールを紹介します。</p>
+        <p class="en">We introduce tools for creating simple morpheme dictionaries from ELAN data, automatically categorizing all morphemes by part of speech with example sentences and playable audio.</p>
+        <a href="https://note.com/lingfieldwork/n/ncccf87239433" class="card-link" target="_blank" rel="noopener"><span class="ja-inline">note記事を読む</span><span class="en-inline">Read the article (note)</span></a>
       </div>
 
     </section>
@@ -167,26 +174,26 @@
   <footer class="site-footer">
     <div class="footer-content">
       <div class="footer-section">
-        <h3>下地理則の研究室</h3>
-        <p>九州大学大学院人文科学研究院<br>言語学講座</p>
+        <h3 data-i18n="site-title">下地理則の研究室</h3>
+        <p data-i18n="footer-affiliation">九州大学大学院人文科学研究院<br>言語学講座</p>
         <p style="margin-top: 1rem;">smz [at] kyudai.jp</p>
       </div>
       <div class="footer-section">
-        <h3>リンク</h3>
+        <h3 data-i18n="footer-links">リンク</h3>
         <a href="https://kyushu-u.academia.edu/MichinoriShimoji" target="_blank" rel="noopener">Academia.edu</a>
         <a href="https://researchmap.jp/read0122330" target="_blank" rel="noopener">Researchmap</a>
         <a href="https://note.com/lingfieldwork" target="_blank" rel="noopener">note</a>
       </div>
       <div class="footer-section">
-        <h3>サイトマップ</h3>
-        <a href="index.html">HOME</a>
-        <a href="members.html">メンバー</a>
-        <a href="research.html">研究</a>
-        <a href="teaching.html">授業</a>
+        <h3 data-i18n="footer-sitemap">サイトマップ</h3>
+        <a href="index.html" data-i18n="nav-home">HOME</a>
+        <a href="members.html" data-i18n="nav-members">メンバー</a>
+        <a href="research.html" data-i18n="nav-research">研究</a>
+        <a href="teaching.html" data-i18n="nav-teaching">授業</a>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>&copy; 2025 下地理則研究室. All rights reserved.</p>
+      <p data-i18n="footer-copyright">&copy; 2025 下地理則研究室. All rights reserved.</p>
     </div>
   </footer>
 
@@ -194,6 +201,41 @@
     function toggleMenu() {
       document.getElementById('navList').classList.toggle('active');
     }
+    
+    // 言語設定を確認してbodyクラスを設定
+    document.addEventListener('DOMContentLoaded', function() {
+      const savedLang = localStorage.getItem('lang');
+      if (savedLang === 'en') {
+        document.body.classList.add('lang-en');
+      }
+    });
   </script>
+  <script src="js/i18n.js"></script>
+  <script>
+    // i18n.jsロード後、toggleLangをオーバーライドしてbodyクラスも切り替え
+    (function() {
+      const originalToggle = window.i18n ? window.i18n.toggle : null;
+      if (originalToggle) {
+        window.i18n.toggle = function() {
+          originalToggle();
+          const lang = localStorage.getItem('lang') || 'ja';
+          if (lang === 'en') {
+            document.body.classList.add('lang-en');
+          } else {
+            document.body.classList.remove('lang-en');
+          }
+        };
+      }
+    })();
+  </script>
+<!-- Research Artisan Pro Script Tag Start -->
+<script type="text/javascript">
+  var _Ra = {};
+  _Ra.hId = '1';
+  _Ra.uCd = '26010500010465531600';
+  (function() {var s=document.getElementsByTagName('script')[0],js=document.createElement('script');js.type='text/javascript';js.async='async';js.src='https://analyze.pro.research-artisan.com/track/script.php';s.parentNode.insertBefore(js,s);})();
+</script>
+<noscript><p><img src="https://analyze.pro.research-artisan.com/track/tracker.php?ucd=26010500010465531600&amp;hid=1&amp;guid=ON" alt="" width="1" height="1" /></p></noscript>
+<!-- Research Artisan Pro Script Tag End   -->
 </body>
 </html>
