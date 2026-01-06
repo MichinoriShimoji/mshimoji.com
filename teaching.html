@@ -7,86 +7,98 @@
   <title>授業 | 下地理則の研究室</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>">
+  <style>
+    /* i18n styles */
+    .en { display: none; }
+    body.lang-en .ja { display: none; }
+    body.lang-en .en { display: block; }
+    body.lang-en .en-inline { display: inline; }
+    body.lang-en .ja-inline { display: none; }
+    .ja-inline { display: inline; }
+    .en-inline { display: none; }
+  </style>
 </head>
 <body>
-  <!-- ヘッダー -->
   <header class="site-header">
     <div class="header-content">
-      <a href="index.html" class="site-title">下地理則の研究室</a>
-      <p class="site-subtitle">琉球語と日本語方言の研究 | 九州大学言語学講座</p>
+      <a href="index.html" class="site-title" data-i18n="site-title">下地理則の研究室</a>
+      <p class="site-subtitle" data-i18n="site-subtitle">日琉諸語の総合的記述研究 | 九州大学言語学講座</p>
     </div>
   </header>
 
-  <!-- ナビゲーション -->
   <nav class="main-nav">
     <div class="nav-container">
       <button class="mobile-menu-btn" aria-label="メニュー" onclick="toggleMenu()">
         <span class="hamburger"></span>
       </button>
       <ul class="nav-list" id="navList">
-        <li class="nav-item"><a href="index.html" class="nav-link">HOME</a></li>
-        <li class="nav-item"><a href="members.html" class="nav-link">メンバー</a></li>
-        <li class="nav-item"><a href="research.html" class="nav-link">研究</a></li>
-        <li class="nav-item"><a href="teaching.html" class="nav-link active">授業</a></li>
-        <li class="nav-item"><a href="theses.html" class="nav-link">指導した学位論文</a></li>
-        <li class="nav-item"><a href="irabu.html" class="nav-link">伊良部島方言を知る</a></li>
-        <li class="nav-item"><a href="resources.html" class="nav-link">記述のリソース</a></li>
-        <li class="nav-item"><a href="prospective.html" class="nav-link">大学院志望者へ</a></li>
+        <li class="nav-item"><a href="index.html" class="nav-link" data-i18n="nav-home">HOME</a></li>
+        <li class="nav-item"><a href="members.html" class="nav-link" data-i18n="nav-members">メンバー</a></li>
+        <li class="nav-item"><a href="research.html" class="nav-link" data-i18n="nav-research">研究</a></li>
+        <li class="nav-item"><a href="teaching.html" class="nav-link active" data-i18n="nav-teaching">授業</a></li>
+        <li class="nav-item"><a href="theses.html" class="nav-link" data-i18n="nav-theses">指導した学位論文</a></li>
+        <li class="nav-item"><a href="irabu.html" class="nav-link" data-i18n="nav-irabu">伊良部島方言を知る</a></li>
+        <li class="nav-item"><a href="resources.html" class="nav-link" data-i18n="nav-resources">記述のリソース</a></li>
+        <li class="nav-item"><a href="prospective.html" class="nav-link" data-i18n="nav-prospective">大学院志望者へ</a></li>
         <li class="nav-item"><a href="https://note.com/lingfieldwork" class="nav-link" target="_blank" data-i18n="nav-essay">エッセイ</a></li>
       </ul>
+      <button id="langToggle" class="lang-toggle" onclick="toggleLang()" style="background:transparent;border:1px solid #333;color:#333;padding:0.3rem 0.6rem;border-radius:4px;cursor:pointer;font-size:0.85rem;margin-left:auto;">EN</button>
     </div>
   </nav>
 
-  <!-- メインコンテンツ -->
   <main class="main-content">
     <section class="page-hero">
-      <h1 class="page-title">授業</h1>
-      <p class="page-description">Teaching</p>
+      <h1 class="page-title" data-i18n="page-title">授業</h1>
+      <p class="page-description"><span class="ja">学部・大学院の授業</span><span class="en">Undergraduate and Graduate Courses</span></p>
     </section>
 
     <section class="section">
-      <div class="text-content">
-        <p>
-          私の授業は学部（言語学概論、音声学（前期）、フィールド言語学（後期）、卒論演習）と大学院（輪読系、フィールド実習系、アカデミックスキル系）からなります。後者はフルオンラインが基本なので、外部学生も自由に参加できます。関心のある人は<a href="mailto:smz@kyudai.jp">私まで連絡</a>してください。
-        </p>
-      </div>
+      <p class="ja" style="line-height:1.8;">
+        私の授業は学部（言語学概論、音声学（前期）、フィールド言語学（後期）、卒論演習）と大学院（輪読系、フィールド実習系、アカデミックスキル系）からなります。後者はフルオンラインが基本なので、外部学生も自由に参加できます。関心のある人は<a href="mailto:smz@kyudai.jp">私まで連絡</a>してください。
+      </p>
+      <p class="en" style="line-height:1.8;">
+        My courses consist of undergraduate courses (Introduction to Linguistics, Phonetics (first semester), Field Linguistics (second semester), and Thesis Seminar) and graduate courses (reading seminars, fieldwork practice, and academic skills). The latter are fully online, so external students are welcome to participate. If you are interested, please <a href="mailto:smz@kyudai.jp">contact me</a>.
+      </p>
     </section>
 
     <section class="section">
-      <h2 class="section-title">2025年度後期（10月〜）</h2>
+      <h2 class="section-title"><span class="ja-inline">2025年度後期（10月〜）</span><span class="en-inline">2025 Fall Semester (October–)</span></h2>
       
       <div class="class-section">
-        <h3 class="class-title">学部授業</h3>
+        <h3 class="class-title"><span class="ja-inline">学部授業</span><span class="en-inline">Undergraduate Courses</span></h3>
         <div class="class-list">
           <div class="class-item">
-            <strong>言語学概論</strong>（月曜4限）、前期
+            <strong><span class="ja-inline">言語学概論</span><span class="en-inline">Introduction to Linguistics</span></strong><span class="ja-inline">（月曜4限）、前期</span><span class="en-inline"> (Mon. 4th period), Spring</span>
           </div>
           <div class="class-item">
-            <strong>音声学</strong>（火曜4限）、前期
+            <strong><span class="ja-inline">音声学</span><span class="en-inline">Phonetics</span></strong><span class="ja-inline">（火曜4限）、前期</span><span class="en-inline"> (Tue. 4th period), Spring</span>
           </div>
           <div class="class-item">
-            <strong>フィールド言語学</strong>（火曜4限）、後期
+            <strong><span class="ja-inline">フィールド言語学</span><span class="en-inline">Field Linguistics</span></strong><span class="ja-inline">（火曜4限）、後期</span><span class="en-inline"> (Tue. 4th period), Fall</span>
           </div>
           <div class="class-item">
-            <strong>卒論演習</strong>（個別面談形式）、3年後期〜
+            <strong><span class="ja-inline">卒論演習</span><span class="en-inline">Thesis Seminar</span></strong><span class="ja-inline">（個別面談形式）、3年後期〜</span><span class="en-inline"> (Individual meetings), from 3rd year Fall</span>
           </div>
         </div>
       </div>
 
       <div class="class-section">
-        <h3 class="class-title">大学院授業 <span style="font-weight:normal;font-size:0.85rem;color:var(--color-accent);">フルオンライン（外部学生参加歓迎）</span></h3>
+        <h3 class="class-title"><span class="ja-inline">大学院授業</span><span class="en-inline">Graduate Courses</span> <span style="font-weight:normal;font-size:0.85rem;color:var(--color-accent);"><span class="ja-inline">フルオンライン（外部学生参加歓迎）</span><span class="en-inline">Fully Online (External students welcome)</span></span></h3>
         <div class="class-list">
           <div class="class-item">
-            <strong>アカデミックライティング</strong>（月曜3限）<br>
-            <span style="color:var(--color-text-light);font-size:0.9rem;">毎週、担当者が各自の進行中プロジェクトを紹介（学振申請書、論文草稿、学会要旨、フィールドデータ検討など）。それに対して全員でフィードバックする。</span>
+            <strong><span class="ja-inline">アカデミックライティング</span><span class="en-inline">Academic Writing</span></strong><span class="ja-inline">（月曜3限）</span><span class="en-inline"> (Mon. 3rd period)</span><br>
+            <span style="color:var(--color-text-light);font-size:0.9rem;" class="ja">毎週、担当者が各自の進行中プロジェクトを紹介（学振申請書、論文草稿、学会要旨、フィールドデータ検討など）。それに対して全員でフィードバックする。</span>
+            <span style="color:var(--color-text-light);font-size:0.9rem;" class="en">Each week, a presenter introduces their ongoing project (JSPS applications, paper drafts, conference abstracts, field data review, etc.) and receives feedback from all participants.</span>
           </div>
           <div class="class-item">
-            <strong>言語学キー論文の輪読</strong>（火曜3限）<br>
-            <span style="color:var(--color-text-light);font-size:0.9rem;">下地が指定したキー論文（音韻論から談話研究までジャンルは多様）を学生が担当してまとめ、議論する。</span>
+            <strong><span class="ja-inline">言語学キー論文の輪読</span><span class="en-inline">Reading Key Papers in Linguistics</span></strong><span class="ja-inline">（火曜3限）</span><span class="en-inline"> (Tue. 3rd period)</span><br>
+            <span style="color:var(--color-text-light);font-size:0.9rem;" class="ja">下地が指定したキー論文（音韻論から談話研究までジャンルは多様）を学生が担当してまとめ、議論する。</span>
+            <span style="color:var(--color-text-light);font-size:0.9rem;" class="en">Students summarize and discuss key papers (covering diverse topics from phonology to discourse studies) assigned by Shimoji.</span>
           </div>
           <div class="class-item">
-            <strong>ELANを使った談話データの管理と分析</strong>（火曜5限）<br>
-            <span style="color:var(--color-text-light);font-size:0.9rem;">ELANを用いて、フィールドで得た談話データを管理し、注釈し、研究で使用する一連のワークフローを学ぶ。ワークショップ形式。</span>
+            <strong><span class="ja-inline">ELANを使った談話データの管理と分析</span><span class="en-inline">Managing and Analyzing Discourse Data with ELAN</span></strong><span class="ja-inline">（火曜5限）</span><span class="en-inline"> (Tue. 5th period)</span><br>
+            <span style="color:var(--color-text-light);font-size:0.9rem;" class="ja">ELANを用いて、フィールドで得た談話データを管理し、注釈し、研究で使用する一連のワークフローを学ぶ。ワークショップ形式。</span>
+            <span style="color:var(--color-text-light);font-size:0.9rem;" class="en">Learn the workflow for managing, annotating, and using discourse data collected in the field using ELAN. Workshop format.</span>
           </div>
         </div>
       </div>
@@ -94,40 +106,38 @@
 
     <section class="section">
       <div style="background:var(--color-sea-foam);padding:var(--spacing-lg);border-radius:12px;">
-        <h3 style="font-family:var(--font-serif);color:var(--color-primary-dark);margin-bottom:var(--spacing-sm);">外部学生の参加について</h3>
+        <h3 style="font-family:var(--font-serif);color:var(--color-primary-dark);margin-bottom:var(--spacing-sm);"><span class="ja-inline">外部学生の参加について</span><span class="en-inline">Participation by External Students</span></h3>
         <p style="color:var(--color-text-light);">
-          大学院の授業はフルオンラインで行っており、外部学生の参加も歓迎しています。関心のある方は、お気軽に<a href="mailto:smz@kyudai.jp">メール</a>でご連絡ください。
+          <span class="ja">大学院の授業はフルオンラインで行っており、外部学生の参加も歓迎しています。関心のある方は、お気軽に<a href="mailto:smz@kyudai.jp">メール</a>でご連絡ください。</span>
+          <span class="en">Graduate courses are conducted fully online, and external students are welcome to participate. If you are interested, please feel free to <a href="mailto:smz@kyudai.jp">contact us by email</a>.</span>
         </p>
       </div>
     </section>
   </main>
 
-  <!-- フッター -->
   <footer class="site-footer">
     <div class="footer-content">
       <div class="footer-section">
-        <h3>下地理則の研究室</h3>
-        <p>九州大学大学院人文科学研究院<br>言語学講座</p>
-        <p style="margin-top: 1rem;">
-          <a href="mailto:smz@kyudai.jp">smz [at] kyudai.jp</a>
-        </p>
+        <h3 data-i18n="site-title">下地理則の研究室</h3>
+        <p data-i18n="footer-affiliation">九州大学大学院人文科学研究院<br>言語学講座</p>
+        <p style="margin-top: 1rem;">smz [at] kyudai.jp</p>
       </div>
       <div class="footer-section">
-        <h3>リンク</h3>
+        <h3 data-i18n="footer-links">リンク</h3>
         <a href="https://kyushu-u.academia.edu/MichinoriShimoji" target="_blank" rel="noopener">Academia.edu</a>
         <a href="https://researchmap.jp/read0122330" target="_blank" rel="noopener">Researchmap</a>
         <a href="https://note.com/lingfieldwork" target="_blank" rel="noopener">note</a>
       </div>
       <div class="footer-section">
-        <h3>サイトマップ</h3>
-        <a href="index.html">HOME</a>
-        <a href="members.html">メンバー</a>
-        <a href="research.html">研究</a>
-        <a href="teaching.html">授業</a>
+        <h3 data-i18n="footer-sitemap">サイトマップ</h3>
+        <a href="index.html" data-i18n="nav-home">HOME</a>
+        <a href="members.html" data-i18n="nav-members">メンバー</a>
+        <a href="research.html" data-i18n="nav-research">研究</a>
+        <a href="teaching.html" data-i18n="nav-teaching">授業</a>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>&copy; 2025 下地理則研究室. All rights reserved.</p>
+      <p data-i18n="footer-copyright">&copy; 2025 下地理則研究室. All rights reserved.</p>
     </div>
   </footer>
 
@@ -135,21 +145,32 @@
     function toggleMenu() {
       document.getElementById('navList').classList.toggle('active');
     }
-  </script>
-
-
-    <div class="footer-bottom">
-      <p>&copy; 2025 下地理則研究室. All rights reserved.</p>
-    </div>
-  </footer>
-
-  <script>
-    function toggleMenu() {
-      document.getElementById('navList').classList.toggle('active');
-    }
+    
+    // 言語設定を確認してbodyクラスを設定
+    document.addEventListener('DOMContentLoaded', function() {
+      const savedLang = localStorage.getItem('lang');
+      if (savedLang === 'en') {
+        document.body.classList.add('lang-en');
+      }
+    });
   </script>
   <script src="js/i18n.js"></script>
-
-
+  <script>
+    // i18n.jsロード後、toggleLangをオーバーライドしてbodyクラスも切り替え
+    (function() {
+      const originalToggle = window.i18n ? window.i18n.toggle : null;
+      if (originalToggle) {
+        window.i18n.toggle = function() {
+          originalToggle();
+          const lang = localStorage.getItem('lang') || 'ja';
+          if (lang === 'en') {
+            document.body.classList.add('lang-en');
+          } else {
+            document.body.classList.remove('lang-en');
+          }
+        };
+      }
+    })();
+  </script>
 </body>
 </html>
