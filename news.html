@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="下地理則研究室のお知らせ">
+  <title>お知らせ | 下地理則の研究室</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>">
+  <style>
+    .news-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+    .news-item {
+      background: #fff;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .news-date {
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 0.5rem;
+    }
+    .news-title {
+      font-size: 1.2rem;
+      color: #1a365d;
+      margin-bottom: 0.8rem;
+    }
+    .news-content {
+      line-height: 1.8;
+      color: #333;
+    }
+    .news-content a {
+      color: #0369a1;
+    }
+    .news-content ul {
+      margin: 0.8rem 0;
+      padding-left: 1.2rem;
+    }
+    .news-content li {
+      margin-bottom: 0.4rem;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      color: #666;
+      text-decoration: none;
+    }
+    .back-link:hover {
+      color: #0369a1;
+    }
+    /* i18n styles */
+    .en { display: none; }
+    body.lang-en .ja { display: none; }
+    body.lang-en .en { display: block; }
+    body.lang-en .en-inline { display: inline; }
+    body.lang-en .ja-inline { display: none; }
+    .ja-inline { display: inline; }
+    .en-inline { display: none; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-content">
+      <a href="index.html" class="site-title" data-i18n="site-title">下地理則の研究室</a>
+      <p class="site-subtitle" data-i18n="site-subtitle">日琉諸語の総合的記述研究 | 九州大学言語学講座</p>
+    </div>
+  </header>
+
+  <nav class="main-nav">
+    <div class="nav-container">
+      <button class="mobile-menu-btn" aria-label="メニュー" onclick="toggleMenu()">
+        <span class="hamburger"></span>
+      </button>
+      <ul class="nav-list" id="navList">
+        <li class="nav-item"><a href="index.html" class="nav-link" data-i18n="nav-home">HOME</a></li>
+        <li class="nav-item"><a href="members.html" class="nav-link" data-i18n="nav-members">メンバー</a></li>
+        <li class="nav-item"><a href="research.html" class="nav-link" data-i18n="nav-research">研究</a></li>
+        <li class="nav-item"><a href="teaching.html" class="nav-link" data-i18n="nav-teaching">授業</a></li>
+        <li class="nav-item"><a href="theses.html" class="nav-link" data-i18n="nav-theses">指導した学位論文</a></li>
+        <li class="nav-item"><a href="irabu.html" class="nav-link" data-i18n="nav-irabu">伊良部島方言を知る</a></li>
+        <li class="nav-item"><a href="resources.html" class="nav-link" data-i18n="nav-resources">記述のリソース</a></li>
+        <li class="nav-item"><a href="prospective.html" class="nav-link" data-i18n="nav-prospective">大学院志望者へ</a></li>
+        <li class="nav-item"><a href="https://note.com/lingfieldwork" class="nav-link" target="_blank" data-i18n="nav-essay">エッセイ</a></li>
+      </ul>
+      <button id="langToggle" class="lang-toggle" onclick="toggleLang()" style="background:transparent;border:1px solid #333;color:#333;padding:0.3rem 0.6rem;border-radius:4px;cursor:pointer;font-size:0.85rem;margin-left:auto;">EN</button>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="news-container">
+      <a href="index.html" class="back-link"><span class="ja-inline">← HOMEに戻る</span><span class="en-inline">← Back to HOME</span></a>
+      
+      <h1 style="font-size:1.8rem;margin-bottom:2rem;color:#1a365d;"><span class="ja-inline">お知らせ</span><span class="en-inline">News</span></h1>
+
+      <!-- ======== ここから下を編集してニュースを追加 ======== -->
+
+      <div class="news-item">
+        <div class="news-date"><span class="ja-inline">2026年1月10日</span><span class="en-inline">January 10, 2026</span></div>
+        <div class="news-title"><span class="ja-inline">博士論文公聴会のお知らせ</span><span class="en-inline">Doctoral Dissertation Defense</span></div>
+        <div class="news-content">
+          <p class="ja">以下の日程で、下地ゼミの博士課程学生の博論審査公聴会を行います。オンラインです。事前の登録は不要ですが、参加希望者はメールでお問い合わせください。</p>
+          <p class="en">A doctoral dissertation defense will be held online for a PhD student of the Shimoji Lab. No prior registration is required, but those who wish to attend should contact us by email.</p>
+          <ul class="ja">
+            <li><strong>日時：</strong>2026年1月28日（水）15:00–16:00</li>
+            <li><strong>場所：</strong>オンライン（参加希望者は smz[at]kyudai.jp までメール）</li>
+            <li><strong>発表者：</strong>Matthew Guay（博士後期課程／流通経済大学准教授）</li>
+            <li><strong>博論題目：</strong><em>The Orientation System of Yaeyama Ryukyuan and a Grammar Sketch of Aragusuku-Uechi Yaeyaman</em></li>
+          </ul>
+          <ul class="en">
+            <li><strong>Date & Time:</strong> January 28, 2026 (Wed) 15:00–16:00 (JST)</li>
+            <li><strong>Venue:</strong> Online (contact smz[at]kyudai.jp for the link)</li>
+            <li><strong>Presenter:</strong> Matthew Guay (PhD candidate / Associate Professor, Ryutsu Keizai University)</li>
+            <li><strong>Dissertation Title:</strong> <em>The Orientation System of Yaeyama Ryukyuan and a Grammar Sketch of Aragusuku-Uechi Yaeyaman</em></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="news-item">
+        <div class="news-date"><span class="ja-inline">2026年1月10日</span><span class="en-inline">January 10, 2026</span></div>
+        <div class="news-title"><span class="ja-inline">ウェブサイトをリニューアルしました</span><span class="en-inline">Website Renewed</span></div>
+        <div class="news-content">
+          <p class="ja">下地理則研究室のウェブサイトをリニューアルしました。日本語・英語の切り替え機能を追加し、より使いやすくなりました。</p>
+          <p class="en">The Shimoji Lab website has been renewed. A Japanese/English toggle feature has been added for improved usability.</p>
+        </div>
+      </div>
+
+      <!-- 新しいニュースを追加する場合は、上の<div class="news-item">...</div>をコピーして
+           日付、タイトル、内容を書き換えてください。最新のニュースを上に配置してください。 -->
+
+      <!-- ======== ここまで ======== -->
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3 data-i18n="site-title">下地理則の研究室</h3>
+        <p data-i18n="footer-affiliation">九州大学大学院人文科学研究院<br>言語学講座</p>
+        <p style="margin-top: 1rem;">smz [at] kyudai.jp</p>
+      </div>
+      <div class="footer-section">
+        <h3 data-i18n="footer-links">リンク</h3>
+        <a href="https://kyushu-u.academia.edu/MichinoriShimoji" target="_blank" rel="noopener">Academia.edu</a>
+        <a href="https://researchmap.jp/read0122330" target="_blank" rel="noopener">Researchmap</a>
+        <a href="https://note.com/lingfieldwork" target="_blank" rel="noopener">note</a>
+      </div>
+      <div class="footer-section">
+        <h3 data-i18n="footer-sitemap">サイトマップ</h3>
+        <a href="index.html" data-i18n="nav-home">HOME</a>
+        <a href="members.html" data-i18n="nav-members">メンバー</a>
+        <a href="research.html" data-i18n="nav-research">研究</a>
+        <a href="teaching.html" data-i18n="nav-teaching">授業</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p data-i18n="footer-copyright">&copy; 2025 下地理則研究室. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById('navList').classList.toggle('active');
+    }
+    
+    // 言語設定を確認してbodyクラスを設定
+    document.addEventListener('DOMContentLoaded', function() {
+      const savedLang = localStorage.getItem('lang');
+      if (savedLang === 'en') {
+        document.body.classList.add('lang-en');
+      }
+    });
+  </script>
+  <script src="js/i18n.js"></script>
+  <script>
+    // i18n.jsロード後、toggleLangをオーバーライドしてbodyクラスも切り替え
+    (function() {
+      const originalToggle = window.i18n ? window.i18n.toggle : null;
+      if (originalToggle) {
+        window.i18n.toggle = function() {
+          originalToggle();
+          const lang = localStorage.getItem('lang') || 'ja';
+          if (lang === 'en') {
+            document.body.classList.add('lang-en');
+          } else {
+            document.body.classList.remove('lang-en');
+          }
+        };
+      }
+    })();
+  </script>
+<!-- Research Artisan Pro Script Tag Start -->
+<script type="text/javascript">
+  var _Ra = {};
+  _Ra.hId = '1';
+  _Ra.uCd = '26010500010465531600';
+  (function() {var s=document.getElementsByTagName('script')[0],js=document.createElement('script');js.type='text/javascript';js.async='async';js.src='https://analyze.pro.research-artisan.com/track/script.php';s.parentNode.insertBefore(js,s);})();
+</script>
+<noscript><p><img src="https://analyze.pro.research-artisan.com/track/tracker.php?ucd=26010500010465531600&amp;hid=1&amp;guid=ON" alt="" width="1" height="1" /></p></noscript>
+<!-- Research Artisan Pro Script Tag End   -->
+</body>
+</html>

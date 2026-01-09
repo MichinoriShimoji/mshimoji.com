@@ -35,10 +35,12 @@
     .main-content {
       flex: 1;
       display: flex;
-      justify-content: center;
-      align-items: flex-start;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
       padding: 2rem 1rem 1rem;
       background: transparent;
+      gap: 1rem;
     }
     .content-box {
       background: rgba(255, 255, 255, 0.6);
@@ -47,7 +49,7 @@
       backdrop-filter: blur(6px);
       max-width: 1100px;
       width: 90%;
-      max-height: calc(100vh - 180px);
+      max-height: calc(100vh - 220px);
       overflow-y: auto;
     }
     .content-box h1 {
@@ -81,6 +83,25 @@
       color: #0284c7;
       border-color: #0284c7;
     }
+    .news-box {
+      background: rgba(255, 255, 255, 0.7);
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      backdrop-filter: blur(6px);
+      max-width: 1100px;
+      width: 90%;
+      text-align: center;
+    }
+    .news-box a {
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      font-size: 0.95rem;
+      color: #0369a1;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+    .news-box a:hover {
+      color: #0284c7;
+    }
     .site-footer {
       display: none;
     }
@@ -89,7 +110,15 @@
         padding: 1.5rem 1.5rem;
         margin: 0.5rem;
       }
+      .news-box {
+        padding: 0.6rem 1rem;
+      }
     }
+    /* i18n styles */
+    .en-inline { display: none; }
+    .ja-inline { display: inline; }
+    body.lang-en .ja-inline { display: none; }
+    body.lang-en .en-inline { display: inline; }
   </style>
 </head>
 <body>
@@ -117,7 +146,7 @@
           <li class="nav-item"><a href="irabu.html" class="nav-link" data-i18n="nav-irabu">伊良部島方言を知る</a></li>
           <li class="nav-item"><a href="resources.html" class="nav-link" data-i18n="nav-resources">記述のリソース</a></li>
           <li class="nav-item"><a href="prospective.html" class="nav-link" data-i18n="nav-prospective">大学院志望者へ</a></li>
-        <li class="nav-item"><a href="https://note.com/lingfieldwork" class="nav-link" target="_blank" data-i18n="nav-essay">エッセイ</a></li>
+          <li class="nav-item"><a href="https://note.com/lingfieldwork" class="nav-link" target="_blank" data-i18n="nav-essay">エッセイ</a></li>
         </ul>
         <button id="langToggle" class="lang-toggle" onclick="toggleLang()" style="background:transparent;border:1px solid #333;color:#333;padding:0.3rem 0.6rem;border-radius:4px;cursor:pointer;font-size:0.85rem;margin-left:auto;">EN</button>
       </div>
@@ -136,6 +165,9 @@
           下地研究室の目指す「日琉諸語の総合的記述」のあり方について、読書案内や有用なリソースガイド付きのわかりやすいブックレットを用意しています。<a href="https://www.canva.com/design/DAF6CK2iCHo/7f-u1_Xb1LYXOl-Euc19Jw/view" target="_blank" rel="noopener">こちらからご覧ください</a>。
         </p>
       </div>
+      <div class="news-box">
+        <a href="news.html"><span class="ja-inline">📢 博士論文公聴会のお知らせ（2026/1/10）</span><span class="en-inline">📢 Doctoral Dissertation Defense Announcement (2026/1/10)</span></a>
+      </div>
     </main>
   </div>
 
@@ -143,8 +175,33 @@
     function toggleMenu() {
       document.getElementById('navList').classList.toggle('active');
     }
+    
+    // 言語設定を確認してbodyクラスを設定
+    document.addEventListener('DOMContentLoaded', function() {
+      const savedLang = localStorage.getItem('lang');
+      if (savedLang === 'en') {
+        document.body.classList.add('lang-en');
+      }
+    });
   </script>
   <script src="js/i18n.js"></script>
+  <script>
+    // i18n.jsロード後、toggleLangをオーバーライドしてbodyクラスも切り替え
+    (function() {
+      const originalToggle = window.i18n ? window.i18n.toggle : null;
+      if (originalToggle) {
+        window.i18n.toggle = function() {
+          originalToggle();
+          const lang = localStorage.getItem('lang') || 'ja';
+          if (lang === 'en') {
+            document.body.classList.add('lang-en');
+          } else {
+            document.body.classList.remove('lang-en');
+          }
+        };
+      }
+    })();
+  </script>
 <!-- Research Artisan Pro Script Tag Start -->
 <script type="text/javascript">
   var _Ra = {};
