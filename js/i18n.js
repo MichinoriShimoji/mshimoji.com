@@ -242,6 +242,52 @@
       }
     },
 
+    // 記述文法作成支援ページ
+    grammar: {
+      ja: {
+        'grammar-page-title': '記述文法作成支援',
+        'grammar-page-description': 'グラマーの執筆項目リスト、記述のポイント解説など',
+        'grammar-back-link': '← 記述のリソースに戻る',
+        'grammar-intro': '記述文法（グラマー）を書くためのガイドラインや、執筆項目のリスト、各項目における記述のポイントなどを解説しています。フィールドワークで得られたデータを、体系的な文法書としてまとめる際の参考にしてください。',
+        'grammar-card1-title': '🎧 基礎語彙調査ガイド',
+        'grammar-card1-desc': 'フィールドワーク1日目に行う基礎語彙調査の進め方を、音声つきの実例とともに解説しています。音素分析の3つのキーワード（相補分布・自由変異・対立）を、伊良部島方言のデータで体験的に学べます。',
+        'grammar-card1-link': 'ガイドを見る',
+        'grammar-card2-title': '📖 方言記述のスタートガイド',
+        'grammar-card2-desc': '下地ゼミ監修による、総合的な記述文法を独力で仕上げていくために知っておくべきことをコンパクトにまとめたガイドブックです。',
+        'grammar-card2-link': 'ガイドを見る',
+        'grammar-card3-title': '📋 執筆項目リスト',
+        'grammar-card3-desc': 'どのような言語であっても最低限カバーすべき執筆項目のリストと、項目ごとの記述上のポイントをまとめています。',
+        'grammar-card3-link': 'リストを見る',
+        'grammar-card4-title': '📚 記述文法リスト',
+        'grammar-card4-desc': 'これまでに出版ないし公開された日琉諸語の記述文法/概説のリストです。その多くにPDFリンクがついています。ご自身の執筆の参考にしてください。リンクに追加して欲しい執筆者の方は<a href="/cdn-cgi/l/email-protection#e1928c9ba18a9894858088cf8b91">下地までメール</a>をください。',
+        'grammar-card4-link': 'リストを見る',
+        'grammar-card5-title': '📝 日琉諸語の調査票ポータル',
+        'grammar-card5-desc': '松岡葵氏作成のelicitation調査票のポータルサイトです。音韻、形態、構文その他、トピックごとに、さまざまな調査票がまとめられています。',
+        'grammar-card5-link': 'ポータルを見る'
+      },
+      en: {
+        'grammar-page-title': 'Grammar Writing Support',
+        'grammar-page-description': 'Checklist of grammar sections, tips for descriptive writing, and more',
+        'grammar-back-link': '← Back to Resources',
+        'grammar-intro': 'Here you will find guidelines for writing a descriptive grammar, a checklist of sections to cover, and tips for each section. Use these as a reference when organizing your fieldwork data into a systematic grammar.',
+        'grammar-card1-title': '🎧 Basic Vocabulary Survey Guide',
+        'grammar-card1-desc': 'A guide to conducting a basic vocabulary survey on Day 1 of fieldwork, with audio examples. Learn the three key concepts of phonemic analysis (complementary distribution, free variation, and contrast) through Irabu dialect data.',
+        'grammar-card1-link': 'View Guide',
+        'grammar-card2-title': '📖 Dialect Description Starter Guide',
+        'grammar-card2-desc': 'A compact guidebook, supervised by the Shimoji seminar, covering everything you need to know to write a comprehensive descriptive grammar on your own.',
+        'grammar-card2-link': 'View Guide',
+        'grammar-card3-title': '📋 Writing Checklist',
+        'grammar-card3-desc': 'A list of sections that should be covered at minimum for any language, along with key points for describing each section.',
+        'grammar-card3-link': 'View List',
+        'grammar-card4-title': '📚 Descriptive Grammar List',
+        'grammar-card4-desc': 'A list of published or publicly available descriptive grammars and overviews of Japonic languages, many with PDF links. Use them as references for your own writing.',
+        'grammar-card4-link': 'View List',
+        'grammar-card5-title': '📝 Japonic Languages Questionnaire Portal',
+        'grammar-card5-desc': 'A portal site of elicitation questionnaires compiled by Aoi Matsuoka. Various questionnaires are organized by topic: phonology, morphology, syntax, and more.',
+        'grammar-card5-link': 'View Portal'
+      }
+    },
+
     // リソースページ
     resources: {
       ja: {
