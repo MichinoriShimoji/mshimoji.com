@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>語境界を入れて例文を正しく提示する方法</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --paper: #f8f5f0;
+    --accent: #c0392b;
+    --accent-soft: #e74c3c22;
+    --muted: #7f8c8d;
+    --border: #d5cec6;
+    --highlight: #fdf2e9;
+    --code-bg: #2c3e50;
+    --tag-bg: #eee8e0;
+    --example-bg: #eef6f0;
+    --example-border: #27ae60;
+    --example-accent: #1e8449;
+    --column-bg: #f0ebe4;
+    --column-border: #8e7c6a;
+    --body-width: 780px;
+    --sidenote-width: 260px;
+    --sidenote-gap: 36px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Noto Sans JP', sans-serif; background: var(--paper); color: var(--ink); line-height: 2; font-size: 17px; font-weight: 400; -webkit-font-smoothing: antialiased; }
+
+  .hero { position: relative; padding: 90px 40px 70px; background: var(--ink); color: var(--paper); overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: -120px; right: -80px; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(192,57,43,0.25) 0%, transparent 70%); pointer-events: none; }
+  .hero::after { content: '='; position: absolute; bottom: -30px; right: 40px; font-family: 'JetBrains Mono', monospace; font-size: 200px; font-weight: 500; color: rgba(255,255,255,0.03); pointer-events: none; }
+  .hero-inner { max-width: var(--body-width); margin: 0 auto; position: relative; z-index: 1; }
+  .hero-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); border: 1px solid rgba(192,57,43,0.4); padding: 5px 16px; border-radius: 3px; margin-bottom: 30px; }
+  .hero h1 { font-family: 'Noto Serif JP', serif; font-size: clamp(26px, 4vw, 42px); font-weight: 900; line-height: 1.35; margin-bottom: 20px; }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero-meta { font-size: 15px; color: rgba(248,245,240,0.55); line-height: 1.8; }
+  .hero-meta strong { color: rgba(248,245,240,0.85); font-weight: 500; }
+
+  .container { max-width: calc(var(--body-width) + var(--sidenote-width) + var(--sidenote-gap)); margin: 0 auto; padding: 0 40px; position: relative; }
+
+  .toc { margin: 52px 0; padding: 32px 36px; background: var(--highlight); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; max-width: var(--body-width); }
+  .toc-title { font-family: 'Noto Serif JP', serif; font-size: 14px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+  .toc ol { list-style: none; counter-reset: toc; }
+  .toc li { counter-increment: toc; margin-bottom: 7px; }
+  .toc li a { text-decoration: none; color: var(--ink); font-size: 15.5px; font-weight: 500; transition: color 0.2s; display: flex; align-items: baseline; gap: 10px; }
+  .toc li a::before { content: counter(toc, decimal-leading-zero); font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); min-width: 22px; }
+  .toc li a:hover { color: var(--accent); }
+
+  .section { margin: 64px 0; padding-top: 14px; border-top: 1px solid var(--border); max-width: var(--body-width); }
+  .section-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 24px; }
+  .section-num { font-family: 'JetBrains Mono', monospace; font-size: 36px; font-weight: 500; color: var(--accent); line-height: 1; min-width: 56px; opacity: 0.85; }
+  .section-titles h2 { font-family: 'Noto Serif JP', serif; font-size: 25px; font-weight: 700; line-height: 1.4; }
+  .section p { margin-bottom: 18px; }
+
+  .key-idea { background: var(--accent-soft); border-left: 3px solid var(--accent); padding: 18px 24px; border-radius: 0 6px 6px 0; margin: 24px 0; font-size: 16px; line-height: 1.9; }
+  .key-idea::before { content: '核心'; display: block; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 8px; }
+
+  .subsection { margin: 32px 0; padding-left: 22px; border-left: 2px solid var(--border); }
+  .subsection h3 { font-family: 'Noto Serif JP', serif; font-size: 19px; font-weight: 700; margin-bottom: 12px; }
+  .subsection h3 span { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent); margin-right: 6px; }
+
+  .ipa { font-family: 'JetBrains Mono', 'Noto Sans', monospace; font-size: 0.92em; background: rgba(0,0,0,0.04); padding: 1px 5px; border-radius: 3px; white-space: nowrap; }
+
+  /* ══════ INTERLINEAR GLOSS ══════ */
+  .ex-numbered { margin: 22px 0; padding: 14px 0; }
+  .ex-num-label { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--accent); font-weight: 500; margin-bottom: 8px; }
+  .ex-translation { margin-top: 6px; color: #555; }
+  .ex-note { font-size: 14.5px; color: var(--muted); margin-top: 4px; }
+
+  .gloss-line { display: flex; flex-wrap: wrap; gap: 2px 18px; margin: 6px 0; font-family: 'JetBrains Mono', 'Noto Sans', monospace; }
+  .gloss-unit { display: flex; flex-direction: column; align-items: flex-start; }
+  .gloss-src { font-size: 16px; line-height: 1.6; }
+  .gloss-label { font-size: 14.5px; line-height: 1.5; color: #666; font-family: 'Noto Sans JP', sans-serif; font-style: normal; }
+  .gloss-label-sc { font-variant: normal; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; font-size: 13px; font-style: normal; letter-spacing: 0.5px; }
+
+  .ungrammatical { color: var(--accent); font-weight: 700; }
+
+  .ex-sublist { margin-left: 24px; }
+  .ex-sublist .ex-sub-label { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent); margin-right: 6px; }
+
+  .ex-block { margin: 18px 0; padding: 14px 20px; background: var(--example-bg); border-left: 3px solid var(--example-border); border-radius: 0 6px 6px 0; }
+
+  /* ══════ SIDENOTES ══════ */
+  .sn-ref { font-family: 'JetBrains Mono', monospace; font-size: 0.68em; font-weight: 700; color: #fff; background: var(--accent); width: 17px; height: 17px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; vertical-align: super; line-height: 0; margin-left: 2px; cursor: default; }
+  .sidenote { float: right; clear: right; width: var(--sidenote-width); margin-right: calc(-1 * (var(--sidenote-width) + var(--sidenote-gap))); margin-bottom: 20px; font-size: 13.5px; line-height: 1.7; color: #4a3a2e; position: relative; padding: 14px 16px; background: linear-gradient(135deg, #fdf2e9 0%, #fdebd2 100%); border-radius: 8px; border: 1px solid #e8c9a8; box-shadow: 0 2px 8px rgba(192,57,43,0.07); }
+  .sidenote::before { content: attr(data-num); font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700; color: #fff; background: var(--accent); display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; position: absolute; top: -9px; left: -9px; box-shadow: 0 1px 4px rgba(192,57,43,0.25); }
+  .sidenote a { color: var(--accent); text-decoration: none; word-break: break-all; }
+  .sidenote a:hover { text-decoration: underline; }
+
+  .figure { margin: 32px 0; text-align: center; }
+  .figure img { max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border); background: #fff; padding: 8px; }
+  .figure-caption { font-size: 14px; color: var(--muted); margin-top: 10px; font-style: italic; line-height: 1.6; }
+  .figure-caption strong { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); font-weight: 700; margin-right: 4px; font-style: normal; }
+
+  .footer { text-align: center; padding: 60px 24px; font-size: 14px; color: var(--muted); border-top: 1px solid var(--border); margin-top: 80px; line-height: 1.8; }
+
+  /* ══════ STICKY NAV ══════ */
+  .sticky-nav { position: fixed; top: 0; left: 0; width: 100%; background: rgba(26,26,46,0.97); backdrop-filter: blur(8px); z-index: 100; display: flex; align-items: center; gap: 0; padding: 0 20px; height: 44px; overflow-x: auto; white-space: nowrap; font-size: 13px; }
+  .sticky-nav-title { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1px; color: rgba(248,245,240,0.4); margin-right: 12px; flex-shrink: 0; }
+  .sticky-nav a { color: rgba(248,245,240,0.55); text-decoration: none; padding: 10px 10px; flex-shrink: 0; transition: color 0.2s; font-weight: 400; }
+  .sticky-nav a:hover, .sticky-nav a.active { color: #fff; }
+  .sticky-nav .sn-num { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--accent); margin-right: 3px; }
+
+  @media (max-width: 1200px) {
+    .sidenote { float: none; width: 100%; margin: 10px 0 18px 0; padding: 14px 16px; background: linear-gradient(135deg, #fdf2e9 0%, #fdebd2 100%); border: 1px solid #e8c9a8; border-radius: 8px; font-size: 14px; box-shadow: 0 2px 8px rgba(192,57,43,0.07); }
+    .sidenote::before { position: static; display: inline-flex; margin-right: 8px; margin-bottom: 0; top: auto; left: auto; box-shadow: none; }
+    .section, .toc { max-width: 100%; }
+  }
+  @media (max-width: 640px) {
+    .hero { padding: 70px 20px 50px; }
+    .container { padding: 0 16px; }
+    .section-num { font-size: 28px; min-width: 40px; }
+    .section-titles h2 { font-size: 21px; }
+    .subsection { padding-left: 14px; }
+    .toc { padding: 24px 20px; }
+    .gloss-line { gap: 2px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ STICKY NAV ═══════════════ -->
+<nav class="sticky-nav" id="stickyNav">
+  <div class="sticky-nav-title">目次</div>
+  <a href="#s0"><span class="sn-num">00</span>はじめに</a>
+  <a href="#s1"><span class="sn-num">01</span>区切れ目を入れる</a>
+  <a href="#s2"><span class="sn-num">02</span>自立語・接語・接辞の認定</a>
+</nav>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<header class="hero">
+  <div class="hero-inner">
+    <h1>文法調査の準備（マスター編）：<br><em>語境界</em>を入れて例文を正しく提示する方法</h1>
+    <div class="hero-meta">
+      <strong>下地理則</strong>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════ TOC ═══════════════ -->
+<div class="container">
+  <nav class="toc">
+    <div class="toc-title">目次</div>
+    <ol>
+      <li><a href="#s0">はじめに</a></li>
+      <li><a href="#s1">文の内部に区切れ目を入れる</a></li>
+      <li><a href="#s2">自立語、接語、接辞をどうやって認定するのか</a></li>
+    </ol>
+  </nav>
+
+  <!-- ═══════════════ S0: はじめに ═══════════════ -->
+  <section class="section" id="s0">
+    <div class="section-header">
+      <div class="section-num">00</div>
+      <div class="section-titles"><h2>はじめに</h2></div>
+    </div>
+    <p>
+      伊良部島で調査を開始して1ヶ月ほど経った。400語の基礎語彙調査をあらかた終えているこの時期には、これまでに収集した語彙と、語彙と一緒に時々習う例文（例：「頭」という語彙と一緒に話者がたまたま教えてくれた「頭が痛い」）もノートにたくさん記録されていると思う。しかしその表記は安定せず、単語の境界のつもりで入れてみたスペースも一貫性がない。これからの時期は、いよいよ、「聞いたままの音素連続」の記録から、その内部構造の分析にシフトしていくことになる。巷で形態素分析と呼ばれる作業を本格化させるということである。
+    </p>
+    <div class="key-idea">
+      これまでは「頭」や「痛い」などの語彙を丸ごと記録していたあなたは、単語ごとにスペースを入れたり、その内部にハイフンを入れることで、名詞や動詞といったいわゆる語彙項目だけでなく、助詞や活用語尾といった文法項目の収集と整理、体系化に没頭していくことになる。本章では、その第一歩、つまり、「聞いたままの音素連続」に切れ目を入れていく方法を解説する。音素表記とこれらの境界表示の規則を身につければ、例文を一貫して書いていくことができるようになる。
+    </div>
+  </section>
+
+  <!-- ═══════════════ S1: 文の内部に区切れ目を入れる ═══════════════ -->
+  <section class="section" id="s1">
+    <div class="section-header">
+      <div class="section-num">01</div>
+      <div class="section-titles"><h2>文の内部に区切れ目を入れる</h2></div>
+    </div>
+
+    <div class="subsection">
+      <h3><span>1.1</span> 自立語と接語</h3>
+
+      <p>例文を丁寧に発話してもらったとき、話者が息継ぎをしたり区切ったりする切れ目が存在する。以下の録音データ（音素表記で書き起こし済み）を聴いてみて、発話の切れ目ごとに区切ってみよう。</p>
+
+      <!-- Example (1) -->
+      <div class="ex-numbered">
+        <div class="ex-num-label">(1) ELANデータ (irabu36_e 00:01:19:610)</div>
+        <p style="font-family:'JetBrains Mono',monospace; font-size:15px; word-break:break-all;">nkjaandukibannkibannupžtutuujakiitiinupžtutu dusɨatarca.</p>
+        <div class="ex-translation">「昔々、とても貧しい人ととても裕福な人が友達だったとさ。」</div>
+      </div>
+
+      <p>おそらく、以下のような発話の切れ目になっていたと思う。</p>
+
+      <!-- Example (2) -->
+      <div class="ex-numbered">
+        <div class="ex-num-label">(2)</div>
+        <div class="gloss-line">
+          <div class="gloss-unit"><span class="gloss-src">nkjaandu</span><span class="gloss-label">昔々</span></div>
+          <div class="gloss-unit"><span class="gloss-src">kibannkibannu</span><span class="gloss-label">とても貧乏な</span></div>
+          <div class="gloss-unit"><span class="gloss-src">pžtutu</span><span class="gloss-label">人と</span></div>
+          <div class="gloss-unit"><span class="gloss-src">ujakiitiinu</span><span class="gloss-label">とても裕福な</span></div>
+          <div class="gloss-unit"><span class="gloss-src">pžtutu</span><span class="gloss-label">人と</span></div>
+          <div class="gloss-unit"><span class="gloss-src">dusɨatarca.</span><span class="gloss-label">友達だったとさ</span></div>
+        </div>
+        <div class="ex-translation">「昔々、とても貧乏な人ととても裕福な人が友達だったとさ。」</div>
+      </div>
+
+      <p>
+        私の経験上、琉球諸語であれ本土方言であれ、そして標準語の場合でも、名詞や動詞に、格助詞や副助詞（「も」「さえ」的な形態素）、モダリティ助詞（「だろう」「はず（だ）」的な形態素）、終助詞（「ね」「よ」的な形態素）、あるいは接続助詞（「ので」「から」「なら」的な形態素）をくっつけてできたまとまりは、ここで例示したように、丁寧な「逐語的発話」においては1つの発話の切れ目になっていることが普通である。そしてこの単位は、多くの場合、音韻的なまとまりにもなっている。例えばアクセント規則を考える上での基礎単位でもあり、またリエゾンや子音の同化、脱落などなどの音韻規則などの適用される範囲（ドメイン）でもある。この、音声的に明確なまとまりをもち、経験的にも「便利」な単位を<strong>拡張語</strong>と呼ぶことにする<span class="sn-ref">1</span><span class="sidenote" data-num="1">この用語は伊良部島方言の記述文法書で導入したものであり、ヌートカ語の記述を行った中山(2007)が、自立語と接語（の連続）からなる音声的まとまりに対して用いた用語に倣った（中山俊秀「ヌートカ語」中山俊秀・山越康裕編『文法を描く―フィールドワークに基づく諸言語の文法スケッチ・2』東京外国語大学アジア・アフリカ言語文化研究所, 2007, pp.197-228）。学校文法で文節と呼ぶ単位に相当するが、文節の明確な定義はなく、「ね」が入る要素、のような「テスト」が提示されるのみである。文節という用語をもし使うのであれば、自分の記述でそれが一体何を指しうるのかについて、きちんと定義しておくのを忘れずに。</span>。もし、あなたの記述する言語で、拡張語が発話の区切りとして典型的な単位になっているなら、例文を記録する場合に拡張語ごとにスペースを入れておくと良いだろう<span class="sn-ref">2</span><span class="sidenote" data-num="2">もし、あなたの記述している言語が、拡張語よりも小さい、あるいは大きい単位で例文を区切った方が便利である、あるいは有効であると考えるなら、そう考えた時点で区切れ目を変えていけば良い。結局、第一仮説としてのとっかかりは、それが合理的ではない仮説なら、いつか必ず言語体系の側から「ツッコミ」が入り、あなたはそれに気づいて修正を迫られる。</span>。
+      </p>
+
+      <p>
+        拡張語は言語学者が単語すなわち<strong>自立語</strong>とみなす単位よりは大きい。上で述べたように、自立語である名詞や動詞に付属する文法的な諸要素（例えば上で助詞と呼んだもの）が連なって1つの拡張語を構成する。今、自立語の外側にあって、それに付属する要素を<strong>接語</strong>（付属語とも）と呼んで、その境界にイコールサイン（=）を使用する、と決めよう。上の説明から明らかに、接語は自立語ほどの「自立性」を持たない。なぜなら、自立語にくっついてしか出てこられないからである。一方で、接語は自立語の内部に取り込まれるほど「完全従属」したものでもない。あくまで自立語の外にあって、外部要素としての地位を保っており、ただ単独で発話することができないために、自立語にくっついて生じる。
+      </p>
+
+      <!-- Example (3) -->
+      <div class="ex-numbered">
+        <div class="ex-num-label">(3)</div>
+        <div class="gloss-line">
+          <div class="gloss-unit"><span class="gloss-src">nkjaan=du</span><span class="gloss-label">昔々=ぞ</span></div>
+          <div class="gloss-unit"><span class="gloss-src">kibann-kiban=nu</span><span class="gloss-label">とても.貧乏=な</span></div>
+          <div class="gloss-unit"><span class="gloss-src">pžtu=tu</span><span class="gloss-label">人=と</span></div>
+          <div class="gloss-unit"><span class="gloss-src">ujakii=tii=nu</span><span class="gloss-label">とても.裕福=な</span></div>
+          <div class="gloss-unit"><span class="gloss-src">pžtu=tu</span><span class="gloss-label">人=と</span></div>
+          <div class="gloss-unit"><span class="gloss-src">dusɨ=a-tar=ca.</span><span class="gloss-label">友達=COP-PST=とさ</span></div>
+        </div>
+        <div class="ex-translation">「昔々、とても貧しい人ととても裕福な人が友達だったとさ。」</div>
+      </div>
+
+      <p>
+        接語と同様に従属的な要素である<strong>接辞</strong>は、接語と違って自立語に「完全従属」し、常に語の内部要素として生じる。よって、接辞境界は接語境界と区別する必要がある<span class="sn-ref">3</span><span class="sidenote" data-num="3">区別する必要性を感じない、という人もいるかもしれない。しかし考えてみてほしい。品詞分類や単語の内部構造の記述を行う立場に立った時、語の内部にある要素か否かは決定的に重要な情報であろう。語という単位が確定しなくては、その分類（品詞分類）もできず、その内部構造（形態論）の記述もできないからである。例えば、日本語の拡張語 /kireina/「綺麗な」があった時、従属的な要素 /na/ が単語の中にあるならこの「語」は活用することになるが、実際はこれは接語であって、/kirei/ という自立語は活用しない。後続する接語 /na/ はコピュラとして品詞分類でき、その結果見えてくるのは、「形容動詞」なる品詞の強烈な名詞性である。</span>。慣習にしたがってハイフンを使う。接辞に限らず、複合語の語根同士の境界も、重複形の語基とコピーとの境界も、とにかく語の内部要素であればハイフンを使っても良い<span class="sn-ref">4</span><span class="sidenote" data-num="4">接辞境界と区別してチルダを使うことが一部で推奨されているが、そこまで浸透した慣習にはなっていない。ハイフンとイコールサインは「単語の内部要素かそうでないか」という語性 (wordhood) の記号であるのに対し、重複境界のチルダや複合語根境界のプラスサインは、さらに単語の作り方（形態法）も表示している記号であり、レベルが異なるものだからである。</span>。
+      </p>
+
+      <!-- Example (4) -->
+      <div class="ex-numbered">
+        <div class="ex-num-label">(4)</div>
+        <div class="gloss-line">
+          <div class="gloss-unit"><span class="gloss-src">nkjaan=du</span><span class="gloss-label">昔々=ぞ</span></div>
+          <div class="gloss-unit"><span class="gloss-src">kibann-kiban=nu</span><span class="gloss-label">RED-貧乏=な</span></div>
+          <div class="gloss-unit"><span class="gloss-src">pžtu=tu</span><span class="gloss-label">人=と</span></div>
+          <div class="gloss-unit"><span class="gloss-src">ujakii=tii=nu</span><span class="gloss-label">とても.裕福=な</span></div>
+          <div class="gloss-unit"><span class="gloss-src">pžtu=tu</span><span class="gloss-label">人=と</span></div>
+          <div class="gloss-unit"><span class="gloss-src">dusɨ=a-tar=ca.</span><span class="gloss-label">友達=COP-PST=とさ</span></div>
+        </div>
+        <div class="ex-translation">「昔々、とても貧しい人ととても裕福な人が友達だったとさ。」</div>
+      </div>
+
+      <div class="figure">
+        <img src="files/fig1_wordhood.png" alt="「先生たちが」「食べただろう」の構造と語性">
+        <div class="figure-caption"><strong>図1</strong> 「先生たちが」「食べただろう」の構造と語性</div>
+      </div>
+
+      <p>
+        拡張語ごとに記録した例文は、そのままではあまり有効な分析対象にはならない。拡張語に含まれるさまざまな文法的要素を切り出して、それらに名前をつけておくことで、初めて有効なデータとなる。つまり、ハイフンで接辞を切り出し、イコールサインで接語を切り出していく作業が必要になる。
+      </p>
+
+      <!-- Example (5) -->
+      <div class="ex-block">
+        <div class="ex-num-label">(5) 例文「昼ごはんは食べたよね」</div>
+        <p><strong>a.</strong> 拡張語ごとの分割（スペース）：<span class="ipa">pisirruba fautardarai</span></p>
+        <p><strong>b.</strong> 自立語と接語の分割（イコールサイン）：<span class="ipa">pisir=ru=ba fautar=dara=i</span></p>
+        <p><strong>c.</strong> 自立語内部の分割（ハイフン）：<span class="ipa">pisir=ru=ba fau-tar=dara=i</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ S2: 自立語、接語、接辞をどうやって認定するのか ═══════════════ -->
+  <section class="section" id="s2">
+    <div class="section-header">
+      <div class="section-num">02</div>
+      <div class="section-titles"><h2>自立語、接語、接辞をどうやって認定するのか</h2></div>
+    </div>
+
+    <p>
+      ところで、(5) で示した例文の境界表示法の方針自体は至極分りやすく、スペース、イコールサイン、ハイフンを使いながら例文を区切っていくことのイメージはよくつくと思う。ところが、実際に自分の記述対象言語で例文の境界表示を始めてみると、すぐに以下の困難にぶつかる。「自立語はどこまで続いていると見做せばいいのか？」、言い換えれば「接辞と接語の区別はどうやって行うのか？」という問題である。この問題、すなわち語の境界や語の同定にまつわる問題（<strong>語性</strong>）はまさに言語個別的で、あなたの扱う言語を観察しながら、あなた自身の指針で行なっていく必要がある。
+    </p>
+    <p>
+      以下では、伊良部島方言の拡張語の具体例「先生たちが」「食べただろう」を例に、この言語の自立語、接辞、接語を区別する方法を解説する。一連のプロセスとロジックの組み立て方を参考に、各自の言語記述に役立ててほしい。
+    </p>
+    <p>
+      結論を先取りして示しておこう。「先生たちが」「食べただろう」という拡張語は図1のように分析できる。「先生たちが」の場合、sinsiiが語根（自立語の中で接辞を全て取り除いた語彙的な意味を担う部分）で、これが複数接辞-mmiをとり、これら2つの形態素で1つの自立語たる名詞を形成している。その外側に主格助詞=nuが接語としてくっついている。「食べただろう」の場合、fauが語根で、これがテンス接辞-tarをとり、これら2つで1つの自立語たる動詞を形成している。その外側にモダリティ助詞=pazɨ「だろう」(conjectural; グロスは<span class="gloss-label-sc">CJC</span>) が接語としてくっついている。
+    </p>
+
+    <!-- ── 2.1 入れ替えテスト ── -->
+    <div class="subsection">
+      <h3><span>2.1</span> 入れ替えテスト</h3>
+
+      <p>
+        拡張語同士であれば、その語順の入れ替えは自由とまではいかなくとも、可能なことが多い。最小の拡張語（接語をすべて取り去ったもの）を自立語であると考えると、自立語同士の順番もまた、入れ替え可能な場合が見つかる<span class="sn-ref">5</span><span class="sidenote" data-num="5">より正確には、拡張語がいくつか連なって構成する句が、統語論的な操作の単位になっていて、最小の句（修飾部分などを一切伴わない、主要部だけの句）が、我々が今問題にしている拡張語である。</span>。
+      </p>
+
+      <!-- Example (6) -->
+      <div class="ex-numbered">
+        <div class="ex-num-label">(6)</div>
+        <div class="gloss-line">
+          <div class="gloss-unit"><span class="gloss-src">sinsii=tu</span><span class="gloss-label">先生=<span class="gloss-label-sc">COM</span></span></div>
+          <div class="gloss-unit"><span class="gloss-src">siitu</span><span class="gloss-label">生徒</span></div>
+        </div>
+        <div class="ex-translation">「先生と生徒」</div>
+      </div>
+
+      <!-- Example (7) -->
+      <div class="ex-numbered">
+        <div class="ex-num-label">(7)</div>
+        <div class="gloss-line">
+          <div class="gloss-unit"><span class="gloss-src">siitu=tu</span><span class="gloss-label">生徒=<span class="gloss-label-sc">COM</span></span></div>
+          <div class="gloss-unit"><span class="gloss-src">sinsii</span><span class="gloss-label">先生</span></div>
+        </div>
+        <div class="ex-translation">「生徒と先生」</div>
+      </div>
+
+      <p>
+        一方、自立語の内部要素、すなわち語根と接辞を入れ替えることは決してできない。例えば以下の例「ちびっこたち（直訳：子供っこたち）」において許される順序は (8) だけで、それ以外の論理的に可能な5通りは全く容認されないし、自由発話にも決して見つからない<span class="sn-ref">6</span><span class="sidenote" data-num="6">理論的には、形態論という領域と、統語論という領域の性質の違いとして考えることができる。形態論における形態素の操作とそのまとまり方は、統語論における語（以上の単位）の操作とそのまとまり方とかなり異なっているということである。</span>。
+      </p>
+
+      <!-- Example (8) -->
+      <div class="ex-numbered">
+        <div class="ex-num-label">(8)</div>
+        <div class="gloss-line">
+          <div class="gloss-unit"><span class="gloss-src">jarabi-gama-mmi</span><span class="gloss-label">子供-<span class="gloss-label-sc">DIM</span>-<span class="gloss-label-sc">PL</span></span></div>
+        </div>
+        <div class="ex-translation">「ちびっこたち」</div>
+      </div>
+
+      <!-- Example (9) -->
+      <div class="ex-numbered">
+        <div class="ex-num-label">(9) 不可能な構造</div>
+        <p style="font-family:'JetBrains Mono',monospace; font-size:14px; line-height:2;">
+          a. <span class="ungrammatical">*</span>jarabi-mmi-gama<br>
+          b. <span class="ungrammatical">*</span>mmi-jarabi-gama<br>
+          c. <span class="ungrammatical">*</span>mmi-gama-jarabi<br>
+          d. <span class="ungrammatical">*</span>gama-jarabi-mmi<br>
+          e. <span class="ungrammatical">*</span>gama-mmi-jarabi
+        </p>
+      </div>
+
+      <p>
+        このように、自立語の内部要素の順番は固定している。語より大きな単位（拡張語同士、あるいは自立語同士）の順番は語の内部要素の辞順よりは自由である、と言えるのである。この重要な違いを利用して、接辞と接語を判別可能な場合がある。以下、どちらも名詞にくっついているように見える -mmi「たち（複数）」と =nu「が（主格助詞）」を検討してみよう。
+      </p>
+
+      <!-- Example (10) -->
+      <div class="ex-numbered">
+        <div class="ex-num-label">(10)</div>
+        <div class="ex-sublist">
+          <p><span class="ex-sub-label">a.</span></p>
+          <div class="gloss-line">
+            <div class="gloss-unit"><span class="gloss-src">sinsii</span><span class="gloss-label">先生</span></div>
+            <div class="gloss-unit"><span class="gloss-src">tu</span><span class="gloss-label">と</span></div>
+            <div class="gloss-unit"><span class="gloss-src">siitu</span><span class="gloss-label">生徒</span></div>
+            <div class="gloss-unit"><span class="gloss-src">nu</span><span class="gloss-label"><span class="gloss-label-sc">NOM</span></span></div>
+          </div>
+          <div class="ex-translation">「先生と生徒が」</div>
+          <p style="margin-top:10px;"><span class="ex-sub-label">b.</span></p>
+          <div class="gloss-line">
+            <div class="gloss-unit"><span class="gloss-src">siitu</span><span class="gloss-label">生徒</span></div>
+            <div class="gloss-unit"><span class="gloss-src">tu</span><span class="gloss-label">と</span></div>
+            <div class="gloss-unit"><span class="gloss-src">sinsii</span><span class="gloss-label">先生</span></div>
+            <div class="gloss-unit"><span class="gloss-src">nu</span><span class="gloss-label"><span class="gloss-label-sc">NOM</span></span></div>
+          </div>
+          <div class="ex-translation">「生徒と先生が」</div>
+        </div>
+      </div>
+
+      <p>
+        今、ここで関わる形態素4つ（sinsii, tu, siitu, nu）の順番が sinsii-tu-siitu-nu というふうにテンプレートで固定されているなら、このようなことは決して起こらないはずである。最初の3つの順番が可変である時点で、その3つはそれぞれ語の内部要素とは言えないということになる。
+      </p>
+      <p>
+        では、nuについてはどうだろうか？(11c) に示すように、「先生と生徒」の外側にある主格助詞 nu が句全体に対してくっついている、と考えてみよう。
+      </p>
+
+      <!-- Example (11) -->
+      <div class="ex-numbered">
+        <div class="ex-num-label">(11)</div>
+        <div class="ex-sublist">
+          <p><span class="ex-sub-label">a.</span> sinsii=tu siitu 「先生と生徒」</p>
+          <p><span class="ex-sub-label">b.</span> siitu=tu sinsii 「生徒と先生」</p>
+          <p><span class="ex-sub-label">c-i.</span></p>
+          <div class="gloss-line">
+            <div class="gloss-unit"><span class="gloss-src">[sinsii</span><span class="gloss-label">先生</span></div>
+            <div class="gloss-unit"><span class="gloss-src">tu</span><span class="gloss-label">と</span></div>
+            <div class="gloss-unit"><span class="gloss-src">siitu]<sub>Phrase</sub>=nu</span><span class="gloss-label">生徒 <span class="gloss-label-sc">NOM</span></span></div>
+          </div>
+          <div class="ex-translation">「先生と生徒が」</div>
+          <p style="margin-top:10px;"><span class="ex-sub-label">c-ii.</span></p>
+          <div class="gloss-line">
+            <div class="gloss-unit"><span class="gloss-src">[siitu</span><span class="gloss-label">生徒</span></div>
+            <div class="gloss-unit"><span class="gloss-src">tu</span><span class="gloss-label">と</span></div>
+            <div class="gloss-unit"><span class="gloss-src">sinsii]<sub>Phrase</sub>=nu</span><span class="gloss-label">先生 <span class="gloss-label-sc">NOM</span></span></div>
+          </div>
+          <div class="ex-translation">「生徒と先生が」</div>
+        </div>
+      </div>
+
+      <p>
+        ここでもし、(12a) のように考えて、nu が siitu と一緒に自立語を構成している（接辞になっている）と分析してしまうと、語順を入れ替えた時、nu は siitu と一緒に文頭に移動するはずである (12b)。しかし、実際はそうならない。やはり、主格助詞を接語として、自立語の外側にあって句に接続する拘束形式だと考えた方が良い。
+      </p>
+
+      <!-- Example (12) -->
+      <div class="ex-numbered">
+        <div class="ex-num-label">(12)</div>
+        <div class="ex-sublist">
+          <p><span class="ex-sub-label">a.</span> [sinsii tu siitu-nu]<sub>Phrase</sub> 「生徒と先生が」</p>
+          <p><span class="ex-sub-label">b.</span> <span class="ungrammatical">*</span>siitu-nu tu sinsii 「（直訳：）生徒がと先生」</p>
+        </div>
+      </div>
+
+      <p>
+        では、今度は、単独で出現できない点では主格助詞と同じように見える複数形態素の -mmi について、同じように順序入れ替えテストをしてみる。
+      </p>
+
+      <!-- Example (13) -->
+      <div class="ex-numbered">
+        <div class="ex-num-label">(13)</div>
+        <div class="ex-sublist">
+          <p><span class="ex-sub-label">a.</span></p>
+          <div class="gloss-line">
+            <div class="gloss-unit"><span class="gloss-src">sinsii</span><span class="gloss-label">先生</span></div>
+            <div class="gloss-unit"><span class="gloss-src">tu</span><span class="gloss-label">と</span></div>
+            <div class="gloss-unit"><span class="gloss-src">siitu</span><span class="gloss-label">生徒</span></div>
+            <div class="gloss-unit"><span class="gloss-src">mmi</span><span class="gloss-label"><span class="gloss-label-sc">PL</span></span></div>
+          </div>
+          <div class="ex-translation">「先生と生徒たち」</div>
+          <p style="margin-top:10px;"><span class="ex-sub-label">b.</span></p>
+          <div class="gloss-line">
+            <div class="gloss-unit"><span class="gloss-src">siitu</span><span class="gloss-label">生徒</span></div>
+            <div class="gloss-unit"><span class="gloss-src">mmi</span><span class="gloss-label"><span class="gloss-label-sc">PL</span></span></div>
+            <div class="gloss-unit"><span class="gloss-src">tu</span><span class="gloss-label">と</span></div>
+            <div class="gloss-unit"><span class="gloss-src">sinsii</span><span class="gloss-label">先生</span></div>
+          </div>
+          <div class="ex-translation">「生徒たちと先生」</div>
+        </div>
+      </div>
+
+      <p>
+        (13b) において、複数形態素の mmi が、直前の名詞語根 siitu と一緒に文頭に移動していることに注意されたい。移動の対象になる siitu mmi は、それ全体で1つの自立語と見るのが合理的である。すなわち、mmi は、主格助詞の =nu（接語）と違い、自立語の内部要素と見た方が良さそうだ（つまり接辞だ）、ということがわかる。
+      </p>
+
+      <!-- Example (14) -->
+      <div class="ex-numbered">
+        <div class="ex-num-label">(14) 正しい分析結果</div>
+        <div class="gloss-line">
+          <div class="gloss-unit"><span class="gloss-src">sinsii=tu</span><span class="gloss-label">先生=<span class="gloss-label-sc">COM</span></span></div>
+          <div class="gloss-unit"><span class="gloss-src">siitu-mmi</span><span class="gloss-label">生徒-<span class="gloss-label-sc">PL</span></span></div>
+        </div>
+        <div class="ex-translation">「先生と生徒たち」</div>
+      </div>
+
+      <p>
+        ここでもし、(15a) に示すように、mmi が主格助詞と同様に「先生と生徒」の句に対して外側からくっついているなら、「先生と生徒」全体をスコープに入れた解釈（「先生と生徒」が全体で複数人いる解釈）が予測されるだろう。例えば「先生も３人、生徒も３人いる」状況も指せるはずである。そして、「先生と生徒」を入れ替えても、論理的意味は変わらないはずである。つまり、同じ絵を見せながら、指で指す順番だけを変えて、(15a, 15b) が得られるはずである。
+      </p>
+
+      <!-- Example (15) -->
+      <div class="ex-numbered">
+        <div class="ex-num-label">(15) mmi が句に接続しているとみた分析（間違っている分析）</div>
+        <div class="ex-sublist">
+          <p><span class="ex-sub-label">a.</span></p>
+          <div class="gloss-line">
+            <div class="gloss-unit"><span class="gloss-src">[sinsii</span><span class="gloss-label">先生</span></div>
+            <div class="gloss-unit"><span class="gloss-src">tu</span><span class="gloss-label">と</span></div>
+            <div class="gloss-unit"><span class="gloss-src">siitu]<sub>Phrase</sub>=mmi</span><span class="gloss-label">生徒=<span class="gloss-label-sc">PL</span></span></div>
+          </div>
+          <div class="ex-note">予期される解釈「ある先生とある生徒を核とする複数集団（＝先生も生徒も複数いて良い）」</div>
+          <p style="margin-top:10px;"><span class="ex-sub-label">b.</span></p>
+          <div class="gloss-line">
+            <div class="gloss-unit"><span class="gloss-src">[siitu</span><span class="gloss-label">生徒</span></div>
+            <div class="gloss-unit"><span class="gloss-src">tu</span><span class="gloss-label">と</span></div>
+            <div class="gloss-unit"><span class="gloss-src">sinsii]<sub>Phrase</sub>=mmi</span><span class="gloss-label">先生=<span class="gloss-label-sc">PL</span></span></div>
+          </div>
+          <div class="ex-note">予期される解釈「ある生徒とある先生を核とする複数集団（＝先生も生徒も複数いて良い）」</div>
+        </div>
+      </div>
+
+      <p>
+        しかし、実際には、sinsii tu siitu mmi という形態素連続は必ず「先生1人、生徒複数名」でなければならず、mmi の前を入れ替えた siitu tu sinsii mmi は「生徒1人、先生複数名」でなければならない。よって、(15) に示したような分析は成り立たず、-mmi は語の内部要素、すなわち接辞であるとみるべきなのである。
+      </p>
+
+      <p>
+        こうして、図1に示した通り、複数接辞 -mmi は確かに接辞であるといえ、主格助詞 =nu は確かに接語であると言える。どちらも名詞にくっついているように見える点では同じだが、くっついているレベル（レイヤー）が異なるのである。-mmi は名詞語根にくっついて名詞という自立語を構成するが、=nu は名詞句にくっついている。
+      </p>
+    </div>
+
+    <!-- ── 2.2 選択制限 ── -->
+    <div class="subsection">
+      <h3><span>2.2</span> 選択制限</h3>
+
+      <p>
+        接語と接辞は、その接続する対象が異なる、ということがよくわかってきたと思う。接語が句にくっつき、接辞が語の内部要素（例えば語根）にくっつく、というこの性質は、これらが見せる<strong>選択制限</strong>の違いに結びつくことが多い。
+      </p>
+      <p>
+        先に進む前に、ここで「くっつく」というインフォーマルな言い方を少し正確にしておこう。まず、接語は句全体を<strong>構造的ホスト</strong>にし、構造的にこの句全体に接続する。構造的に接続する、というのは、先にみた (11c-i, 11c-ii) や (15) のように、その接語が名詞句という構成素全体と、新たな構成素を作る、というような意味である。図2において、四角の番号で示した構成素に注目すると、主格助詞=nu は、線形的にその左側にある名詞句（四角の番号2）と構成素を作る。この最も大きな構成素は主語という役割を帯びた、伊良部島方言の記述で「拡張名詞句」と私が呼ぶ構成素である<span class="sn-ref">7</span><span class="sidenote" data-num="7">拡張名詞句という用語に関して、図2における構成素3の主要部が2（すなわち名詞句）であると主張しているわけではなく、単に便宜的に、構成素3に対してわかりやすい名前をつけただけである。名詞句に何ら役割がない段階（構成素2）に対して、その文法的役割を明示する格助詞が結びついた拡張名詞句を考えるとき、その主要部（その働きを決める部分）はむしろ格助詞の方にあると見ても良い。生成文法では、主格のような格標識を（英語における determiner のように）DP のヘッドとする考え方もあれば、あるいは DP の上位の構成素である KP (Case Phrase) のヘッドとする考え方もある。私の分析はこの後者の立場に近い。</span>。
+      </p>
+
+      <div class="figure">
+        <img src="files/twokindsofhosts.png" alt="構造的ホストと発話的ホスト">
+        <div class="figure-caption"><strong>図2</strong> 構造的ホストと発話的ホスト</div>
+      </div>
+
+      <p>
+        一方、この拡張名詞句を、今度は実際の発話のまとまりという観点で見ると（図2における丸の番号のまとまりに注目）、sinsii=tu がひとまとまりの拡張語であり、siitu=nu が別の拡張語である。このとき、共格助詞=tu も主格助詞=nu も、それぞれ直前の要素を<strong>発話的ホスト</strong>に接続して発話される、と言える。
+      </p>
+      <p>
+        以下は伊良部島方言のモダリティ助詞 =pazɨ が述語句に後続する例である。述語句の終端は動詞述語なら動詞、形容詞述語なら形容詞、名詞述語なら名詞なので、結果的に =pazɨ はこれら3つの品詞要素と共起していることになる。
+      </p>
+
+      <!-- Example (16) -->
+      <div class="ex-numbered">
+        <div class="ex-num-label">(16) [ ]<sub>Phrase</sub> =pazɨ</div>
+        <div class="ex-sublist">
+          <p><span class="ex-sub-label">a.</span></p>
+          <div class="gloss-line">
+            <div class="gloss-unit"><span class="gloss-src">[fau-tar]=pazɨ</span><span class="gloss-label">食べる-<span class="gloss-label-sc">PST</span>=<span class="gloss-label-sc">CJC</span></span></div>
+          </div>
+          <div class="ex-translation">「食べただろう」</div>
+          <p style="margin-top:10px;"><span class="ex-sub-label">b.</span></p>
+          <div class="gloss-line">
+            <div class="gloss-unit"><span class="gloss-src">[mmaa-mma]=pazɨ</span><span class="gloss-label"><span class="gloss-label-sc">RED</span>-おいしい=<span class="gloss-label-sc">CJC</span></span></div>
+          </div>
+          <div class="ex-translation">「おいしいだろう」</div>
+          <p style="margin-top:10px;"><span class="ex-sub-label">c.</span></p>
+          <div class="gloss-line">
+            <div class="gloss-unit"><span class="gloss-src">[sinsii]=pazɨ</span><span class="gloss-label">先生=<span class="gloss-label-sc">CJC</span></span></div>
+          </div>
+          <div class="ex-translation">「先生だろう」</div>
+        </div>
+      </div>
+
+      <p>
+        接辞の場合、「特定のタイプの語根/語幹」に接続する。つまり、接辞は1種類の品詞としか共起しない、という決定的な特徴がある。以下はテンス接辞の -tar（過去）の例である。
+      </p>
+
+      <!-- Example (17) -->
+      <div class="ex-numbered">
+        <div class="ex-num-label">(17) [ ]<sub>Stem</sub>-tar</div>
+        <div class="ex-sublist">
+          <p><span class="ex-sub-label">a.</span></p>
+          <div class="gloss-line">
+            <div class="gloss-unit"><span class="gloss-src">[fau]-tar</span><span class="gloss-label">食べる-<span class="gloss-label-sc">PST</span></span></div>
+          </div>
+          <div class="ex-translation">「食べた」</div>
+          <p style="margin-top:10px;"><span class="ex-sub-label">b.</span></p>
+          <div class="gloss-line">
+            <div class="gloss-unit"><span class="gloss-src">[mma-ka]-tar</span><span class="gloss-label">おいしい-<span class="gloss-label-sc">VLZ</span>-<span class="gloss-label-sc">PST</span></span></div>
+          </div>
+          <div class="ex-translation">「美味しかった」（形容詞語根 → -ka による動詞語幹化）</div>
+        </div>
+      </div>
+
+      <!-- Example (18) -->
+      <div class="key-idea">
+        <strong>(18) 接語 vs. 接辞の判別テストその2</strong><br>
+        2種類以上の品詞要素を発話的ホストにできるなら、その時点でそれは接辞ではない。
+      </div>
+
+      <p>
+        このテストによって、モダリティ助詞 =pazɨ は接辞ではない、ということができる。そしてこれは単独で生じることがないので、結果的にこれは（自立語ではなく）接語だと判定できる。
+      </p>
+      <p>
+        ただし、このテストを運用する際、以下の点に注意してほしい。「2種類以上の品詞要素を発話ホストにできない」場合、つまり、1種類の品詞要素にしか接続できないからといって、即座に「接辞だ」とは言えないということである。
+      </p>
+
+      <div class="figure">
+        <img src="files/selecttest.png" alt="選択制限テストとその判定結果">
+        <div class="figure-caption"><strong>図3</strong> 選択制限テストとその判定結果</div>
+      </div>
+
+      <p>
+        句によっては、その句末要素がたまたま、ただ1種類の品詞で固定されている場合もある。例えば伊良部島方言の接続助詞 =suga「だけど」（逆接）は句に接続するが<span class="sn-ref">8</span><span class="sidenote" data-num="8">節という用語は、述語を主要部として含み、項を支配するという内心的 (endocentric) な関係を考慮した場合の用語である。一方、この節というユニットは上位構造との相対的な外心的 (exocentric) な関係においては句として理解される。</span>、句末がどんな品詞であっても良いわけでなく、=suga の発話的ホストは常に動詞であるという強い制限がある。
+      </p>
+
+      <!-- Example (19) -->
+      <div class="ex-numbered">
+        <div class="ex-num-label">(19) [ ]<sub>Phrase</sub>=suga</div>
+        <div class="ex-sublist">
+          <p><span class="ex-sub-label">a.</span></p>
+          <div class="gloss-line">
+            <div class="gloss-unit"><span class="gloss-src">[narav-tar]=ruga</span><span class="gloss-label">習う-<span class="gloss-label-sc">PST</span>=<span class="gloss-label-sc">CNC</span></span></div>
+            <div class="gloss-unit"><span class="gloss-src">bassi-i</span><span class="gloss-label">忘れる-<span class="gloss-label-sc">SEQ</span></span></div>
+            <div class="gloss-unit"><span class="gloss-src">njaan=dooi.</span><span class="gloss-label"><span class="gloss-label-sc">PRF</span>=<span class="gloss-label-sc">EMP</span></span></div>
+          </div>
+          <div class="ex-translation">「習ったけど忘れたよ。」</div>
+          <p style="margin-top:10px;"><span class="ex-sub-label">b.</span></p>
+          <div class="gloss-line">
+            <div class="gloss-unit"><span class="gloss-src">[jarabi</span><span class="gloss-label">子供</span></div>
+            <div class="gloss-unit"><span class="gloss-src">jar]=ruga</span><span class="gloss-label"><span class="gloss-label-sc">COP</span>=<span class="gloss-label-sc">CNC</span></span></div>
+            <div class="gloss-unit"><span class="gloss-src">cuu-ganamar-ja=dooi</span><span class="gloss-label">強い-頭-<span class="gloss-label-sc">ATRB</span>=<span class="gloss-label-sc">EMP</span></span></div>
+          </div>
+          <div class="ex-translation">「子供だけど頭がいいよ。」</div>
+          <p style="margin-top:10px;"><span class="ex-sub-label">c.</span></p>
+          <div class="gloss-line">
+            <div class="gloss-unit"><span class="gloss-src">[mmaa-mma</span><span class="gloss-label"><span class="gloss-label-sc">RED</span>-おいしい</span></div>
+            <div class="gloss-unit"><span class="gloss-src">jar]=ruga</span><span class="gloss-label"><span class="gloss-label-sc">COP</span>=<span class="gloss-label-sc">CNC</span></span></div>
+            <div class="gloss-unit"><span class="gloss-src">takadai=dooi.</span><span class="gloss-label">高い=<span class="gloss-label-sc">EMP</span></span></div>
+          </div>
+          <div class="ex-translation">「おいしいけど高いよ。」</div>
+        </div>
+      </div>
+
+      <p>
+        これは、歴史的な観点から説明される「たまたま」である。=suga の =su は、伊良部島方言では形式名詞と呼ばれる =su「～の、～もの、～やつ」を起源とし、それに逆説の =ga が接続して出来上がった接続詞である。形式名詞 =su は、単独では出現できず、常に構造的ホストとして連体修飾節をとる。そして、この連体修飾節は必ず動詞で終わるという特徴がある。従って、=suga もまたこの特徴を引きずって、その発話的ホストが動詞に限定されてしまうのである。
+      </p>
+      <p>
+        なお、=suga が接語であることは、この選択制限テストからは判定できないが、かといって、入れ替えテストを使ってもまた、これが接語であることを明確に示すことはできない。以下の例を見てみよう。
+      </p>
+
+      <!-- Example (20) -->
+      <div class="ex-numbered">
+        <div class="ex-num-label">(20)</div>
+        <div class="ex-sublist">
+          <p><span class="ex-sub-label">a.</span></p>
+          <div class="gloss-line">
+            <div class="gloss-unit"><span class="gloss-src">agari-i</span><span class="gloss-label">上がる-<span class="gloss-label-sc">SEQ</span></span></div>
+            <div class="gloss-unit"><span class="gloss-src">sagar=ruga</span><span class="gloss-label">下がる=<span class="gloss-label-sc">CNC</span></span></div>
+          </div>
+          <div class="ex-translation">「上がって下がるけど」</div>
+          <p style="margin-top:10px;"><span class="ex-sub-label">b.</span></p>
+          <div class="gloss-line">
+            <div class="gloss-unit"><span class="gloss-src">sagari-i</span><span class="gloss-label">下がる-<span class="gloss-label-sc">SEQ</span></span></div>
+            <div class="gloss-unit"><span class="gloss-src">agar=ruga</span><span class="gloss-label">上がる=<span class="gloss-label-sc">CNC</span></span></div>
+          </div>
+          <div class="ex-translation">「下がって上がるけど」</div>
+        </div>
+      </div>
+
+      <p>
+        意味の点で考えれば、「上がって下がる」という節全体に対して =suga が接続していると見ることができる。
+      </p>
+
+    </div>
+  </section>
+
+</div>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="footer">
+  下地理則
+</footer>
+
+<script>
+(function() {
+  /* ── Sticky nav ── */
+  const nav = document.getElementById('stickyNav');
+  const links = nav.querySelectorAll('a');
+  const sections = document.querySelectorAll('.section[id]');
+
+  function updateNav() {
+    let current = '';
+    sections.forEach(function(section) {
+      if (window.scrollY >= section.offsetTop - 60) {
+        current = section.id;
+      }
+    });
+    links.forEach(function(link) {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + current) {
+        link.classList.add('active');
+        if (window.innerWidth <= 1300) {
+          link.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+        }
+      }
+    });
+  }
+
+  links.forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      var target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        window.scrollTo({ top: target.offsetTop - 20, behavior: 'smooth' });
+      }
+    });
+  });
+
+  window.addEventListener('scroll', updateNav, { passive: true });
+  updateNav();
+})();
+</script>
+</body>
+</html>
