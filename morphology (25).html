@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>形態素分析の実際（ビギナー編）</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e; --paper: #f8f5f0; --accent: #c0392b; --accent-soft: #e74c3c22;
+    --muted: #7f8c8d; --border: #d5cec6; --highlight: #fdf2e9; --code-bg: #2c3e50;
+    --tag-bg: #eee8e0; --example-bg: #eef6f0; --example-border: #27ae60; --example-accent: #1e8449;
+    --column-bg: #f0ebe4; --column-border: #8e7c6a;
+    --body-width: 780px; --sidenote-width: 260px; --sidenote-gap: 36px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Noto Sans JP', sans-serif; background: var(--paper); color: var(--ink); line-height: 2; font-size: 17px; font-weight: 400; -webkit-font-smoothing: antialiased; }
+
+  .hero { position: relative; padding: 90px 40px 70px; background: var(--ink); color: var(--paper); overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: -120px; right: -80px; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(192,57,43,0.25) 0%, transparent 70%); pointer-events: none; }
+  .hero::after { content: '-mmi'; position: absolute; bottom: -30px; right: 40px; font-family: 'JetBrains Mono', monospace; font-size: 180px; font-weight: 500; color: rgba(255,255,255,0.03); pointer-events: none; }
+  .hero-inner { max-width: var(--body-width); margin: 0 auto; position: relative; z-index: 1; }
+  .hero h1 { font-family: 'Noto Serif JP', serif; font-size: clamp(28px, 4.5vw, 46px); font-weight: 900; line-height: 1.35; margin-bottom: 20px; }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero-meta { font-size: 15px; color: rgba(248,245,240,0.55); line-height: 1.8; }
+  .hero-meta strong { color: rgba(248,245,240,0.85); font-weight: 500; }
+
+  .container { max-width: calc(var(--body-width) + var(--sidenote-width) + var(--sidenote-gap)); margin: 0 auto; padding: 0 40px; position: relative; }
+
+  .toc { margin: 52px 0; padding: 32px 36px; background: var(--highlight); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; max-width: var(--body-width); }
+  .toc-title { font-family: 'Noto Serif JP', serif; font-size: 14px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+  .toc ol { list-style: none; counter-reset: toc; }
+  .toc li { counter-increment: toc; margin-bottom: 7px; }
+  .toc li a { text-decoration: none; color: var(--ink); font-size: 15.5px; font-weight: 500; transition: color 0.2s; display: flex; align-items: baseline; gap: 10px; }
+  .toc li a::before { content: counter(toc, decimal-leading-zero); font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); min-width: 22px; }
+  .toc li a:hover { color: var(--accent); }
+
+  .section { margin: 64px 0; padding-top: 14px; border-top: 1px solid var(--border); max-width: var(--body-width); }
+  .section-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 24px; }
+  .section-num { font-family: 'JetBrains Mono', monospace; font-size: 36px; font-weight: 500; color: var(--accent); line-height: 1; min-width: 56px; opacity: 0.85; }
+  .section-titles h2 { font-family: 'Noto Serif JP', serif; font-size: 25px; font-weight: 700; line-height: 1.4; }
+  .section p { margin-bottom: 18px; }
+
+  .key-idea { background: var(--accent-soft); border-left: 3px solid var(--accent); padding: 18px 24px; border-radius: 0 6px 6px 0; margin: 24px 0; font-size: 16px; line-height: 1.9; }
+  .key-idea::before { content: '核心'; display: block; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 8px; }
+
+  .subsection { margin: 32px 0; padding-left: 22px; border-left: 2px solid var(--border); }
+  .subsection h3 { font-family: 'Noto Serif JP', serif; font-size: 19px; font-weight: 700; margin-bottom: 12px; }
+  .subsection h3 span { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent); margin-right: 6px; }
+
+  .ipa { font-family: 'JetBrains Mono', 'Noto Sans', monospace; font-size: 0.92em; background: rgba(0,0,0,0.04); padding: 1px 5px; border-radius: 3px; white-space: nowrap; }
+
+  .ex-block { margin: 20px 0; padding: 14px 20px; background: var(--example-bg); border-left: 3px solid var(--example-border); border-radius: 0 6px 6px 0; }
+  .ex-item { display: flex; gap: 10px; margin-bottom: 8px; font-size: 16px; line-height: 1.8; }
+  .ex-item:last-child { margin-bottom: 0; }
+  .ex-num { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--muted); min-width: 34px; flex-shrink: 0; padding-top: 2px; }
+  .ex-label { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--accent); font-weight: 500; margin-bottom: 8px; }
+
+  .derivation { margin: 8px 0; font-family: 'JetBrains Mono', 'Noto Sans', monospace; font-size: 15px; line-height: 2; }
+  .derivation .arrow { color: var(--accent); margin: 0 4px; }
+
+  /* ══════ SIDENOTES ══════ */
+  .sn-ref { font-family: 'JetBrains Mono', monospace; font-size: 0.68em; font-weight: 700; color: #fff; background: var(--accent); width: 17px; height: 17px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; vertical-align: super; line-height: 0; margin-left: 2px; cursor: default; }
+  .sidenote { float: right; clear: right; width: var(--sidenote-width); margin-right: calc(-1 * (var(--sidenote-width) + var(--sidenote-gap))); margin-bottom: 20px; font-size: 13.5px; line-height: 1.7; color: #4a3a2e; position: relative; padding: 14px 16px; background: linear-gradient(135deg, #fdf2e9 0%, #fdebd2 100%); border-radius: 8px; border: 1px solid #e8c9a8; box-shadow: 0 2px 8px rgba(192,57,43,0.07); }
+  .sidenote::before { content: attr(data-num); font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700; color: #fff; background: var(--accent); display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; position: absolute; top: -9px; left: -9px; box-shadow: 0 1px 4px rgba(192,57,43,0.25); }
+  .sidenote a { color: var(--accent); text-decoration: none; word-break: break-all; }
+  .sidenote a:hover { text-decoration: underline; }
+
+  .figure { margin: 32px 0; text-align: center; }
+  .figure img { max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border); background: #fff; padding: 8px; }
+  .figure-caption { font-size: 14px; color: var(--muted); margin-top: 10px; font-style: italic; line-height: 1.6; }
+  .figure-caption strong { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); font-weight: 700; margin-right: 4px; font-style: normal; }
+
+  .reveal-btn.answer-btn { color: var(--example-accent); border-color: var(--example-accent); }
+  .reveal-btn.answer-btn:hover { background: var(--example-accent); color: #fff; }
+  .reveal-btn.answer-btn.revealed { border-color: var(--muted); color: var(--muted); }
+  .reveal-btn.answer-btn.revealed:hover { background: var(--muted); color: #fff; }
+
+  a { color: var(--accent); }
+  strong, b { font-weight: 700; }
+  .footer { margin-top: 80px; padding: 40px; background: var(--ink); color: rgba(248,245,240,0.45); font-size: 14px; text-align: center; line-height: 1.8; }
+
+  /* ══════ STICKY NAV ══════ */
+  .sticky-nav { position: fixed; left: 0; top: 0; width: 200px; height: 100vh; background: var(--ink); padding: 28px 20px 28px 24px; z-index: 100; display: flex; flex-direction: column; justify-content: center; transform: translateX(-100%); transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease; opacity: 0; overflow-y: auto; }
+  .sticky-nav.visible { transform: translateX(0); opacity: 1; }
+  .sticky-nav-title { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: rgba(248,245,240,0.3); margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid rgba(248,245,240,0.08); }
+  .sticky-nav a { display: flex; align-items: baseline; gap: 8px; text-decoration: none; color: rgba(248,245,240,0.4); font-size: 12.5px; font-weight: 400; padding: 5px 0; transition: color 0.2s, padding-left 0.2s; line-height: 1.5; }
+  .sticky-nav a:hover { color: rgba(248,245,240,0.85); }
+  .sticky-nav a .sn-num { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: rgba(192,57,43,0.5); min-width: 20px; transition: color 0.2s; }
+  .sticky-nav a.active { color: var(--paper); font-weight: 500; padding-left: 6px; }
+  .sticky-nav a.active .sn-num { color: var(--accent); }
+
+  @media (max-width: 1300px) {
+    .sticky-nav { width: 100%; height: auto; flex-direction: row; align-items: center; gap: 4px; padding: 0 16px; overflow-x: auto; overflow-y: hidden; white-space: nowrap; justify-content: flex-start; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .sticky-nav::-webkit-scrollbar { display: none; }
+    .sticky-nav-title { display: none; }
+    .sticky-nav a { flex-shrink: 0; padding: 10px 8px; font-size: 11.5px; gap: 4px; }
+    .sticky-nav a .sn-num { font-size: 9px; min-width: auto; }
+    .sticky-nav a.active { padding-left: 8px; }
+  }
+  @media (max-width: 1200px) {
+    .sidenote { float: none; width: 100%; margin: 10px 0 18px 0; padding: 14px 16px; background: linear-gradient(135deg, #fdf2e9 0%, #fdebd2 100%); border: 1px solid #e8c9a8; border-radius: 8px; font-size: 14px; box-shadow: 0 2px 8px rgba(192,57,43,0.07); }
+    .sidenote::before { position: static; display: inline-flex; margin-right: 8px; margin-bottom: 0; top: auto; left: auto; box-shadow: none; }
+    .container { padding: 0 28px; }
+    .section, .toc { max-width: 100%; }
+  }
+  @media (max-width: 640px) {
+    body { font-size: 16px; }
+    .hero { padding: 52px 20px 44px; }
+    .container { padding: 0 16px; }
+    .section-num { font-size: 28px; min-width: 40px; }
+    .section-titles h2 { font-size: 21px; }
+    .subsection { padding-left: 14px; }
+    .toc { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ STICKY NAV ═══════════════ -->
+<nav class="sticky-nav" id="stickyNav">
+  <div class="sticky-nav-title">目次</div>
+  <a href="#s0"><span class="sn-num">00</span>はじめに</a>
+  <a href="#s1"><span class="sn-num">01</span>区切れ目を入れる</a>
+  <a href="#s1-1"><span class="sn-num"></span>形態素</a>
+  <a href="#s1-2"><span class="sn-num"></span>異形態</a>
+  <a href="#s2"><span class="sn-num">02</span>形態素境界</a>
+  <a href="#s2-1"><span class="sn-num"></span>引きにくい場合</a>
+  <a href="#s3"><span class="sn-num">03</span>テクニック</a>
+  <a href="#s3-1"><span class="sn-num"></span>削除</a>
+  <a href="#s3-2"><span class="sn-num"></span>挿入</a>
+  <a href="#s3-3"><span class="sn-num"></span>交替</a>
+  <a href="#s3-4"><span class="sn-num"></span>適用順序</a>
+  <a href="#s4"><span class="sn-num">04</span>形態素について</a>
+  <a href="#s4-1"><span class="sn-num"></span>形態素とは？</a>
+  <a href="#s4-2"><span class="sn-num"></span>/r/</a>
+  <a href="#s4-3"><span class="sn-num"></span>謎の母音</a>
+</nav>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<header class="hero">
+  <div class="hero-inner">
+    <h1><em>形態素分析</em>の実際（ビギナー編）</h1>
+    <div class="hero-meta">
+      <strong>下地理則</strong>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════ TOC ═══════════════ -->
+<div class="container">
+  <nav class="toc">
+    <div class="toc-title">目次</div>
+    <ol>
+      <li><a href="#s0">はじめに</a></li>
+      <li><a href="#s1">単語の内部に区切れ目を入れる</a>
+        <ol style="margin-left:22px; margin-top:4px;">
+          <li><a href="#s1-1">形態素</a></li>
+          <li><a href="#s1-2">異形態</a></li>
+        </ol>
+      </li>
+      <li><a href="#s2">形態素境界の標示</a>
+        <ol style="margin-left:22px; margin-top:4px;">
+          <li><a href="#s2-1">形態素境界を引きにくい場合</a></li>
+        </ol>
+      </li>
+      <li><a href="#s3">形態素分析の基本的なテクニック</a>
+        <ol style="margin-left:22px; margin-top:4px;">
+          <li><a href="#s3-1">削除</a></li>
+          <li><a href="#s3-2">挿入</a></li>
+          <li><a href="#s3-3">交替</a></li>
+          <li><a href="#s3-4">適用順序</a></li>
+        </ol>
+      </li>
+      <li><a href="#s4">再び、形態素について</a>
+        <ol style="margin-left:22px; margin-top:4px;">
+          <li><a href="#s4-1">形態素とは？</a></li>
+          <li><a href="#s4-2">/r/は形態素か？</a></li>
+          <li><a href="#s4-3">謎の母音</a></li>
+        </ol>
+      </li>
+    </ol>
+  </nav>
+
+  <!-- ═══════════════ S0: はじめに ═══════════════ -->
+  <section class="section" id="s0">
+    <div class="section-header">
+      <div class="section-num">00</div>
+      <div class="section-titles"><h2>はじめに</h2></div>
+    </div>
+    <p>
+      伊良部島で調査を開始して2ヶ月ほど経った。それまでの基礎語彙調査が「語彙」すなわち名詞やら動詞やらの膨大な表現の収集であったのに対し、この段階になると「文法項目」すなわち活用語尾やら名詞の複数接辞、あるいは助詞や接続詞などの有限個の文法形態素の形の洗い出しと機能の措定（意味の記述）にも精を出すようになっている。気づけば、もう文法記述の真っ只中に放り込まれた状態になっているのである。あなたが用いる音素表記は安定してきているが、形態素の切り方、その基底をどう定めるかについては一進一退の状態だと思う。このような段階で役にたつのは、フィールドワーカー達が様々な言語の調査を通して身につけてきた形態論のテクニックである。形態素が組み合わさって生じる形態音韻規則にはある種の類型（パターン）があり、それはどのような言語を扱う際にも役にたつ。この章では、伊良部島方言の形態音韻規則を類型化して解説することを通して、あなたが自分自身のフィールドでも同様の類型化を行って行けるようにトレーニングする。
+    </p>
+    <p>
+      なお、ここで展開する形態素分析のテクニックは、まず記述する側から見て、提示された音素列を形態素に切り分けるテクニック（構造主義的形態論）と、話者側から見て、発話される前の形態素（基底）から実際の音韻規則の適用を経て発話に乗る（表層）までのプロセスを提示するテクニック（生成音韻論、あるいは形態音韻論）と言える。記述を進めていれば、そのような形態分析の「王道」に様々な問題が潜んでいることを知り、ある意味では不毛なことをしていると気づくタイミングがやってくる。しかし、それに実感を持って賛同するためにも経験しなければならないのが、このモデルである<span class="sn-ref">1</span><span class="sidenote" data-num="1">本解説は形態論や形態音韻論の教科書ではないから、様々な用語や微細な分析テクニックを解説する余裕はない。形態音韻論は音韻論の教科書の中で扱っているものがほとんどである。これは、形態素の組み合わせから実現形を導出する領域（即ち形態音韻論）が基本的には音韻論の範囲である、という理論的な位置付け（特に生成文法における生成音韻論という理論的枠組みにおける位置付け）が理由であったり、あるいは音韻論で学んだ道具立てを使った応用編、という性格を持っているからでもある。よって、音韻論に関する教科書をいろいろ探ってみると良い。私の個人的なおすすめは<a href="https://www.wiley.com/en-us/Introductory+Phonology-p-9781444360134" target="_blank">Hayes (2009) <i>Introductory Phonology</i> (Blackwell)</a>である。日本語なら、<a href="https://www.amazon.co.jp/dp/4874241190" target="_blank">柴谷・影山・田守(1981)『言語の構造（音声・音韻篇）』（くろしお出版）</a>だろうか。なお、本章を読み進めながら伊良部島方言の形態音韻規則の全容を知りたくなったら<a href="https://www.9640.jp/book_view/?760" target="_blank">下地(2018)</a>を参照してほしい。</span>。
+    </p>
+  </section>
+
+
+  <!-- ═══════════════ S1: 単語の内部に区切れ目を入れる ═══════════════ -->
+  <section class="section" id="s1">
+    <div class="section-header">
+      <div class="section-num">01</div>
+      <div class="section-titles"><h2>単語の内部に区切れ目を入れる</h2></div>
+    </div>
+
+    <div class="subsection">
+      <h3 id="s1-1"><span>1.1</span> 形態素</h3>
+      <p>
+        これまで手に入れた基礎語彙データのほとんどは単語であろう。「単語」が何を指すのかは5章で詳しく考えていくとして、ひとまず直感的に辞書の項目になりそうな、短い表現であることは確かである<span class="sn-ref">2</span><span class="sidenote" data-num="2">経験的に、1から2音節程度が基礎語彙によくある長さで、3から4音節あたりになってくると、複数の「単語」を合わせたもの（複合語）か、少なくとも歴史的にそのような成り立ちであったろうと推定できそうなものが増えてくる。例えば2章で見た基礎語彙の中で /mipana/「顔」は /mii/「目」と /pana/「鼻」を合成したものを起源としているらしいとわかる。</span>。
+      </p>
+      <p>
+        しかし、これらの中には、あるいは話者が気まぐれに教えてくれる関連語彙の中には比較的長いものもあって、明らかに2つ以上の<strong>形態素</strong>に分解できるものも含まれている。例えば、/kanamar/「頭」という語彙を習ったときに、話者がたまたま「そういえば、「頭がいい人」のことを /zauganamarja/ というよ」と教えてくれたとしよう<span class="sn-ref">3</span><span class="sidenote" data-num="3">このようなことは非常に頻繁にある。ありがたいことである。基礎語彙調査は、話者にとって「教えるべきこと」が極めて分かりやすいために、余裕も生まれやすい。身体語彙を5つほど聞いていると、「ああ、この人は今、身体の方言を習いたいんだな」と気づいて、こちらが用意していなかった、実に様々な関連語彙を教えてくれるし、事前に「次回は体の部分について習いますのでよろしくお願いしますね」と伝えておけば、話者によっては膨大な関連語彙リストを自らメモして持ってきてくれることすらある（！）。私は、むしろそれを見越して、用意していく語彙は1日に20項目くらいに抑えて、話者が積極的に教えてくれる関連語彙の収集をメインにしていたほどである。そうしたのには別の理由もある。基礎語彙調査は調査者側の母語の世界の切り方に沿ったものになってしまうというリスクがあるが、こうすればある程度、このリスクを回避できるのである。例えば、身体語彙のうち、日本語の母語話者なら、調音音声学でしきりに習う「口蓋」を基礎語彙とは考えないから、まさかこれを調査項目にしようとは思わないだろう。ところが、伊良部島方言には /azɨgaa/「口蓋（上の歯の後ろ側から始まる、熱いものを食べてよく火傷する箇所）」という立派な基礎語彙があり、私が「口」「歯」「唇」「舌」あたりまで聞いて別の語彙にシフトすると、慌てて「歯の裏側のことを /azɨgaa/ というんだよ」と教えてくれた。この語彙は、富浜(2013)の『伊良部方言辞典』にも当然、立項されている(p. 18)。/azɨ/は、その音対応から古典語でアギやアギト（上顎を口の内側から指す）という名詞として知られるものと同根であろう。/gaa/は /kaa/「皮」の連濁形と考えられる。紛らわしいが、/azɨ/は「味」という同音異義の語彙もあって、話者によっては語源意識の薄れからか、「味を感じる皮」と考える人もいるが、語源的にはこれは正しくない。</span>。基礎語彙調査もだいぶ進んできたこの頃になると、/zauganamarja/ における /zau/ が「良い」という意味の形態素であることを、例えば以下のような基礎語彙の収集を通して知っているはずである。
+      </p>
+      <div class="ex-block">
+        <div class="ex-item"><span class="ex-num">a.</span>zaukar「良い」</div>
+        <div class="ex-item"><span class="ex-num">b.</span>ssukar「白い」</div>
+        <div class="ex-item"><span class="ex-num">c.</span>zaupžtu「いい人」</div>
+        <div class="ex-item"><span class="ex-num">d.</span>pžtu「人」</div>
+      </div>
+      <p>
+        zaukarとssukarの対比を通じて、これらの語が2つの形態素に分かれていることが同時にわかる。つまり、前半の /zau/「良い」および /ssu/「白い」という、形容詞の語彙的な意味を担う部分と、/kar/ という、おそらく形容詞の活用に関わる何らかの形態素に分解できることがわかる。そしてこの分析は、次のペア /zaupžtu/ と /pžtu/ の対比によっても確実であることがわかる。今ここで行なっていることが、形態素分析の実際である。
+      </p>
+      <p>
+        さて、/zauganamarja/ は、/zau/ と、おそらく /kanamar/ が何らかの理由で形を少し変えた /ganamar/ の部分を含み、さらに /ja/ という形態素も切り出せそうだとわかる。2章でも簡単に触れたように、/-ja/ という形態素は「〜する人」「〜である人」を表すことをどこかで覚えて知っていれば、この単語は途端に zau-ganamar-ja と3つの形態素に分解できそうだ、と気づく。/zauganamarja/「頭のいい人」は、/zau/「良い」+ /kanamar/「頭」+ /ja/「〜である人」の3形態素からなる1単語であろう、という見通しがたった。意味的にも確かに、「良い頭である人」＝「頭のいい人」は妥当な分析だろう。
+      </p>
+    </div>
+
+    <div class="subsection">
+      <h3 id="s1-2"><span>1.2</span> 異形態</h3>
+      <p>
+        形態素は音素と同様、話者の心的表示であって、厳密にはそれをダイレクトに「聞く」ことはできない。我々調査者が聞くことになるのは形態素が発話されたもの、つまり実現形であり、これは<strong>異形態</strong>と呼ばれる。異形態は、ストレートに形態素そのままの形で出てくることもあるが、実際は周囲の環境に応じて微妙に形を変えることが多い。まさに音素（心的表示）と異音（実現形）の関係とパラレルに考えることができ、ここでもまた、話者と調査者のそれぞれの視点に立って考えてみるのがわかりやすい（図1）。話者の視点からは、頭の中で /zau/ + /kanamar/ + /ja/ という3つの形態素を組み合わせ、それを単語にして発話しようと決める。それらが組み合わさるとき、周囲の環境に応じて、/kanamar/ はその形態素頭のオンセット /k/ を /g/ に交替させる。このように、形態素の組み合わせの際に生じる特定の音韻交替の規則を<strong>形態音韻規則</strong>という。形態素 /kanamar/ に対して、形態音韻規則の適用を受けた /ganamar/ が最終的な実現形（異形態）である<span class="sn-ref">4</span><span class="sidenote" data-num="4">/kanamar/ が /ganamar/ に交替する際の形態音韻規則はズバリ連濁である（3章参照）。複合という単語の作り方（語根と語根をそのままくっつける方法）に固有の形態音韻規則である。伊良部島方言では形容詞の語根と名詞がよく複合するが、日本語の名詞＋名詞の複合の場合と同様、連濁がよく見られる。</span>。調査者は、<strong>表層</strong>に出てきた /zauganamarja/ を観察し、いろいろな証拠をもとに、それが異形態 /zau/, /ganamar/, /ja/ を含むと睨み、そこから話者の心的表示である形態素の組み合わせ、すなわち<strong>基底</strong>の構造を復元していく。基底から表層を導く形態音韻規則は、形態素の種類によって様々で、それを1つ1つ見つけてはルールを明示していくのは調査者の重要な仕事である。
+      </p>
+      <p>
+        以下で説明をする際、基底すなわち形態素と、表層に出てくる実現形すなわち異形態を特に明確に区別する必要があるとき、前者を // // で、後者を / / で示す場合がある（これもまた言語学でよくなされる表示法である）。//zau-kanamar-ja// は、表層で /zauganamarja/ として出てくるということである。
+      </p>
+      <div class="figure">
+        <img src="files/fig1.png" alt="形態素と異形態の関係">
+        <div class="figure-caption"><strong>図1</strong> 形態素と異形態の関係</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ S2: 形態素境界の標示 ═══════════════ -->
+  <section class="section" id="s2">
+    <div class="section-header">
+      <div class="section-num">02</div>
+      <div class="section-titles"><h2>形態素境界の標示</h2></div>
+    </div>
+    <p>
+      あなたが単語であろうとみなす /zauganamarja/ が、今3つの形態素に分解できることがわかった。単語の内部の形態素境界は、最も一般的な言語学の慣習によるとハイフンで標示する。実現形である /zauganamarja/ に対して境界を入れるということは、異形態同士に境界を入れていることになる。しかし、結局その境界は形態素の境界と一致する場合が多い。
+    </p>
+    <div class="ex-block">
+      <div class="ex-label">異形態の境界と形態素の境界</div>
+      <div class="ex-item"><span class="ex-num">a.</span>/zau-ganamar-ja/（表層即ち異形態同士の境界）</div>
+      <div class="ex-item"><span class="ex-num">b.</span>//zau-kanamar-ja//（基底即ち形態素同士の境界）</div>
+    </div>
+    <p>
+      よって、異形態の境界であっても、とりあえず<strong>形態素境界</strong>と読んでおこう。なお、言語学でよくやる例文提示の際は、実際に発話される文なり句なり語なりを音素表記にして、それに（つまり異形態レベルで）形態素境界を入れたものを1行目に、そして1行目のそれぞれの区切られた異形態に対して訳（グロス）をつけたものを2行目にして提示する。このような例文提示法を、よく基本的な<strong>3段方式の提示</strong>という<span class="sn-ref">5</span><span class="sidenote" data-num="5">Canonical trilinear representation (Lehman 2004)の和訳。この基本的な3段方式や後述の4段のやり方も含め、日琉諸語の言語構造の実態に合わせた方言研究における例文提示の方法についてより詳しく知りたい人は<a href="https://www.academia.edu/41601269/%E6%96%B9%E8%A8%80%E7%A0%94%E7%A9%B6%E3%81%AB%E3%81%8A%E3%81%91%E3%82%8B%E4%BE%8B%E6%96%87%E6%8F%90%E7%A4%BA%E6%B3%95%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6" target="_blank">下地理則 (2020)「方言研究における例文提示法について」</a>を参考にしていただきたい。</span>。
+    </p>
+
+    <div class="subsection">
+      <h3 id="s2-1"><span>2.1</span> 形態素境界を引きにくい場合</h3>
+      <p>
+        形態素境界と実現形の境界（異形態の境界）が一致しないこともある。最もよくある例は、形態素の組み合わせが激しい<strong>融合</strong>(fusion)を引き起こし、実現形において境界が見えなくなってしまう場合である。伊良部島方言にはそのような例はなかなかないが、例えば以下のような例を見つけることができる。
+      </p>
+      <div class="ex-block">
+        <div class="ex-label">/jume/ の形成</div>
+        <div class="ex-item"><span class="ex-num">表層</span>/jume/</div>
+        <div class="ex-item"><span class="ex-num">基底</span>//jum-i-e//（読む-IMP-Q）</div>
+        <div class="ex-item">「読め（ってこと）か？」</div>
+      </div>
+      <p>
+        この例の基底構造は //jum//「読む」+ //i//「〜しろ（命令）」+ //e//「〜か？」の3形態素の組み合わせである<span class="sn-ref">6</span><span class="sidenote" data-num="6">/e/ は、単に命題の真偽を問う疑問というより、よりメタ的な（発話内容ではなく発話したセリフそのものに注目した）疑問助詞（発話内容の「確認疑問」の助詞）である。「読め（ってこと）か？」は、「あなたは今、「読め」と言ったのか？」という意味である。</span>。基底構造の組み合わせ //jumie// に形態音韻規則が働いて、命令の形態素 //i// が見えなくなってしまっている。なお、ここで働いている形態音韻規則がどんなものか、この例だけでは判断できない。安易に命令の /i/ が「脱落」したのだ、と言えないことは以下の例からわかる。
+      </p>
+      <div class="ex-block">
+        <div class="ex-label">bausjee? (bausje?)</div>
+        <div class="ex-item"><span class="ex-num">基底</span>//bau-si-e//（棒-INST-Q）</div>
+        <div class="ex-item">「棒でか？（私は今、「棒で」と聞いたけど、それで合ってるか？）」</div>
+      </div>
+      <p>
+        /bausjee/ は、基底では3つの形態素、即ち //bau//「棒」+ //si//（具格助詞「で」）+ //e//（確認疑問助詞）からなる。/bausjee/ は、特にぞんざいな発話（早い発話）では /bausje/ でも良い。この例からわかることは2つある。まず、今考えたい形態音韻規則は命令形態素と疑問形態素の組み合わせに限らない、ということである。疑問形態素 //e// が、命令形であれなんであれ、狭母音 //i// で終わる要素にくっつく際に適用される形態音韻規則だろう、ということである。次に、基底における //bau// + //si// + //e// の組み合わせによって生じる //ie// が /jee/ に交替した、ということである。/ie/ や /ia/, /ua/ などの時に、前半の狭母音（/i/ や /u/）が短くなる（すなわち /j/ や /w/ になる）ことは伊良部島方言でも、そしていろんな言語でも見られる。/i/ と /j/、および /u/ と /w/ は、音声学的に見れば「同じ母音」であり、単にその長さが違う。短いものは、その短さゆえに音節核として機能できず、従って子音として分類され、接近音 /j/ および /w/ としての記号を与えられるのであった（3章参照）。/i/ や /u/ が他の母音（例えば /a/）と組み合わさった時、それら他の母音に「音節核としての地位」を譲り、自らは短くなって接近音（子音）の位置を占める、という現象は、2つの独立の音節に属する母音が1つの音節に融合する例として考えることができる。
+      </p>
+      <p>そこで、この形態音韻規則を以下のように定式化してみよう。</p>
+      <div class="ex-block">
+        <div class="ex-label">疑問形態素 /e/ が関与する形態音韻規則</div>
+        <div class="ex-item">//i// + //e// → /jee/ (→ /je/)</div>
+      </div>
+      <p>
+        この規則の最後の(/je/)は、母音が短くなる（より正確には、/e/ が1つ脱落する）ことを意図している。今、この規則を前提として、再び /jume/ を検討しよう。//jum// + //i// + //e// は以下のようなプロセスを経て、基底構造から形を変えていくと想定できる<span class="sn-ref">7</span><span class="sidenote" data-num="7">このような、基底構造を入力として、形態音韻規則によって形を変えていくことを<strong>派生</strong>ということがある。</span>。
+      </p>
+      <div class="ex-block">
+        <div class="ex-label">/jume/ の形成プロセス</div>
+        <div class="ex-item">//jumie// → (上記規則) → /jumje/</div>
+      </div>
+      <p>
+        さて、この /jumje/ は、まだ我々が観察できるもの（音声として [jume]）と異なる。この言語には /mje/ という音節をはじめ、歯茎阻害音（/s/, /c/, /z/）以外は /Cje/ という音節構造は許されない。上記のように出来上がった /jumje/ は単に確認疑問形式の成立のために一連の形態音韻規則を機械的に適用しただけで、この言語の一般的な音韻制約（適格な音節になっているかなど）の調整を経ていない。/mje/ を適格な音節に修正するために /j/ を削除するという、（この疑問形式の形成に限らない）<strong>より一般的な音韻規則</strong>を想定する必要がある。
+      </p>
+      <div class="ex-block">
+        <div class="ex-label">/Cje/ の回避（ただし /C/ は歯茎阻害音以外）</div>
+        <div class="ex-item">/jumje/ → /jume/</div>
+      </div>
+      <p>
+        こうして、基底構造（//jum// + //i// + //e// の形態素の組み合わせ）から、形態音韻規則、そしてより一般的な音韻規則の適用を経て、実現形を導出することができた。出来上がった /jume/ にダイレクトに形態素境界を入れようと思っても、命令の /i/ の名残は見つからないし、しかもそれは単に消えたわけでもない。よって、/jume/ を /jum-e/ と切ることは正確ではない。
+      </p>
+      <p>
+        このように、基底（形態素の組み合わせ）と表層（実現形）の一対一の対応が見られない場合、上のような3段方式の例文提示は不都合である。こういう場合は、さらに1段足して、1段目に実現形（形態素分析なし）、2段目に基底構造（形態素の組み合わせ）、3段目に、2段目に対応したグロス付与、という風な提示が好都合である。
+      </p>
+      <p>
+        伊良部島方言を含む宮古語は概して形態素境界が明瞭に保たれやすく、3段方式の例文提示で事足りることが多いが、他の言語、例えば私が長く記述している宮崎県椎葉村尾前方言では母音融合が激しく、基底と表層の乖離が大きい場合も比較的多い。扱う言語のキャラクターに合わせて、例文提示の方法も考えていけば良い。
+      </p>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════ S3: 形態素分析の基本的なテクニック ═══════════════ -->
+  <section class="section" id="s3">
+    <div class="section-header">
+      <div class="section-num">03</div>
+      <div class="section-titles"><h2>形態素分析の基本的なテクニック</h2></div>
+    </div>
+    <p>
+      形態素が組み合わさるときの典型的な形態音韻規則は<strong>削除、挿入、交替、融合</strong>である。融合についてはすでに上で触れたので、以下ではそれ以外の3つについて、順番に具体的なデータ分析を通して学んでいこう。
+    </p>
+
+    <!-- ── 3.1 削除 ── -->
+    <div class="subsection">
+      <h3 id="s3-1"><span>3.1</span> 事例1: 削除</h3>
+      <p>
+        形態素が組み合わさるとき、形態素の境界にある音節同士がそのまま隣接するとその言語で不適格な音節構造になってしまうことがある。そんな時、形態音韻規則によって一方の音素が削除され、適格な音節構造が保持されることがよくある。
+      </p>
+      <p>
+        以下に示すデータは複数形、方向格形、与格形の作り方を例示したものである。各ペアを見比べながら、名詞語根と複数接辞、格助詞に分割できそうな場所を見つけて、実現形にハイフンを入れてみよう。そして、基底から表層を導く際、削除という点に注意して定式化してみよう。
+      </p>
+      <div class="ex-block">
+        <div class="ex-label">(1) 複数形</div>
+        <div class="ex-item"><span class="ex-num">a.</span>jarabi「子供」vs. jarabimmi「子供たち」</div>
+        <div class="ex-item"><span class="ex-num">b.</span>mjuuž「甥/姪」vs. mjuužmmi「甥/姪たち」</div>
+        <div class="ex-item"><span class="ex-num">c.</span>midum「女」vs. midummi「女たち」</div>
+      </div>
+      <div class="ex-block">
+        <div class="ex-label">(2) 方向格形</div>
+        <div class="ex-item"><span class="ex-num">a.</span>jarabi「子供」vs. jarabinkai「子供へ」</div>
+        <div class="ex-item"><span class="ex-num">b.</span>mjuuž「甥/姪」vs. mjuužnkai「甥/姪へ」</div>
+        <div class="ex-item"><span class="ex-num">c.</span>midum「女」vs. midumkai「女へ」</div>
+      </div>
+      <div class="ex-block">
+        <div class="ex-label">(3) 与格形</div>
+        <div class="ex-item"><span class="ex-num">a.</span>jarabi「子供」vs. jarabin「子供に」</div>
+        <div class="ex-item"><span class="ex-num">b.</span>mjuuž「甥/姪」vs. mjuužn「甥/姪に」</div>
+        <div class="ex-item"><span class="ex-num">c.</span>midum「女」vs. midum「女に」</div>
+      </div>
+
+      <div style="margin: 20px 0;">
+        <button class="reveal-btn answer-btn" id="answerToggle3" onclick="(function(){ var c=document.getElementById('answerContent3'); var b=document.getElementById('answerToggle3'); if(c.style.display==='none'){c.style.display='block';b.textContent='正解を隠す';b.classList.add('revealed');}else{c.style.display='none';b.textContent='正解を見る';b.classList.remove('revealed');} })()">正解を見る</button>
+        <div id="answerContent3" style="display:none; background: linear-gradient(135deg, #eef6f0 0%, #e8f4ec 100%); border: 1px solid #b5d8c2; border-radius: 8px; padding: 20px 24px; margin-top: 12px;">
+      <div class="ex-block" style="background: #fff !important; border-left-color: var(--example-accent); color: #1a1a2e;">
+        <div class="ex-label" style="color: var(--example-accent); font-size: 15px;">✔ 正解</div>
+        <div class="ex-label">(1) 複数形</div>
+        <div class="ex-item"><span class="ex-num">a.</span>jarabi-mmi「子供たち」</div>
+        <div class="ex-item"><span class="ex-num">b.</span>mjuuž-mmi「甥/姪たち」</div>
+        <div class="ex-item"><span class="ex-num">c.</span>midum-mi「女たち」（接辞頭の/m/削除）</div>
+      </div>
+      <div class="ex-block" style="background: #fff !important; border-left-color: var(--example-accent); color: #1a1a2e;">
+        <div class="ex-label">(2) 方向格形</div>
+        <div class="ex-item"><span class="ex-num">a.</span>jarabi-nkai「子供へ」</div>
+        <div class="ex-item"><span class="ex-num">b.</span>mjuuž-nkai「甥/姪へ」</div>
+        <div class="ex-item"><span class="ex-num">c.</span>midum-kai「女へ」（助詞頭の/n/削除）</div>
+      </div>
+      <div class="ex-block" style="background: #fff !important; border-left-color: var(--example-accent); color: #1a1a2e;">
+        <div class="ex-label">(3) 与格形</div>
+        <div class="ex-item"><span class="ex-num">a.</span>jarabi-n「子供に」</div>
+        <div class="ex-item"><span class="ex-num">b.</span>mjuuž-n「甥/姪に」</div>
+        <div class="ex-item"><span class="ex-num">c.</span>midum「女に」（助詞/n/の全体が削除）</div>
+      </div>
+      <p>
+        それぞれの形式の作り方で共通して、名詞語根が鼻音で終わっている場合（各例のc）に限り、後続する接辞/助詞の頭子音である鼻音が削除されることがわかる。複数接辞の/mmi/は/mi/として、方向格助詞の/nkai/は/kai/として実現する。(1c)は、このデータ単体で見た場合に、/mmi/の/m/が削除されたのか、名詞語根/midum/の末尾/m/が削除されたのかわからない。しかし、方向格と与格の作り方を見れば、そしてこれら<strong>異なる形態素で共通した削除規則が働いている</strong>と想定すれば、名詞語根ではなく、それに後続する形態素の側で削除が起こることがわかる。もちろん、今太字にした部分はこちらでおいた分析上の仮定であり、必ずしもそうなっているかどうかはわからない。しかし、そう仮定する合理的な理由がある。それは、この削除の環境が、3つの形態素間で共通しているからである。すなわち、単なる子音連続削除ではなく、語根末尾がモーラを持つ鼻音で、かつ後続の形態素の頭子音もまたモーラを持つ鼻音である（Nμ + Nμ）という特殊な環境である。
+      </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 1.2 挿入 ── -->
+    <div class="subsection">
+      <h3 id="s3-2"><span>3.2</span> 事例2: 挿入</h3>
+      <p>
+        基底には元々なかった要素（音素）が新たに挿入されることもある。非常によくあるパターンは、以下の2つである。<strong>母音挿入</strong>は、形態素境界に生じた、音節構造上許されない子音連続や語末のコーダ子音を回避するために、母音が挿入されることをいう。<strong>渡り音挿入</strong>は、同様に音節構造上許されない母音連続を避けるために渡り音（/j/や/w/）が挿入されることをいう。
+      </p>
+      <div class="ex-block">
+        <div class="ex-label">(4) 挿入 (Epenthesis)</div>
+        <div class="ex-item"><span class="ex-num">a.</span>//CC// → /C<strong>V</strong>C/ （母音挿入：Vowel epenthesis）</div>
+        <div class="ex-item"><span class="ex-num">b.</span>//VV// → /V<strong>G</strong>V/ （渡り音挿入：Glide epenthesis）</div>
+      </div>
+
+      <p>ここで、伊良部島方言における挿入現象を検討してみよう。以下は主題助詞「は」を名詞にくっつけた時の形（主題形）をいくつか挙げたものである。このデータを頼りに、主題助詞の形態素の形（基底形）と、異形態を導く規則を同定してみよう。</p>
+      <div class="ex-block">
+        <div class="ex-item"><span class="ex-num">(5)</span>/pana/「花」vs. /panaa/「花は」</div>
+        <div class="ex-item"><span class="ex-num">(6)</span>/pai/「畑」vs. /paija/「畑は」</div>
+        <div class="ex-item"><span class="ex-num">(7)</span>/bau/「棒」vs. /bauja/「棒は」</div>
+        <div class="ex-item"><span class="ex-num">(8)</span>/paa/「歯」vs. /paaja/「歯は」</div>
+      </div>
+
+      <div class="ex-block">
+        <div class="ex-label">(9) /ɨ/挿入</div>
+        <div class="ex-item"><span class="ex-num">a.</span>//nkif// → /ɨ/挿入 → /nkifɨ/「海ぶどう」</div>
+        <div class="ex-item"><span class="ex-num">b.</span>//pus// → /ɨ/挿入 → /pusɨ/「星」</div>
+        <div class="ex-item"><span class="ex-num">c.</span>//pac// → /ɨ/挿入 → /pacɨ/「蜂」</div>
+        <div class="ex-item"><span class="ex-num">d.</span>//paz// → /ɨ/挿入 → /pazɨ/「足」</div>
+      </div>
+
+      <p>
+        (9)で示すように、相互に無関係な、しかも単独の形態素の中で/ɨ/挿入が生じるのだから、この母音挿入が特定の形態素の組み合わせに駆動されるものではないことは明らかだろう。/ɨ/挿入は、形態素の組み合わせがあろうがなかろうが、とにかく最終段階（表層）において観察される音節構造を適格なものに保つために挿入される。例えば、単語の末尾に来る子音は1つまで、しかも共鳴音に限られるという厳格な制限があるために、(9)の全ての単語は基底のままでは出現できない。そこで/ɨ/挿入が駆動され、適格な音節構造を持った表層の語形が出力されるというわけである<span class="sn-ref">8</span><span class="sidenote" data-num="8">このような解説を聞いて、モヤる人もいるかもしれない。つまり、「/ɨ/挿入を仮定したからこそ、結果として語末子音に「共鳴音のみ」という制限が生じたわけで、その制限を回避するために/ɨ/挿入がある、というのは論理が逆転しているのではないか？」と。しかし、以下のように順序立てて説明すればこのモヤモヤは解消できる。まず、我々が耳で聞いて確認できる(9)の表層形には、確実に/ɨ/の音声が確認できる。実際に声帯振動が聞こえたり、仮に無声化していても、/ɨ/特有の、唇の横への開き（平唇化）が見られる。以下の動画で確認してみよう。<br><br><a href="https://zenodo.org/records/16574991/files/pazI.mp4?download=1" target="_blank" style="display:inline-flex; align-items:center; gap:4px; font-size:12.5px;">▶ /pazɨ/「足」</a>　<a href="https://zenodo.org/records/16574991/files/pusI.mp4?download=1" target="_blank" style="display:inline-flex; align-items:center; gap:4px; font-size:12.5px;">▶ /pusɨ/「星」</a><br><br>よって、これらが表層において母音で終わっている、と考えるのは正しい。これを踏まえた上で、表層において確実に子音で終わっている単語を集めてくると、全て共鳴音で終わっていることが確認できる。よって、まず「単語が子音で終わる時には共鳴音に限られる」という一般化を打ち立てることができる。次に、(9)の単語は全て、基底において確実に子音で終わっていると見なければならないという独立した根拠がある。すなわち、これらには、（確実に子音で終わっている共鳴音終わりの単語と全く同様に）重子音化規則が適用される（(11)も参照）。先ほど明らかにした確実な事実すなわち「(9)は表層では母音/ɨ/で終わっており、したがって単語が子音で終わる時には共鳴音に限られる」と、今明らかにした「(9)の単語は基底において子音で終わっている」という事実を合わせて考えるなら、合理的な説明は「(9)の単語は基底では子音で終わっているが、共鳴音ではないために、母音/ɨ/が挿入され、表層では母音終わりとなって実現した」というものになる。</span>。この規則は、もちろん形態素の組み合わせによって生じてしまう、不適格な子音連続を回避する手段にもなる。
+      </p>
+
+      <div class="ex-block">
+        <div class="ex-label">(10) /ɨ/挿入（形態素の組み合わせ）</div>
+        <div class="ex-item"><span class="ex-num">a.</span>//nkif// + //nu// → /ɨ/挿入 → /nkifɨnu/「海ぶどうが」</div>
+        <div class="ex-item"><span class="ex-num">b.</span>//pus// + //nu// → /ɨ/挿入 → /pusɨnu/「星が」</div>
+        <div class="ex-item"><span class="ex-num">c.</span>//pac// + //nu// → /ɨ/挿入 → /pacɨnu/「蜂が」</div>
+        <div class="ex-item"><span class="ex-num">d.</span>//paz// + //nu// → /ɨ/挿入 → /pazɨnu/「足が」</div>
+      </div>
+
+      <p>
+        このほかにも、一般的な音韻規則としての挿入現象はある。語中ではC.V（コーダ子音に隣接するオンセットなしの母音）が許されない。形態素の種類によらず、Cで終わる形態素にVで始まる形態素が隣接した場合、C.Vを回避する手段として、コーダと同じ子音がVのオンセットにコピーされ挿入される<strong>重子音化</strong>が生じる。
+      </p>
+      <div class="ex-block">
+        <div class="ex-label">(11) 重子音化規則</div>
+        <div class="ex-item"><span class="ex-num">a.</span>//nkif// + //a// (主題) → 重子音化 → /nkiffa/「海ぶどうは」</div>
+        <div class="ex-item"><span class="ex-num">b.</span>//nkif// + //u// (対格) → 重子音化 → /nkiffu/「海ぶどうを」</div>
+      </div>
+    </div>
+
+    <!-- ── 1.3 交替 ── -->
+    <div class="subsection">
+      <h3 id="s3-3"><span>3.3</span> 事例3: 交替</h3>
+      <p>
+        形態素が組み合わさるとき、基底において隣接する音素の一方が周囲の影響によって別の音素に交替することがある。理由がはっきりしている場合が多く、それは大体<strong>同化</strong>で説明される。同化とは、その隣接する音素の影響で、それに似ることを指す。完全に似る、すなわち隣接する音素と同じものになれば完全同化といい、部分的に（例えば有声性だけ、とか調音位置だけ、とか）似る場合は部分同化という。形態音韻論で交替を扱う際、同化のメカニズムを推理するために調音音声学的な知識とそれをフルに使った考察が肝になる。
+      </p>
+      <p>以下のデータを見てみよう。逆接の助詞/suga/「〜けど」は、それが接続する節末の要素（動詞）の末尾音によっては完全同化を起こす。</p>
+      <div class="ex-block">
+        <div class="ex-item"><span class="ex-num">(12)</span>ssan「知らない」+ suga → ssansuga「知らないけど」</div>
+        <div class="ex-item"><span class="ex-num">(13)</span>miir「見る」+ suga → miirruga「見るけど」</div>
+        <div class="ex-item"><span class="ex-num">(14)</span>jum「読む」+ suga → jumsuga「読むけど」</div>
+        <div class="ex-item"><span class="ex-num">(15)</span>až「言う」+ suga → ažsuga「言うけど」</div>
+        <div class="ex-item"><span class="ex-num">(16)</span>rr「入る」+ suga → rrsuga「入るけど」</div>
+      </div>
+
+      <p>
+        節末の動詞の語末が/r/の場合、/suga/の/s/が完全同化し、/r/に交替する。ただし、これだけでは不十分である。/rr/「入る」の場合にそうならないからである。/rr/は、音節構造としては成節子音（準音節）Rが重なったRRとして分析でき、それは語末にコーダを持つ構造とは異なる（むしろ音節核のみからなる）から、この同化規則は「動詞の語末<strong>コーダ</strong>が/r/の時」に限定される、と言うことである<span class="sn-ref">9</span><span class="sidenote" data-num="9">別の考え方もある。/rr/ + /suga/が同化規則の適用を受けた場合、/rrruga/となるはずで、この「超」重子音/rrr/を形成するのを避けるために、この規則が適用されない、と考えることもできる。</span>。
+      </p>
+
+      <p>以下の例は、動詞のさまざまな語形変化パターンのデータを抜粋したものである。各データの左端は語根の形であり、例えば語根kak-「書く」のハイフンは、後に何かしらの接辞をとって動詞として自立することを示している。fa(u)-「食べる」やumu(v)-「思う」におけるカッコは、ある時には/u/や/v/が削除されることを示す（この削除の環境も同定してみよう）。</p>
+      <div class="ex-block">
+        <div style="overflow-x:auto; margin:18px 0;">
+        <table style="border-collapse:collapse; font-size:15px; line-height:1.8; width:100%; color:#1a1a2e;">
+          <thead>
+            <tr style="border-bottom:2px solid var(--border); font-size:13px; color:var(--muted); font-family:'JetBrains Mono',monospace;">
+              <th style="text-align:left; padding:6px 12px 6px 0;"></th>
+              <th style="text-align:left; padding:6px 12px;">語根</th>
+              <th style="text-align:left; padding:6px 12px;">意志</th>
+              <th style="text-align:left; padding:6px 12px;">否定</th>
+              <th style="text-align:left; padding:6px 12px;">使役</th>
+              <th style="text-align:left; padding:6px 12px;">過去</th>
+              <th style="text-align:left; padding:6px 12px;">条件</th>
+            </tr>
+          </thead>
+          <tbody style="font-family:'JetBrains Mono','Noto Sans',monospace; color:#1a1a2e;">
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:6px 12px 6px 0; color:var(--accent); font-size:13px; font-family:'JetBrains Mono',monospace;">(20)</td>
+              <td style="padding:6px 12px;">jum-<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">読む</span></td>
+              <td style="padding:6px 12px;">juma<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">読もう</span></td>
+              <td style="padding:6px 12px;">juman<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">読まない</span></td>
+              <td style="padding:6px 12px;">jumasɨ<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">読ませる</span></td>
+              <td style="padding:6px 12px;">jumtar<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">読んだ</span></td>
+              <td style="padding:6px 12px;">jumtigaa<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">読んだら</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:6px 12px 6px 0; color:var(--accent); font-size:13px; font-family:'JetBrains Mono',monospace;">(21)</td>
+              <td style="padding:6px 12px;">fa(u)-<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">食べる</span></td>
+              <td style="padding:6px 12px;">faa<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">食べよう</span></td>
+              <td style="padding:6px 12px;">faan<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">食べない</span></td>
+              <td style="padding:6px 12px;">faasɨ<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">食べさせる</span></td>
+              <td style="padding:6px 12px;">fautar<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">食べた</span></td>
+              <td style="padding:6px 12px;">fautigaa<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">食べたら</span></td>
+            </tr>
+            <tr>
+              <td style="padding:6px 12px 6px 0; color:var(--accent); font-size:13px; font-family:'JetBrains Mono',monospace;">(22)</td>
+              <td style="padding:6px 12px;">umu(v)-<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">思う</span></td>
+              <td style="padding:6px 12px;">umuu<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">思おう</span></td>
+              <td style="padding:6px 12px;">umuun<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">思わない</span></td>
+              <td style="padding:6px 12px;">umuusɨ<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">思わせる</span></td>
+              <td style="padding:6px 12px;">umuvtar<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">思った</span></td>
+              <td style="padding:6px 12px;">umuvtigaa<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">思ったら</span></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+      <p>ここでそれぞれの語形を形態素分析してみよう。その上で、同化によって基底形の音素が交替する例を見つけ出してみよう。</p>
+
+      <div style="margin: 20px 0;">
+        <button class="reveal-btn answer-btn" id="answerToggle" onclick="(function(){ var c=document.getElementById('answerContent'); var b=document.getElementById('answerToggle'); if(c.style.display==='none'){c.style.display='block';b.textContent='正解を隠す';b.classList.add('revealed');}else{c.style.display='none';b.textContent='正解を見る';b.classList.remove('revealed');} })()">正解を見る</button>
+        <div id="answerContent" style="display:none; background: linear-gradient(135deg, #eef6f0 0%, #e8f4ec 100%); border: 1px solid #b5d8c2; border-radius: 8px; padding: 20px 24px; margin-top: 12px;">
+
+      <div class="ex-block" style="background: #fff !important; border-left-color: var(--example-accent); color: #1a1a2e;">
+        <div class="ex-label" style="color: var(--example-accent); font-size: 15px;">✔ 正解とその解説</div>
+        <div style="overflow-x:auto; margin:12px 0;">
+        <table style="border-collapse:collapse; font-size:15px; line-height:1.8; width:100%; color:#1a1a2e;">
+          <thead>
+            <tr style="border-bottom:2px solid var(--border); font-size:13px; color:var(--muted); font-family:'JetBrains Mono',monospace;">
+              <th style="text-align:left; padding:6px 12px 6px 0;"></th>
+              <th style="text-align:left; padding:6px 12px;">語根</th>
+              <th style="text-align:left; padding:6px 12px;">意志</th>
+              <th style="text-align:left; padding:6px 12px;">否定</th>
+              <th style="text-align:left; padding:6px 12px;">使役</th>
+              <th style="text-align:left; padding:6px 12px;">過去</th>
+              <th style="text-align:left; padding:6px 12px;">条件</th>
+            </tr>
+          </thead>
+          <tbody style="font-family:'JetBrains Mono','Noto Sans',monospace; color:#1a1a2e;">
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:6px 12px 6px 0; color:var(--accent); font-size:13px;">(20)</td>
+              <td style="padding:6px 12px;">jum-<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">読む</span></td>
+              <td style="padding:6px 12px;">jum-a<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">読もう</span></td>
+              <td style="padding:6px 12px;">jum-an<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">読まない</span></td>
+              <td style="padding:6px 12px;">jum-asɨ<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">読ませる</span></td>
+              <td style="padding:6px 12px;">jum-tar<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">読んだ</span></td>
+              <td style="padding:6px 12px;">jum-tigaa<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">読んだら</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:6px 12px 6px 0; color:var(--accent); font-size:13px;">(21)</td>
+              <td style="padding:6px 12px;">fa(u)-<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">食べる</span></td>
+              <td style="padding:6px 12px;">fa-a<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">食べよう</span></td>
+              <td style="padding:6px 12px;">fa-an<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">食べない</span></td>
+              <td style="padding:6px 12px;">fa-asɨ<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">食べさせる</span></td>
+              <td style="padding:6px 12px;">fau-tar<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">食べた</span></td>
+              <td style="padding:6px 12px;">fau-tigaa<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">食べたら</span></td>
+            </tr>
+            <tr>
+              <td style="padding:6px 12px 6px 0; color:var(--accent); font-size:13px;">(22)</td>
+              <td style="padding:6px 12px;">umu(v)-<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">思う</span></td>
+              <td style="padding:6px 12px;">umu-u<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">思おう</span></td>
+              <td style="padding:6px 12px;">umu-un<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">思わない</span></td>
+              <td style="padding:6px 12px;">umu-usɨ<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">思わせる</span></td>
+              <td style="padding:6px 12px;">umuv-tar<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">思った</span></td>
+              <td style="padding:6px 12px;">umuv-tigaa<br><span style="font-family:'Noto Sans JP',sans-serif; font-size:13px; color:#666;">思ったら</span></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+      <p>
+        語根をjum, fau, umuvとした上で、形態素分析を行ったものを示す。さて、このデータを踏まえ、交替が関わっている環境はどこだろう？それはずばり、否定と使役形においてである。jumとfauの時は-an, -asɨという接尾辞が現れ、umuvの時は-un, -usɨが現れている。-an/-asɨは、前の語根の末尾音素の種類によらず安定していると考えられるが、-un, -usɨの場合は、前の語根の末尾音素が/u/であることに気づく。同化によって、接尾辞の初頭音素が、本来の/a/から/u/に交替した、と考えることができる。一般的に言って、同化はその多くが逆行同化（予期同化）であるが、この例は比較的珍しい進行同化（持ち越し同化）、すなわち先に発音される音が次の音に影響を与える例である。
+      </p>
+      <p>
+        語根の設定について：語根すなわち単一形態素からなる語彙的な部分は、定義上、それ以上分析できないものだから、たとえばfauをfa-u-のように、umuvをumu-v-のようにはしないことを意味する。もちろん、この分析は私自身のアイデアなので、「正解」とは限らない。では、代替のアイデアとして語根のfauをfa-uに、umuvをumu-vにそれぞれ切り出してみよう。すると、別の語根jumとの比較から、謎の余分な形態素-uや-vを切り出してしまうことに気づく。これらと整合させるために、jumの方にjum-Øという「発音されない」形態素すなわちゼロ形態素を設定することも考えられるが、これには2つの問題がある。まず、設定されたゼロ形態素の機能が不明である。語幹を作る、という機能を持つ、ということになるだろうが、通常、音を持った要素を足して語幹を整えることは十分にあり得るが（4.3節参照）、音を加えずに、語幹を「整える」というのは、ゼロ形態素に不要な機能を背負わせる屁理屈である。次に、通常、ゼロ形態素は何をおいてもまず同一パラダイム（例で言えば横の形式のつながり、たとえば「読む」の系列）で設定されるのだが、この分析では縦の系列すなわち異なる語根を臨時的なパラダイムに仕立てて、そこでゼロを設定している。これら縦の系列は「語根」であるという共通性があるのみで、何らかの機能（テンスやムードなどによる）に裏付けられた体系を成しているわけではない。上記から、現状のアイデアの通り、語根として設定した部分はそのまま、単一形態素として考える。すると、これらの語根fauの/u/、umuvの/v/は、別の環境で削除が生じるということになる。削除は、後続形態素が母音始まりの場合に起こることに気づけただろうか？
+      </p>
+
+        </div>
+      </div>
+
+      <p>
+        交替がもう少しわかりにくいメカニズムで生じる場合もある。以下の調査データはいくつかの動詞の使役形の作り方に関するデータであるが、使役接辞の基底形（形態素としての形）を示し、その異形態を導く形態音韻規則を示してみよう。なお、(17g)は先ほど学んだ確認疑問の形式である。
+      </p>
+      <div class="ex-block">
+        <div class="ex-label">(17) 語根jum「読む」とその使役形のいろいろ</div>
+        <div class="ex-item"><span class="ex-num">a.</span>jum「読む」vs. jumasɨ「読ませる」</div>
+        <div class="ex-item"><span class="ex-num">b.</span>juman「読まない」vs. jumahan「読ませない」</div>
+        <div class="ex-item"><span class="ex-num">c.</span>jumii「読んで」vs. jumasii「読ませて」</div>
+        <div class="ex-item"><span class="ex-num">d.</span>jumi「読め」vs. jumasi「読ませろ」</div>
+        <div class="ex-item"><span class="ex-num">e.</span>juma「読もう」vs. jumaha「読ませよう」</div>
+        <div class="ex-item"><span class="ex-num">f.</span>jumtar「読んだ」vs. jumasɨtar「読ませた」</div>
+        <div class="ex-item"><span class="ex-num">g.</span>jume?「読め（といった）か？」vs. jumasje?「読ませろ（といった）か？」</div>
+      </div>
+      <div class="ex-block">
+        <div class="ex-label">(18) 語根juku(v)「休む」とその使役形のいろいろ（/v/は母音の前で削除）</div>
+        <div class="ex-item"><span class="ex-num">a.</span>jukuv「休む」vs. jukuusɨ「休ませる」</div>
+        <div class="ex-item"><span class="ex-num">b.</span>jukuun「休まない」vs. jukuuhan「休まさない」</div>
+        <div class="ex-item"><span class="ex-num">c.</span>jukuii「休んで」vs. jukuusii「休ませて」</div>
+        <div class="ex-item"><span class="ex-num">d.</span>jukui「休め」vs. jukuusi「休ませろ」</div>
+        <div class="ex-item"><span class="ex-num">e.</span>jukuu「休もう」vs. jukuuha「休ませよう」</div>
+        <div class="ex-item"><span class="ex-num">f.</span>jukuvtar「休んだ」vs. jukuusɨtar「休ませた」</div>
+        <div class="ex-item"><span class="ex-num">g.</span>jukue?「休め（といった）か？」vs. jukuusje「休ませろ（といった）か？」</div>
+      </div>
+
+
+      <div style="margin: 20px 0;">
+        <button class="reveal-btn answer-btn" id="answerToggle2" onclick="(function(){ var c=document.getElementById('answerContent2'); var b=document.getElementById('answerToggle2'); if(c.style.display==='none'){c.style.display='block';b.textContent='正解を隠す';b.classList.add('revealed');}else{c.style.display='none';b.textContent='正解を見る';b.classList.remove('revealed');} })()">正解を見る</button>
+        <div id="answerContent2" style="display:none; background: linear-gradient(135deg, #eef6f0 0%, #e8f4ec 100%); border: 1px solid #b5d8c2; border-radius: 8px; padding: 20px 24px; margin-top: 12px;">
+      <div class="ex-block" style="background: #fff !important; border-left-color: var(--example-accent); color: #1a1a2e;">
+        <div class="ex-label" style="color: var(--example-accent); font-size: 15px;">✔ 使役形の比較：jum「読む」、juku(v)「休む」</div>
+        <p style="font-size:14px; color:var(--muted); margin-bottom:12px;">[ɨ]はこの現象と別に挿入される母音で、ここでは無視して良い。赤字の<span style="color:var(--accent);font-weight:700;">h</span>が /s/ → /h/ 交替（弱化）の箇所。</p>
+        <div style="overflow-x:auto;">
+        <table style="border-collapse:collapse; font-size:14.5px; line-height:1.7; width:100%; color:#1a1a2e;">
+          <thead>
+            <tr style="border-bottom:2px solid var(--border); font-size:12px; color:var(--muted); font-family:'JetBrains Mono',monospace;">
+              <th style="text-align:left; padding:6px 10px;"></th>
+              <th style="text-align:left; padding:6px 10px;" colspan="2">jum「読む」</th>
+              <th style="text-align:left; padding:6px 10px;" colspan="2">juku(v)「休む」</th>
+
+            </tr>
+            <tr style="border-bottom:1px solid var(--border); font-size:11px; color:var(--muted); font-family:'JetBrains Mono',monospace;">
+              <th style="padding:4px 10px;"></th>
+              <th style="padding:4px 10px;">基本</th>
+              <th style="padding:4px 10px;">使役</th>
+              <th style="padding:4px 10px;">基本</th>
+              <th style="padding:4px 10px;">使役</th>
+            </tr>
+          </thead>
+          <tbody style="font-family:'JetBrains Mono','Noto Sans',monospace; font-size:14px; color:#1a1a2e;">
+            <tr style="border-bottom:1px solid rgba(0,0,0,0.06);">
+              <td style="padding:5px 10px; font-family:'Noto Sans JP',sans-serif; font-size:13px; color:var(--muted);">基本形</td>
+              <td style="padding:5px 10px;">jum</td>
+              <td style="padding:5px 10px;">jum-as-ɨ</td>
+              <td style="padding:5px 10px;">jukuv</td>
+              <td style="padding:5px 10px;">juku-us-ɨ</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(0,0,0,0.06);">
+              <td style="padding:5px 10px; font-family:'Noto Sans JP',sans-serif; font-size:13px; color:var(--muted);">否定</td>
+              <td style="padding:5px 10px;">jum-an</td>
+              <td style="padding:5px 10px;">jum-<span style="color:var(--accent);font-weight:700;">ah</span>-an</td>
+              <td style="padding:5px 10px;">juku-un</td>
+              <td style="padding:5px 10px;">juku-us-an</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(0,0,0,0.06);">
+              <td style="padding:5px 10px; font-family:'Noto Sans JP',sans-serif; font-size:13px; color:var(--muted);">中止</td>
+              <td style="padding:5px 10px;">jum-ii</td>
+              <td style="padding:5px 10px;">jum-as-ii</td>
+              <td style="padding:5px 10px;">juku-ii</td>
+              <td style="padding:5px 10px;">juku-us-ii</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(0,0,0,0.06);">
+              <td style="padding:5px 10px; font-family:'Noto Sans JP',sans-serif; font-size:13px; color:var(--muted);">命令</td>
+              <td style="padding:5px 10px;">jum-i</td>
+              <td style="padding:5px 10px;">jum-as-i</td>
+              <td style="padding:5px 10px;">juku-i</td>
+              <td style="padding:5px 10px;">juku-us-i</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(0,0,0,0.06);">
+              <td style="padding:5px 10px; font-family:'Noto Sans JP',sans-serif; font-size:13px; color:var(--muted);">意志</td>
+              <td style="padding:5px 10px;">jum-a</td>
+              <td style="padding:5px 10px;">jum-<span style="color:var(--accent);font-weight:700;">ah</span>-a</td>
+              <td style="padding:5px 10px;">juku-u</td>
+              <td style="padding:5px 10px;">juku-us-a</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(0,0,0,0.06);">
+              <td style="padding:5px 10px; font-family:'Noto Sans JP',sans-serif; font-size:13px; color:var(--muted);">過去</td>
+              <td style="padding:5px 10px;">jum-tar</td>
+              <td style="padding:5px 10px;">jum-as-ɨ-tar</td>
+              <td style="padding:5px 10px;">jukuv-tar</td>
+              <td style="padding:5px 10px;">juku-us-ɨ-tar</td>
+            </tr>
+            <tr>
+              <td style="padding:5px 10px; font-family:'Noto Sans JP',sans-serif; font-size:13px; color:var(--muted);">確認疑問</td>
+              <td style="padding:5px 10px;">jum-e?</td>
+              <td style="padding:5px 10px;">jum-as-je?</td>
+              <td style="padding:5px 10px;">juku-e?</td>
+              <td style="padding:5px 10px;">juku-us-je</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+      <p>
+        縦の体系（動詞語幹ごとの異なる活用形）と横の体系（異なる語幹）を見据えながら形態素分析すると、使役接辞-asあるいは-ahが切り出される。なお、jukuvにおける-usは、前の練習問題で見たa/uの交替の例である。使役接辞以外にも、否定接辞でこの交替が確認できる（juku-un）。
+      </p>
+      <p>
+        さて、問題は使役接辞の/s/と/h/の交替がどのようなタイミングで生じるか、である。まず、/s/が基底にある、つまり/s/から/h/へ交替した、と見ることが重要である。それは、使役接辞で一切交替が生じていない/jukuv/のパラダイムを見ればわかり、また以下に述べる音声的な動機を見ても納得できる。/s/を基底と考えた時、/h/に切り替わるのは/a/と/a/に挟まれた時であることがわかる。/a_a/はつまり広母音に挟まれた環境ということで、これは子音の調音が弱まる、すなわち典型的な弱化の生じる環境である<span class="sn-ref">10</span><span class="sidenote" data-num="10">/s/から/h/への（共時的な）<strong>交替</strong>は、歴史的には/s/から/h/への<strong>変化</strong>（以下に述べる弱化）としてよく取り沙汰される。（印欧）比較言語学の授業を履修したことがあれば、debuccalization「非口腔化」の例としてよく挙げられるものである。つまり、もともと口腔内に狭めを作っていた子音が、周りの音声の影響で狭めが弱まり（弱化し）、最終的には消滅してしまう現象であり、/s/が/h/に、そして声門閉鎖、果ては完全消滅へ、という流れが典型的である。ラテン語・古典ギリシャ語などを履修したことがあれば、ラテン語でsを持つ単語が、古典ギリシャ語でhになっている例が多数思いつくことだろう。例えば、語頭のsとhの対応に関して、数字の「6」「7」はラテン語でsex、septem、一方、古典ギリシャ語でhex、hepta。語中では、1人称単数コピュラ形式がラテン語でsum、古典ギリシャ語でeimi（sがhを経て脱落）など、たくさん見つかる。今、練習問題(17-18)で見ている例と同様、/s/が弱化する時、舌の位置が一度大きく下がる広母音に挟まれた時の方がよく弱化する。これは例えばスペイン語の方言などにも見られるようである（pasar [pahar]「起こる」、<a href="https://www.cambridge.org/highereducation/books/language-change/819E0034CEAAC4B156117E45F49AD12C#overview" target="_blank">Bybee, Joan. 2015. <i>Language Change</i>. Cambridge University Press</a>）。</span>。
+      <p>
+        逆に/h/を基底にすると、なぜ/a_a/以外で/s/に交替するのか、その音声メカニズムが不明である。
+      </p>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 1.4 形態音韻規則の適用順序 ── -->
+    <div class="subsection">
+      <h3 id="s3-4"><span>3.4</span> 形態音韻規則の適用順序</h3>
+      <p>
+        記述を進めていると、いろいろな（形態）音韻規則が見つかる。上で例示しただけでも、鼻音の削除規則、/s/を/r/に交替させる同化規則、/j/挿入規則、一般的な/ɨ/挿入規則と重子音化（コピー挿入）規則があった。そうなると、例えば1つの表現を形成する際、いくつかの形態音韻規則がそれぞれ生じるということも当然考えられる。
+      </p>
+      <p>
+        そこで、複数生じるそれぞれの形態音韻規則の<strong>適用順序</strong>もまた、重要な記述内容になってくる。基底に対して、さまざまな形態音韻規則を、その順序まで指定して適用し、それによって基底から表層を導く、という記述のやり方を<strong>Rule Ordering</strong>と呼ぶ。基底を出発点に、それが<strong>入力</strong>となって、ある音韻規則が適用され、それが<strong>出力</strong>され、それがさらに別の音韻規則の入力となって、というふうに規則を逐次的に適用し、最終的な出力形式（表層）が導出されるという、現代言語学で広く共有されている考えに基づいている<span class="sn-ref">11</span><span class="sidenote" data-num="11">最適性理論という音韻理論では、この逐次的な規則の適用という考え方と大きく異なる考え方を採用している。ある入力（形態素の組み合わせ）に対して出来上がる可能な出力がいくつかあるとする。そこに、その言語の出力形に関して「破ってはならない」制約のリストを照らし合わせ、可能な出力のうち最も制約を守った（すなわち最適な）形式が出力になる、という考え方である。実際の出力（たとえば確認疑問形式の例では/jume/や/bausje/）をもとに、その制約のリストの内実がどのようであるからこれらの出力が最適となり得たのか、ということを逆算して推測していく。そのような考え方のメリットやデメリットを知るためにも、まずはより保守的なRule Orderingの考え方を身につけておいた方が良いだろう。</span>。実際、私たちは2.1節で、動詞語根/jum/「読む」の命令形/jumi/および道具格の名詞句/bausi/「棒で」にそれぞれ確認疑問助詞/e/をつけた確認疑問形式に関して、以下のようなRule Orderingを想定した。
+      </p>
+
+      <div class="figure">
+        <img src="files/fig2.png" alt="確認疑問形式の派生過程">
+        <div class="figure-caption"><strong>図2</strong> 確認疑問形式の派生過程</div>
+      </div>
+
+      <p>
+        実は、このRule Orderingに関しては、必ずしもこの順序でなくてはならないわけではない。すなわち、音韻規則BとCを入れ替えても、正しく表層を導くことができるからである（規則Aは必ず最初に適用される必要がある点に注意）。
+      </p>
+
+      <div class="figure">
+        <img src="files/fig3.png" alt="確認疑問形式の派生過程（規則C → Bの順番）">
+        <div class="figure-caption"><strong>図3</strong> 確認疑問形式の派生過程（規則C → Bの順番）</div>
+      </div>
+
+      <p>
+        このように、適用順序を決める際、データに照らしてみて、どっちの案が良いか決め手がない場合もある。しかし、多くの場合は適用順序が1つに定まる。この順序を間違えると、誤った出力を生むことでそれがわかる。だから、Rule Orderingを記述する際は、自分が組み立てた「プログラム」に誤りがないか、慎重にバグをチェックする必要がある。
+      </p>
+      <p>
+        概して、適用範囲が広い規則は、どんな形態素の組み合わせであれ適用されるわけだから、最終的な語形の適格性（特に音節構造上の適格性）に関して、いわば「最後の守護神」のような、最終チェック機構として働いていることが多いだろう。よって、他の形態音韻規則の適用との相対的な順序関係に関しては、それらよりも後に適用されることが普通である。実は、確認疑問形式のRule Orderingに関して図2の案を「しれっと」採用したのは、こういう理由があった。つまり、Rule Orderingの最後に位置付けた音韻規則（/C/が歯茎阻害音以外の/Cje/を回避するという規則）は、どんな単語にも適用される一般的な音韻規則であるのに対し、/(j)ee/を/(j)e/にする短母音化はそうではないので、より前に持って行ったという事情があった。
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════════ S4: 再び、形態素について ═══════════════ -->
+  <section class="section" id="s4">
+    <div class="section-header">
+      <div class="section-num">04</div>
+      <div class="section-titles"><h2>再び、形態素について</h2></div>
+    </div>
+    <p>
+      この章を締めくくるにあたって、もう一度「形態素」という概念について理解を深めておこう。というのも、あなたは今後、フィールド調査でのほぼ全ての期間、形態素分析という作業を通してこの概念と付き合っていくことになるからである。
+    </p>
+
+    <!-- ── 4.1 形態素とは？ ── -->
+    <div class="subsection">
+      <h3 id="s4-1"><span>4.1</span> 形態素とは？</h3>
+      <p>
+        形態素は、教科書的な定義で言えば「意味を持つ最小の単位」である。それ以上分析してしまうと、もはや意味をなさなくなってしまい、それはただの音素（列）になってしまう、限界ギリギリの要素である、と習う。例えば「伊良部の人」を表す /iravpžtu/ という単語（複合語）は、/irav/「伊良部」という名詞語根と /pžtu/「人」という名詞語根からなる。これは、それぞれの名詞を単体で基礎語彙として知っているから、ほぼ自明である。このことから、/iravpžtu/がこれ以上何かの形態素を含むものとして分析できなそうなのもまた、自明に思える。よって、/irav/も/pžtu/もそれぞれ「意味を持つ最小の単位」であると判断して、形態素分析をここまでとする。
+      </p>
+      <p>
+        しかし、ある音素列が「意味を持つ最小の単位」であると、どうやって知るのだろうか？上で見た複合語の例を考えると、「伊良部の人」を表す語は、当然、「伊良部」という要素と「人」という要素を含み、それ以外を含まないはずだから、2形態素から成り立っているだろう、と予想しやすいため、特に疑問を抱くことなく形態素分析を行える、ごくごく稀な例である。しかし、実際に自分で色々な構造を分析してみると、「果たしてこの音素列はさらにいくつかの意味要素に分解できるのだろうか？」とか、「切ってしまったこの2つの「形態素」たちは、実は切り分けない方がいいのではないか？」という疑問がどんどん出てくるものである。
+      </p>
+      <div class="key-idea">
+        以下では、2つの事例を取り上げ、そのような疑問に直面した時の対処法と、その対処法の根本原理を確認する。その根本原理とは、端的に言って「意味を持つ最小単位を探すことは形態素分析の本質にあらず。まずカタチの整理から、切り出されたその単位に「意味」が付与される」という原理である。言語構造を見ずに、あらかじめ「意味」を決めることなどできない、ということである。
+      </div>
+    </div>
+
+    <!-- ── 4.2 事例1: /r/ ── -->
+    <div class="subsection">
+      <h3 id="s4-2"><span>4.2</span> 事例1: /r/は「きょうだい」を表す形態素か？</h3>
+      <p>
+        伊良部島方言には、/bunar/「男きょうだいからみた女きょうだい」と /bikir/「女きょうだいからみた男きょうだい」という表現がある<span class="sn-ref">12</span><span class="sidenote" data-num="12">残念ながら、現在（2023年現在）の伊良部島方言では、この表現そのものが死語化している。今、「男きょうだい」と言えばbikikjavdai、「女きょうだい」と言えばmiikjavdaiがまず出てくるはずで、それは発話者の性別と無関係に使える。なお、/biki/は「男/オス」を表す拘束語根、/mii/は「女/メス」を表す拘束語根である。/miibiki/というと「男女/オスメス」のような言い方の立派な単語になるが、それぞれは単独では使えない、という面白い語根である。</span>。基礎語彙調査のある段階で、これを知ったあなたは、2つを並べて考えて以下のような形態素分析を考えつくことだろう。
+      </p>
+      <div class="ex-block">
+        <div class="ex-item"><span class="ex-num">(19)</span>/buna-r/（女-きょうだい）</div>
+        <div class="ex-item"><span class="ex-num">(20)</span>/biki-r/（男-きょうだい）</div>
+      </div>
+      <p>
+        /bikir/の/biki/は、/bikijarabi/「男の子」や/bikiusɨ/「雄牛」のように、間違いなく「男」（あるいはオス）の意味の形態素として取り出せる。よって、残った/r/は「きょうだい」を表す形態素として取り出せる、と考えるのである。
+      </p>
+      <p>
+        ところが、/bunar/の場合には、少しややこしい問題が生じる。/bunar/の/buna/は、この単語のほかに出現例がない。実は、伊良部島で慣習化された女性の名前の1つに/buna/というものがあるのは事実である<span class="sn-ref">13</span><span class="sidenote" data-num="13">/buna/を女性の特定の個人名として名付けられる例はかつては盛んであったようだが、少なくとも私が調査する範囲では現在の伊良部島方言に確認できない。/bunamega/という名前ならかろうじて耳にしたことがあるが、その場合もやはり/mega/という、女性特有の固有名を形作る標識と共起する。</span>。しかし、通時的な（語源的な）考察をする人は別として、現在の伊良部島方言の言語体系を記述する際に /buna/ を「女」一般の意味で形態素と認定するには、意味的に無理がありそうだ、と思うだろう。
+      </p>
+      <p>
+        このように、/bunar/から/r/を取り出す必要が一方ではありそうで、しかし他方でそうしてしまうと/buna/の意味がわからなくなってしまうという問題もある。ここで、/bunar/全体の意味「男から見た女きょうだい」から推測し、「きょうだい」を表すであろう/r/を切り出した残りの/buna/に「女」の意味を与えたくてたまらないあなたは、上記の語源的な知識を持ち出して、/buna/を「女」を表す形態素だと認定したとしよう。
+      </p>
+      <p>
+        意味だけを基準にして考えると、/buna/という「形態素」の意味が気になるものの、上記の形態素分析には問題がないと言えそうであるし、/r/が「きょうだい」の意味を持っていそうなのにそれを切り出さないのは、教科書的な意味では十分な形態素分析を行えていない可能性すらある、と思うだろう。
+      </p>
+      <p>
+        しかし、<strong>カタチの側面</strong>から考えると、つまりこれらの表現が他の表現と織りなす体系と、そこから見えてくるこれらの表現の「あるべき」内部構造を考えると、上記の形態素分析は「やりすぎ」である。
+      </p>
+      <p>
+        まず、/bunar/と/bikir/が、それぞれ2つの語根からなる複合語だと考えてみよう。ところが、この場合、名詞語根であるはずの/r/は、上記の表現以外で名詞として使われる例が全くないことに気づく。さらに、名詞語根は最も短くて2モーラなければならないという強い制限があるのに対し、/r/は1モーラしかない。
+      </p>
+      <p>
+        今度は、/r/を名詞の接尾辞だと考えるとどうだろう？名詞は以下のような内部構造を持っている。
+      </p>
+      <div class="ex-block">
+        <div class="ex-label">(21) 語根(-指小辞)(-複数辞)(-曖昧辞)</div>
+        <div class="ex-item"><span class="ex-num">例</span>jarabi-gama-mmi-nagi（子供-指小-複数-曖昧）「ちびっこたちとか」</div>
+      </div>
+      <p>
+        今、/r/を「きょうだい」を表す接辞として、上記の構造図式に組み込んだとしよう。この時、/r/は最も語根に近い側に位置付けなければならない。なぜなら、指小辞-gamaよりも前に生じるからである。
+      </p>
+      <div class="ex-block">
+        <div class="ex-label">(22) 語根(-きょうだい)(-指小辞)(-複数辞)(-曖昧辞)</div>
+        <div class="ex-item"><span class="ex-num">例</span>biki-r-gama-mmi-nagi（男-きょうだい-指小-複数-曖昧）「弟ちゃんたちとか」</div>
+      </div>
+      <p>
+        例えば名詞に関して、上記のように「名詞とはこんな内部構造をしています」と宣言して構造図式を想定するということは、伊良部島方言におけるあらゆる発話における個々の名詞を集めてきて列挙せずとも、その構造図式さえあれば、すべての名詞の例を記述できるということを意味するとともに、語彙的な「気まぐれ」に左右されず、どんな名詞であっても、一貫してその構造図式を仮定した方が良いことを意味する。例えば、どんな名詞語根であれ、それが可愛らしさ・親しみなどを覚えるものなら指小辞をつけることができ、またどんな名詞語根であれ、それが有生物で複数化できる限り、複数接辞を伴いうる。そしてこれら2つの接辞が共起する名詞なら、必ず上記の順序になる。いちいち、個別具体的な名詞について言及する必要はなく、むしろそのような必要があるなら、上記の「構造図式」は馴染まない。
+      </p>
+      <p>
+        翻って、(22)のような構造図式は有意義だろうか？察しがつくように、/r/を「きょうだい」を表す名詞接辞だと考えても、このような構造図式に位置付けるほど、さまざまな名詞語根と共起するわけではない。それどころか、/biki/と/buna/としか共起しない。さらに、この2つは名詞ではない。/biki/は常に名詞語根を右側にとって生じる、いわば接頭辞に近い要素であり、/buna/は/bunar/という表現において以外、この形で存在すらできない。
+      </p>
+      <p>
+        こうして、カタチの整理を行なっていくと、/bunar/も/bikir/も、結局はこのままでそれぞれ1つの名詞として考えた方が良い、ということになる。当初、素朴に考えた時には/r/が「きょうだい」を表す形態素であるかに見え、しかも和訳すればその分析案がしっくりくるように思えたが、この言語のカタチの側面を考えれば、そのような「意味」を持った形態素を取り出すことは幻想だったということである。/buna/を形態素として切り出そうとして、その「意味」の認定にアタフタする必要も全くないということである。/buna/ + /r/のような構造を仮定してはいけないという、独立した証拠があるのだから。
+      </p>
+      <p>
+        ここで注意して欲しい点がある。/bunar/および/bikir/の/r/を形態素として取り出すことができない、というとき、「なぜなら/r/が何らかの意味を持つと分析できないからだ」とか、「なぜなら/buna/の意味がわからなくなるからだ」というロジックを全く使っていないことに注意されたい。むしろ、/r/は「きょうだい」という意味を持っていそうで、だからこそ、取り出すべきではないそれを形態素として認定してしまうところであった。
+      </p>
+      <div class="key-idea">
+        /r/が形態素でないのは、伊良部島方言の言語構造においてそのような<strong>カタチの単位</strong>を認めることができない、すなわち、そこに区切り目を入れて、それが形態論的に有意義な部品として働いていると考える根拠がないからなのである。
+      </div>
+      <p>
+        形態素という用語をもう一度ゆっくり見直してみよう。それは「形態」の「素」（もと）と表現されている。「意味」に関する言及はどこにもないではないか。つまり、形態素とは、あなたが調査している言語の体系の中で、何らかの有意義な<strong>カタチの単位</strong>となって働いているとみなせるものを指す。カタチとは一体なんなのか。/irav/「伊良部」や/pžtu/「人」は、それぞれ有意義なカタチの単位であり、例えば単独で名詞として色々な表現に出現し、上記の(21)における内部構造図式の「語根」の位置を占めたりする。しかし、「きょうだい」を表すかに見えた/r/は、/biki/や/buna/と常にセットで生じるのみで、それを構造図式に位置付けようと思っても全く有意義な単位にならなかった。つまり、1つのカタチとして見ることができないことがわかったのである。
+      </p>
+    </div>
+
+    <!-- ── 4.3 事例2: 動詞活用に生じる謎の母音 ── -->
+    <div class="subsection">
+      <h3 id="s4-3"><span>4.3</span> 事例2: 動詞活用に生じる謎の母音</h3>
+      <p>
+        上の例は、「きょうだい」の意味を持つかに見えた/r/という要素が、形態素とはみなせないという事例であった。ここで扱う事例は、その逆、つまり、何ら意味を持たないかに見える要素が、実は形態素として認定すべき事例である。
+      </p>
+      <p>
+        以下は、動詞「読む」と「植える」の活用の一部を比べたものである。それぞれの動詞の活用形を形態素に分ける作業を行うとして、私たちの前提として例えば、「読む」の意志形は「読む」という語彙的な部分（語根）と意志を表す部分（接辞）の2形態素から成り立っているという（何の根拠もない）仮定があったとしよう。
+      </p>
+      <p>
+        まず、接辞を取り出してみよう。「読む」の意志形と「植える」の意志形を比べることで、共通する /di/ を意志接辞の形態素として切り出せそうだ、と漠然とわかる。同様に、否定接辞も /n/ を取り出せる。
+      </p>
+      <div class="ex-block">
+        <div class="ex-label">(23)「読む」の活用（抜粋）</div>
+        <div class="ex-item"><span class="ex-num">a.</span>jumi「読め」（命令形）</div>
+        <div class="ex-item"><span class="ex-num">b.</span>juman「読まない」（否定形）</div>
+        <div class="ex-item"><span class="ex-num">c.</span>jumadi「読もう」（意志形）</div>
+      </div>
+      <div class="ex-block">
+        <div class="ex-label">(24)「植える」の活用（抜粋）</div>
+        <div class="ex-item"><span class="ex-num">a.</span>ibiru「植えろ」（命令形）</div>
+        <div class="ex-item"><span class="ex-num">b.</span>ibin「植えない」（否定形）</div>
+        <div class="ex-item"><span class="ex-num">c.</span>ibidi「飢えよう」（意志形）</div>
+      </div>
+      <p>
+        次に、活用形の残りの部分、つまり語根と見られる部分を分析してみよう。これは、「読む」「植える」それぞれの3つの活用形の共通部分を取り出せば良さそうである。つまり、/jum/と/ibi/である。このように考えていくと、「読む」の活用形のうち意志形と否定形に、語根でも意志接辞でもない、第３の要素（母音/a/）が切り出せることに気づく。
+      </p>
+      <div class="ex-block">
+        <div class="ex-label">(25)「読む」の活用（形態素分析）</div>
+        <div class="ex-item"><span class="ex-num">a.</span>jum-i「読め」（命令形）</div>
+        <div class="ex-item"><span class="ex-num">b.</span>jum-<strong>a</strong>-n「読まない」（否定形）</div>
+        <div class="ex-item"><span class="ex-num">c.</span>jum-<strong>a</strong>-di「読もう」（意志形）</div>
+      </div>
+      <div class="ex-block">
+        <div class="ex-label">(26)「植える」の活用（形態素分析）</div>
+        <div class="ex-item"><span class="ex-num">a.</span>ibi-ru「植えろ」（命令形）</div>
+        <div class="ex-item"><span class="ex-num">b.</span>ibi-n「植えない」（否定形）</div>
+        <div class="ex-item"><span class="ex-num">c.</span>ibi-di「飢えよう」（意志形）</div>
+      </div>
+      <p>
+        私たちは今、jumadiやjumanが、「読む」+「意志」あるいは「読む」+「否定」の2つの意味で成り立っているという想定に立っているから、どうしてもこれらを2つの形態素の合成だと考えたい。/a/は、その2つのどれでもないから、形態素として認めたくない。そこで、以下のように、意志接辞と否定接辞の頭に出てくる/a/を、接辞の異形態の一部だ、と処理する案が出てくる。
+      </p>
+      <div class="ex-block">
+        <div class="ex-label">意志形</div>
+        <div class="ex-item"><span class="ex-num">a.</span>jum-adi — //jum-di// (→ /a/挿入 → /jum-adi/)</div>
+        <div class="ex-item"><span class="ex-num">b.</span>ibi-di — //ibi-di//</div>
+      </div>
+      <div class="ex-block">
+        <div class="ex-label">否定形</div>
+        <div class="ex-item"><span class="ex-num">a.</span>jum-an — //jum-n// (→ /a/挿入 → /jum-an/)</div>
+        <div class="ex-item"><span class="ex-num">b.</span>ibi-n — //ibi-n//</div>
+      </div>
+      <p>
+        つまり、//di//および//n//を基底として、その異形態として/adi/および/an/が出てくるという分析である。/a/は形態素なのではなく、あくまで接辞という形態素の異形態を構成する音素の1つにすぎない、と考えるのである。/a/は、//jum// + //di//および//jum// + //n//の組み合わせの際に生じる特別な形態音韻規則によって、//di//の頭に挿入される、という分析である。
+      </p>
+      <p>
+        しかし、この分析にはまずい点がたくさんある。意志形の//jum// + //di//の場合になぜ母音挿入が起こるのか、音韻論的な説明がつかない。例えば、伊良部島方言には/amdir/「手提げ網」のように、/md/の連続（より一般的に、共鳴音+CのCC連続）は普通に許される（3章）。一方、否定形の//jum// + //n//の場合、確かに語末の子音連続は許されないので（これも3章で見た通り）、/a/の挿入によってこれが回避される、というのは見事な解決策に見えるが、例えば以下の場合のように、同様の事態は一方（右側の鼻音）を削除することでクリアされるのが常道である。この削除規則は3.1節で見たものと同じである。
+      </p>
+      <div class="ex-block">
+        <div class="ex-item"><span class="ex-num"></span>kama「向こう」+ n「〜に（与格）」→ kaman</div>
+        <div class="ex-item"><span class="ex-num"></span>kama「向こう」+ nkai「〜へ（方向格）」→ kamankai</div>
+        <div class="ex-item"><span class="ex-num"></span>kam「神様」+ n → /n/削除 → kam</div>
+        <div class="ex-item"><span class="ex-num"></span>kam「神様」+ nkai → /n/削除 → kamkai</div>
+      </div>
+      <p>
+        なぜ否定の場合だけ母音が挿入されるのか、説明がつきにくい。しかも、挿入が生じたとしてなぜそれが/a/なのか、という説明もまた、恣意的にならざるを得ないだろう。この言語には立派な挿入母音/ɨ/があるにも関わらず、妙な話ではないか。つまり、この現象だけ、母音挿入という規則を導入するという、「その場しのぎ感」が出てくる。
+      </p>
+      <p>
+        あるいは逆に、//adi//と//an//を基底とし、これらが/ibi/「植える」と結びつく際に/di/および/n/の異形態が出てくると考える案ならどうだろう？
+      </p>
+      <div class="ex-block">
+        <div class="ex-label">意志形（逆の分析）</div>
+        <div class="ex-item"><span class="ex-num">a.</span>jum-adi — //jum-adi//</div>
+        <div class="ex-item"><span class="ex-num">b.</span>ibi-di — //ibi-adi// (→ /a/削除 → /ibidi/)</div>
+      </div>
+      <div class="ex-block">
+        <div class="ex-label">否定形（逆の分析）</div>
+        <div class="ex-item"><span class="ex-num">a.</span>jum-an — //jum-an//</div>
+        <div class="ex-item"><span class="ex-num">b.</span>ibi-n — //ibi-an// (→ /a/削除 → /ibin/)</div>
+      </div>
+      <p>
+        この場合は、//ibi//「植える」の意志形・否定形の場合に/a/削除という形態音韻規則を想定することになるが、これも伊良部島方言の他の形態音韻交替を考えたときに説明がつきにくい。すでに「融合」のセクションで見たように、伊良部島方言では/ia/の連続は/jaa/になって、すなわち融合という手段によって音節構造の調整が起こるのが常道であるから、//ibiadi// → /ibjaadi/のようになるのが予測されるところである。この現象においてだけ削除を想定するのは恣意的であろう。
+      </p>
+      <p>
+        このように、「意志形なら語根と「意志」の部分の2つから成り立つだろう」というふうに、意味の分析を専攻させ、それに合うようなカタチの対応を考えるのは、非常に多くの場合、失敗するか、あるいは上記で繰り返し述べた「恣意的」「その場しのぎ」の分析を量産する。
+      </p>
+      <p>
+        実際の言語記述では、概略以下のように進めていく。まず、意志形や否定形に限らず、幅広く動詞の語形変化を眺めてみる。すると、/jum/のような子音で終わる動詞語根の場合に、ある共通特徴が浮かんでくる。
+      </p>
+      <div class="ex-block">
+        <div class="ex-label">(27) 動詞活用の抜粋</div>
+        <div class="ex-item"><span class="ex-num">a.</span>jumadi「読もう」vs. ibidi「植えよう」（意志形）</div>
+        <div class="ex-item"><span class="ex-num">b.</span>juman「読まない」vs. ibin「植えない」（否定形）</div>
+        <div class="ex-item"><span class="ex-num">c.</span>jumada「読まずに」vs. ibida「植えずに」（否定中止形）</div>
+        <div class="ex-item"><span class="ex-num">d.</span>jumii「読んで」vs. ibii「植えて」（中止形）</div>
+        <div class="ex-item"><span class="ex-num">e.</span>jumtar「読んだ」vs. ibitar「植えた」（過去形）</div>
+        <div class="ex-item"><span class="ex-num">f.</span>jumga「読みに（いく）」vs. ibiga「植えに（いく）」（目的形）</div>
+      </div>
+      <p>
+        母音で終わる/ibi/の場合と比べ、余分な母音が1つ、活用語尾と思われる要素の直前に現れている場合と、そうではない場合に大別される。今、便宜的に、前者をThematic、後者をAthematicと呼ぶ。
+      </p>
+      <div class="ex-block">
+        <div class="ex-label">(28) Thematicな活用パターン</div>
+        <div class="ex-item"><span class="ex-num">a.</span>jum-<strong>a</strong>-di「読もう」（意志形）</div>
+        <div class="ex-item"><span class="ex-num">b.</span>jum-<strong>a</strong>-n「読まない」（否定形）</div>
+        <div class="ex-item"><span class="ex-num">c.</span>jum-<strong>a</strong>-da「読まずに」（否定中止形）</div>
+        <div class="ex-item"><span class="ex-num">d.</span>jum-<strong>i</strong>-i「読んで」（中止形）</div>
+      </div>
+      <div class="ex-block">
+        <div class="ex-label">(29) Athematicな活用パターン</div>
+        <div class="ex-item"><span class="ex-num">a.</span>jum-tar「読んだ」（過去形）</div>
+        <div class="ex-item"><span class="ex-num">b.</span>jum-ga「読みに（いく）」（目的形）</div>
+      </div>
+      <p>
+        ThematicやAthematicという用語は、琉球諸語の最近の動詞形態論の記述では比較的浸透しているものである<span class="sn-ref">14</span><span class="sidenote" data-num="14">この文法用語自体は、例えばラテン語を齧ったことがある人なら聞いたことがあるだろう。私は伊良部島方言の記述文法を書いている中で、ラテン語のthematic vs. athematicの動詞活用の種別にちなんでこの用語を採用した(<a href="https://openresearch-repository.anu.edu.au/items/2950667f-9cf3-4093-80de-66498e518269" target="_blank">Shimoji, Michinori. 2008. <i>A Grammar of Irabu, a Southern Ryukyuan Language</i>. PhD dissertation, Australian National University</a>)。</span>。Thematicの形式に出現する /a/ や /i/ すなわちThematic Vowelはれっきとした<strong>形態素</strong>である。つまり、ある特定の活用を行う際、その活用語尾を取るために、それなしではその活用語尾を取ることができない語根にくっついて、まるで触手のような働きをする、そういう形態素である。形態素といえば、何かしらの具体的な意味があるはずだ、と考える人にとっては衝撃的なほど「意味のわからない」形態素である。しかし、カタチの整理から入れば、ある特定の形態素の組み合わせの際に、その媒介として機能する、という立派な「働き」をしているわけであり、その「働き」を認めた今、この母音はただの音素ではなく、言語構造の中で有意義に機能するカタチすなわち形態素としての地位を与えないわけにはいかないのである。
+      </p>
+      <div class="ex-block">
+        <div class="ex-label">(30) 動詞の内部構造図式</div>
+        <div class="ex-item"><span class="ex-num">a.</span>Thematic：語根 + Thematic Vowel + 活用語尾</div>
+        <div class="ex-item"><span class="ex-num">b.</span>Athematic：語根 + 活用語尾</div>
+      </div>
+      <p>
+        この構造図式において、Thematic Vowelの形態素として /a/ の場合と /i/ の場合があり、/a/ の場合は意志形、否定形、否定中止形などの活用語尾を取るための「触手」であり、/i/ の場合は中止形の活用語尾をとるための「触手」であると考える。
+      </p>
+      <p>
+        ところで、Thematic Vowelの/a/は意志形、否定形、否定中止形というように、未だ生じていない事態（非現実的な事態）に対して使われているようにも見える。この点をもって、これを「未然」の意味を持った形態素である、と考える人もいるだろう。学校文法で習う「未然形」の未然である。/a/を未然形を作る形態素とみる人がいるだろう、ということである。
+      </p>
+      <p>
+        しかし、それは結果論であって、Thematic vs. Athematicな活用パターンを見出し、このうちThematicな活用パターンの内部構造を語根 + Thematic Vowel + 活用語尾という3形態素に分析するというカタチの整理がまず先である。そのような整理もないまま、例えば「日本語の方言なら、どんなものでも未然形というものがあり、それは否定形や意志形に出てくるはずだ」という目論見にたつと、悲劇的な形態論を生んでしまう。例えば、そのような立場の人の目には、ibidi「植えよう」（意志形）やibin「植えない」（否定形）も、未然接辞を無理くり見出し、以下のようなとんでもない分析をやってしまうことになる。
+      </p>
+      <div class="ex-block">
+        <div class="ex-item"><span class="ex-num"></span>jumadi = //jum// + //a// + //di//</div>
+        <div class="ex-item"><span class="ex-num"></span>ibidi = //ibi// + （目には見えない未然接辞/a/）+ //di//</div>
+      </div>
+      <div class="key-idea">
+        カタチによってサポートされない形態論は、上記の冗談のような学校文法的分析にとどまらず、目には見えない機能範疇（「発音されない形態素」）を量産していくスタイルの言語研究にも非常によく見られる。そのようなものは「形態論」ではない。
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="footer">
+  下地理則
+</footer>
+
+<script>
+(function() {
+  var nav = document.getElementById('stickyNav');
+  var links = nav.querySelectorAll('a');
+  var sections = document.querySelectorAll('.section[id], h3[id]');
+  var lastScrollY = 0;
+  var heroBottom = document.querySelector('.hero').getBoundingClientRect().height;
+
+  function updateNav() {
+    var scrollY = window.scrollY;
+    if (scrollY > heroBottom * 0.6) {
+      nav.classList.add('visible');
+    } else {
+      nav.classList.remove('visible');
+    }
+    var current = '';
+    sections.forEach(function(section) {
+      if (scrollY >= section.offsetTop - 60) {
+        current = section.id;
+      }
+    });
+    links.forEach(function(link) {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + current) {
+        link.classList.add('active');
+      }
+    });
+    lastScrollY = scrollY;
+  }
+
+  links.forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      var target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        window.scrollTo({ top: target.offsetTop - 20, behavior: 'smooth' });
+      }
+    });
+  });
+
+  window.addEventListener('scroll', updateNav, { passive: true });
+  updateNav();
+})();
+</script>
+</body>
+</html>
