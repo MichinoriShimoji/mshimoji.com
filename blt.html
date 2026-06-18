@@ -6,20 +6,17 @@
 <title>BLT — Browser-based Lightweight Toolkit for Editing Field Data</title>
 <style>
 :root{
-  --bg:#e8ecf3; --surface:#ffffff; --ink:#1c2430; --muted:#5b6573;
-  --line:#dde3ec; --accent:#2a5599; --accent-soft:#eaf0f9; --accent-ink:#173360;
-  --warn:#b4540f; --done:#2e7d5b; --sel:#f2b63f;
-  --radius:11px; --radius-sm:8px;
-  --shadow:0 1px 2px rgba(20,40,80,.04),0 6px 20px rgba(20,40,80,.06);
-  --shadow-lg:0 18px 48px rgba(15,30,60,.22);
+  --bg:#eef1f6; --surface:#ffffff; --ink:#222730; --muted:#5f6672;
+  --line:#d8dde7; --accent:#234a86; --accent-soft:#e6ecf5; --accent-ink:#152e57;
+  --warn:#b4540f; --done:#2e7d5b; --sel:#f5b942;
   --jp-serif:"Hiragino Mincho ProN","Yu Mincho","YuMincho","Noto Serif JP",serif;
-  --ui:system-ui,-apple-system,"Segoe UI","Hiragino Kaku Gothic ProN","Yu Gothic UI","Yu Gothic","Noto Sans JP",sans-serif;
+  --ui:system-ui,-apple-system,"Segoe UI","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
   --ipa:"Charis SIL","Doulos SIL","Gentium Plus","DejaVu Sans","Segoe UI","Hiragino Sans",sans-serif;
   --mono:ui-monospace,"SF Mono",Consolas,Menlo,monospace;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--ui);font-size:15px;line-height:1.62;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-header{background:var(--surface);border-bottom:1px solid var(--line);padding:13px 26px;position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:20px;flex-wrap:wrap;box-shadow:0 2px 10px rgba(20,40,80,.05)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--ui);font-size:14px;line-height:1.55}
+header{background:var(--surface);border-bottom:1px solid var(--line);padding:10px 20px;position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 #brand{display:flex;align-items:center;gap:15px;flex:1;min-width:300px}
 #brand .logo{font-family:var(--jp-serif);font-weight:800;font-size:66px;line-height:.85;letter-spacing:.02em;
   background:linear-gradient(135deg,#2a5499 0%,#21457f 55%,#152e57 100%);
@@ -42,9 +39,8 @@ header{background:var(--surface);border-bottom:1px solid var(--line);padding:13p
 .detbtn:hover{border-color:var(--accent);background:var(--accent-soft)}
 details[open] > .detbtn{background:var(--accent);border-color:var(--accent);color:#fff}
 details[open] > .detbtn::after{transform:rotate(90deg);color:#fff}
-#tabbar{display:flex;gap:6px;width:100%;border-top:1px solid var(--line);margin-top:13px;padding-top:11px}
-#tabbar .tab{font-size:14.5px;font-weight:600;padding:9px 22px;border:1px solid var(--line);border-bottom:none;border-radius:11px 11px 0 0;background:var(--bg);color:var(--muted);cursor:pointer;margin-bottom:-14px;transition:background .12s,color .12s}
-#tabbar .tab:hover{background:var(--accent-soft);color:var(--accent-ink)}
+#tabbar{display:flex;gap:4px;width:100%;border-top:1px solid var(--line);margin-top:8px;padding-top:7px}
+#tabbar .tab{font-size:14px;font-weight:600;padding:6px 18px;border:1px solid var(--line);border-bottom:none;border-radius:8px 8px 0 0;background:var(--bg);color:var(--muted);cursor:pointer;margin-bottom:-8px}
 #tabbar .tab.cur{background:var(--accent);border-color:var(--accent);color:#fff}
 /* 分析・辞書タブ */
 #anCols{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
@@ -90,10 +86,6 @@ main{max-width:1800px;margin:0 auto;padding:18px 20px 60px}
 #waveCol .card h2 .pipbtns{margin-left:auto;display:flex;gap:4px}
 #waveCol .card h2 button{font-size:11px;padding:1px 8px;cursor:pointer}
 #waveCol.min #cardWave>*:not(h2){display:none}
-#waveCol.min #cardWave{padding-top:9px;padding-bottom:9px}
-#waveCol.min #cardWave h2{margin:0;cursor:pointer}
-.waveminhint{display:none;font-size:11.5px;font-weight:600;color:var(--accent);margin-left:10px;letter-spacing:.01em}
-#waveCol.min .waveminhint{display:inline}
 /* コンパクトモード（自動取り込み後：パネル3を縦圧縮してパネル4を広く） */
 #waveCol.compact3 #cardWave{padding:4px 12px 5px}
 #waveCol.compact3 #cardWave h2{font-size:11.5px;margin:0 0 2px}
@@ -104,16 +96,16 @@ main{max-width:1800px;margin:0 auto;padding:18px 20px 60px}
 #waveCol.compact3 #spkBar .note{display:none}
 #waveCol.compact3 #spkBar{margin-top:2px}
 #waveCol.compact3 .helpbtn{display:none}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;margin-bottom:18px;box-shadow:var(--shadow)}
-.card h2{font-size:16px;font-weight:700;color:var(--accent-ink);margin:0 0 16px;letter-spacing:.01em;display:flex;align-items:center;flex-wrap:wrap}
-.steplabel{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;background:var(--accent);color:#fff;font-size:12.5px;font-weight:700;border-radius:7px;padding:0 7px;margin-right:11px;vertical-align:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:16px 18px;margin-bottom:14px}
+.card h2{font-size:13px;color:var(--accent-ink);margin:0 0 10px;letter-spacing:.06em}
+.steplabel{display:inline-block;background:var(--accent);color:#fff;font-size:10.5px;border-radius:4px;padding:1px 7px;margin-right:8px;vertical-align:1px}
 .filebox{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px}
 .filebox .fname{font-family:var(--mono);font-size:12.5px;color:var(--muted)}
 .filebox .fname.ok{color:var(--done)}
-button{font-family:var(--ui);font-size:13.5px;font-weight:500;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:7px 15px;cursor:pointer;transition:background .12s,border-color .12s,color .12s,box-shadow .12s}
-button:hover{border-color:var(--accent);color:var(--accent-ink);background:var(--accent-soft)}
-button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600;box-shadow:0 1px 2px rgba(20,40,80,.12)}
-button.primary:hover{background:var(--accent-ink);border-color:var(--accent-ink);color:#fff}
+button{font-family:var(--ui);font-size:13px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:6px;padding:6px 14px;cursor:pointer}
+button:hover{border-color:var(--accent);color:var(--accent-ink)}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button.primary:hover{background:var(--accent-ink);color:#fff}
 button:disabled{opacity:.45;cursor:default}
 button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 input[type=number]{border:1px solid var(--line);border-radius:6px;padding:5px 8px;font-size:13px;font-family:var(--ui);background:var(--surface)}
@@ -278,32 +270,26 @@ tr.glossrow td{background:#f6faf8;padding:6px 8px}
 .fb-fallback{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.5}
 .fb-fallback a{color:var(--accent);font-weight:600;text-decoration:none}
 .fb-fallback a:hover{text-decoration:underline}
-#tourBtn{margin-left:auto;background:var(--accent-soft);color:var(--accent-ink);border:1px solid var(--accent);border-radius:20px;padding:7px 16px;font-size:13px;font-weight:600;cursor:pointer;align-self:center;transition:background .12s,color .12s}
-#tourBtn:hover{background:var(--accent);color:#fff}
-.tour-spot{position:fixed;border-radius:10px;box-shadow:0 0 0 9999px rgba(13,22,40,.58);z-index:10000;pointer-events:none;transition:top .25s,left .25s,width .25s,height .25s;outline:3px solid var(--accent);outline-offset:3px}
-/* 文中の該当部分を指すハイライト（例：text の midummasii ↔ udl の midum-as-i-i） */
-.tour-mark{position:fixed;z-index:10000;pointer-events:none;border-radius:4px;background:rgba(245,182,63,.34);box-shadow:0 0 0 2px var(--sel),0 2px 8px rgba(180,120,10,.28);transition:opacity .15s;animation:tourmarkpulse 1.6s ease-in-out infinite}
-.tour-mark .tour-mark-tag{position:absolute;left:0;top:-19px;font-size:11px;font-weight:700;color:#5a4200;background:var(--sel);border-radius:4px 4px 4px 0;padding:1px 7px;white-space:nowrap;font-family:var(--ui);letter-spacing:.02em}
-@keyframes tourmarkpulse{0%,100%{box-shadow:0 0 0 2px var(--sel),0 2px 8px rgba(180,120,10,.28)}50%{box-shadow:0 0 0 3px var(--sel),0 3px 14px rgba(180,120,10,.5)}}
-html[data-theme="dark"] .tour-mark{background:rgba(217,167,58,.28)}
-html[data-theme="dark"] .tour-mark .tour-mark-tag{color:#2a2010}
-.tour-pop{position:fixed;z-index:10001;background:var(--surface);border:1px solid var(--line);border-radius:18px;width:480px;max-width:calc(100vw - 28px);padding:30px 32px 26px;box-shadow:var(--shadow-lg)}
-.tour-pop .tour-bar{height:5px;border-radius:5px;background:var(--accent-soft);overflow:hidden;margin:0 0 18px}
-.tour-pop .tour-bar i{display:block;height:100%;background:var(--accent);border-radius:5px;transition:width .3s ease}
-.tour-pop h4{margin:0 0 12px;font-family:var(--ui);font-weight:800;color:var(--accent-ink);font-size:22px;line-height:1.4;letter-spacing:.01em}
-.tour-pop p{margin:0;font-size:16.5px;color:var(--ink);line-height:1.85}
-.tour-row{display:flex;align-items:center;justify-content:space-between;margin-top:24px;gap:10px}
-.tour-step{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;font-weight:600;letter-spacing:.04em}
-.tour-btns{display:flex;gap:10px}
-.tour-btns button{border-radius:10px;padding:11px 24px;font-size:15.5px;font-weight:700;cursor:pointer;border:1px solid var(--line);transition:background .12s,color .12s,border-color .12s}
-.tour-next{background:var(--accent);color:#fff;border-color:var(--accent)}
-.tour-next:hover{background:var(--accent-ink);border-color:var(--accent-ink);color:#fff}
+#tourBtn{margin-left:auto;background:var(--sel);color:#4a3500;border:1px solid #e0a52e;border-radius:16px;padding:5px 13px;font-size:12px;font-weight:700;cursor:pointer;align-self:center}
+#langToggle{background:var(--surface);color:var(--accent);border:1px solid var(--accent);border-radius:16px;padding:5px 13px;font-size:12px;font-weight:700;cursor:pointer;align-self:center}
+#langToggle:hover{background:var(--accent-soft)}
+#tourBtn:hover{background:#e9a92f}
+.tour-spot{position:fixed;border-radius:8px;box-shadow:0 0 0 9999px rgba(15,23,42,.62);z-index:10000;pointer-events:none;transition:top .25s,left .25s,width .25s,height .25s;outline:2px solid var(--accent);outline-offset:2px}
+.tour-pop{position:fixed;z-index:10001;background:var(--surface);border-radius:12px;width:480px;max-width:calc(100vw - 28px);padding:24px 28px 20px;box-shadow:0 14px 50px rgba(0,0,0,.36)}
+.tour-pop h4{margin:0 0 10px;font-family:var(--jp-serif);color:var(--accent-ink);font-size:23px;line-height:1.35}
+.tour-pop p{margin:0;font-size:17px;color:var(--ink);line-height:1.8}
+.tour-row{display:flex;align-items:center;justify-content:space-between;margin-top:20px;gap:10px}
+.tour-step{font-size:14px;color:var(--muted)}
+.tour-btns{display:flex;gap:8px}
+.tour-btns button{border-radius:8px;padding:10px 22px;font-size:16px;font-weight:700;cursor:pointer;border:1px solid var(--line)}
+.tour-next{background:var(--sel);color:#4a3500;border-color:#e0a52e}
+.tour-next:hover{background:#e9a92f}
 .tour-prev{background:var(--surface);color:var(--muted)}
-.tour-prev:hover{color:var(--accent-ink);border-color:var(--accent)}
-.tour-skip{position:absolute;top:16px;right:18px;border:none;background:none;font-size:24px;line-height:1;color:var(--muted);cursor:pointer;width:auto;padding:0}
-.tour-skip:hover{color:var(--warn);background:none;border-color:transparent}
-.tour-quit{margin-left:14px;border:none;background:none;color:var(--muted);font-size:13px;text-decoration:underline;cursor:pointer;padding:0}
-.tour-quit:hover{color:var(--warn);background:none;border-color:transparent}
+.tour-prev:hover{color:var(--ink)}
+.tour-skip{position:absolute;top:12px;right:15px;border:none;background:none;font-size:24px;line-height:1;color:var(--muted);cursor:pointer}
+.tour-skip:hover{color:var(--warn)}
+.tour-quit{margin-left:12px;border:none;background:none;color:var(--muted);font-size:14px;text-decoration:underline;cursor:pointer;padding:0}
+.tour-quit:hover{color:var(--warn)}
 .srow .s-layer,.srow .s-op,.srow .s-val{border:1px solid var(--line);border-radius:6px;padding:5px 8px;font-size:13px;background:var(--surface)}
 .srch-tbl{width:100%;border-collapse:collapse;font-size:13px}
 .srch-tbl th,.srch-tbl td{border-bottom:1px solid var(--line);padding:5px 9px;text-align:left;vertical-align:top}
@@ -323,36 +309,6 @@ html[data-theme="dark"] .tour-mark .tour-mark-tag{color:#2a2010}
 .kwic-k mark{background:#ffe08a;color:#3a2b00;padding:0 3px;border-radius:3px;font-weight:700}
 .kctx{color:var(--muted);opacity:.7}
 .kwic-sub{font-size:11px;color:var(--muted);font-family:var(--ipa)}
-/* テーマ切替ボタン */
-#themeBtn{background:var(--surface);color:var(--muted);border:1px solid var(--line);border-radius:20px;width:40px;height:34px;font-size:16px;cursor:pointer;align-self:center;padding:0;display:inline-flex;align-items:center;justify-content:center;transition:background .12s,color .12s,border-color .12s}
-#themeBtn:hover{background:var(--accent-soft);color:var(--accent-ink);border-color:var(--accent)}
-/* ===== ダークモード ===== */
-html[data-theme="dark"]{
-  --bg:#0f141c; --surface:#1a212c; --ink:#e7ebf2; --muted:#97a2b1;
-  --line:#2c3543; --accent:#5b8ed6; --accent-soft:#1e2c3e; --accent-ink:#bcd5f4;
-  --warn:#e0843a; --done:#46b07f; --sel:#d9a73a;
-  --shadow:0 1px 2px rgba(0,0,0,.35),0 6px 20px rgba(0,0,0,.45);
-  --shadow-lg:0 18px 48px rgba(0,0,0,.6);
-  color-scheme:dark;
-}
-html[data-theme="dark"] #brand .logo{background:linear-gradient(135deg,#7aa6e0 0%,#5b8ed6 55%,#3f72bb 100%);-webkit-background-clip:text;background-clip:text;border-right-color:#2c3543}
-html[data-theme="dark"] th{background:#202836;color:var(--muted)}
-html[data-theme="dark"] [contenteditable]:focus{background:#243042}
-html[data-theme="dark"] .ttline.ttrans{color:#aab4c2}
-html[data-theme="dark"] tr.selrow td,html[data-theme="dark"] .ctxrec.cur,html[data-theme="dark"] .anrow.cur,html[data-theme="dark"] .exig .c.hit .m{background:#322c18}
-html[data-theme="dark"] tr.glossrow td{background:#1d2630}
-html[data-theme="dark"] .ilg-g.ro{background:#232b37}
-html[data-theme="dark"] .ilg-p{color:#aab4c2}
-html[data-theme="dark"] .tval,html[data-theme="dark"] .ilg-g:focus,html[data-theme="dark"] .ilg-p:focus{background:#141a23}
-html[data-theme="dark"] #ctxPane{background:#161c25}
-html[data-theme="dark"] #missCtl.hot{background:#2e1c1c}
-html[data-theme="dark"] #missNote{background:#3a1f1d;border-color:#b04a4a;color:#f3b6b0}
-html[data-theme="dark"] #missNote button{color:#f3b6b0}
-html[data-theme="dark"] .kwic-row:hover td{background:#1f2c3e}
-html[data-theme="dark"] .btn-fit:hover{background:var(--accent-soft)}
-html[data-theme="dark"] .tybadge.root{background:#243042;color:#9cc0cf}
-html[data-theme="dark"] .tybadge.affix{background:#2e2433;color:#c79bbf}
-html[data-theme="dark"] code{color:var(--accent-ink)}
 </style>
 </head>
 <body>
@@ -379,7 +335,7 @@ html[data-theme="dark"] code{color:var(--accent-ink)}
     <button type="button" class="tab" data-tab="search">検索</button>
     <button type="button" class="tab" data-tab="analysis">分析・辞書</button>
     <button type="button" id="tourBtn" title="BLTの使い方を順に案内します">🧭 使い方ツアー</button>
-    <button type="button" id="themeBtn" title="ライト／ダークの切替" aria-label="テーマ切替">☾</button>
+    <button type="button" id="langToggle" data-i18n-skip title="Switch language / 言語切替">English</button>
   </div>
 </header>
 <main>
@@ -444,7 +400,7 @@ html[data-theme="dark"] code{color:var(--accent-ink)}
 <div id="workArea">
 <div id="waveCol">
 <div class="card hidden" id="cardWave">
-  <h2><span class="steplabel">3</span>波形（区切りの確認・修正）<button type="button" class="helpbtn" data-help="helpWave" data-title="波形の操作方法">?</button><span class="waveminhint">▶ クリックで波形をひらく</span><span class="pipbtns"><button type="button" id="btnWaveSize" title="波形を大きく／小さく">⤢ 大きく</button><button type="button" id="pipMin" title="最小化／復元">－</button></span></h2>
+  <h2><span class="steplabel">3</span>波形（区切りの確認・修正）<button type="button" class="helpbtn" data-help="helpWave" data-title="波形の操作方法">?</button><span class="pipbtns"><button type="button" id="btnWaveSize" title="波形を大きく／小さく">⤢ 大きく</button><button type="button" id="pipMin" title="最小化／復元">－</button></span></h2>
   <div class="helpsrc" id="helpWave">
     <div class="note"><b>話者（オーバーラップ対応）：</b>「＋話者」で話者を追加し、チップで選んだ話者が「アクティブ話者」になります。新しく作る区間はアクティブ話者のものになり、<b>別話者どうしの区間は時刻が重なってもOK</b>です（同じ話者内の重なりは不可）。波形下部に話者ごとのレーンが並び、各レコードは自分の話者のレーンに表示されます。レーンのブロックをクリックするとその話者・レコードが選べます。spk列でも話者を変更できます。EAFは話者ごとに <code>text@話者</code> などのレイヤー（PARTICIPANT付き）に分けて書き出すので、ELANで重複発話が正しく開けます。<br><br><b>赤い帯</b>＝どの区間にも入っていない有音（取りこぼし候補）。◀ ▶で候補へジャンプすると仮選択になるので、「確認再生」で聞いて<b>「✓ 区間に追加」でレコード化</b>（Enterでも可）、対象外なら<b>「無視」で件数から除外</b>できます（無視はプロジェクト保存に記録されます）。<br><br><b>区間をクリック＝その区間を再生</b>。<b>区間をダブルクリック＝編集</b>（その行の text 欄にカーソルが入ります）。<br>何もない所をクリック＝再生カーソルを置く（<b>Space＝カーソルから再生／一時停止</b>）<br>何もない所をドラッグ＝範囲を選択 → <b>Enterで区間として確定</b>（Escで取消。確定前も端の調整や▶試聴ができます）<br>区間の端をドラッグ＝境界の移動（選択中はオレンジのつまみ）<br><b>Alt＋ダブルクリック＝区間を分割</b><br>横スクロール（またはShift＋ホイール）＝横移動、縦ホイール＝ズーム<br><br>下のボタン：<b>◀ 前の区間／次の区間 ▶</b>で区間を順に再生、<b>選択を再生／カーソルから／停止</b>で再生操作、<b>🗑 選択を削除</b>は区間の指定と注釈を削除するだけで音声データは変更されません。</div>
   </div>
@@ -516,27 +472,13 @@ html[data-theme="dark"] code{color:var(--accent-ink)}
         <option value="custom" disabled>カスタム（独自の構成）</option>
       </select>
       <span class="sep" style="width:1px;height:20px;background:var(--line)"></span>
-      <span id="addTierGroup" style="display:inline-flex;gap:8px;align-items:center">
       <input type="text" id="newTierName" placeholder="さらに層を追加（名前）" style="width:130px;border:1px solid var(--line);border-radius:6px;padding:5px 8px;font-size:13px">
       <select id="newTierParent"></select>
       <button id="btnAddTier">＋ 追加</button>
-      </span>
     </div>
     <div id="tierChips" style="margin:0 0 8px"></div>
     <details style="margin:0 0 8px">
-      <summary class="detbtn">詳細設定（形態素の分割記号・分割元）</summary>
-      <div class="optrow" id="morphSepRow" style="margin:8px 0 6px">
-        <label class="note">形態素の<b>分割記号</b>（記号を続けて入力。既定 <code>-</code>接辞 ・ <code>=</code>接語 ・ <code>+</code>複合）</label>
-        <input type="text" id="morphSepInput" value="-=+" spellcheck="false" autocomplete="off" title="これらの記号の手前で形態素に分割されます" style="width:96px;border:1px solid var(--line);border-radius:6px;padding:5px 8px;font-size:16px;font-family:var(--mono);letter-spacing:.18em">
-        <button type="button" id="btnMorphSepReset" title="既定（- = +）に戻す">既定に戻す</button>
-        <span class="note" id="morphSepHint"></span>
-      </div>
-      <div class="optrow" id="bdrSepRow" style="margin:8px 0 6px">
-        <label class="note"><b>文境界(bdr)の文末記号</b>（記号を続けて入力。この記号で終わる形態素を文末=EOSと判定）</label>
-        <input type="text" id="bdrSepInput" value=".。!?！？" spellcheck="false" autocomplete="off" title="この記号で終わる形態素が文末(EOS)になります" style="width:120px;border:1px solid var(--line);border-radius:6px;padding:5px 8px;font-size:16px;font-family:var(--mono);letter-spacing:.14em">
-        <button type="button" id="btnBdrSepReset" title="既定に戻す">既定に戻す</button>
-        <span class="note" id="bdrSepHint"></span>
-      </div>
+      <summary class="detbtn">詳細設定（morphの分割元）</summary>
       <div class="optrow" id="morphSrcRow" style="margin:8px 0 6px">
         <label class="note">morphをどの層から分割するか（表層と基底形が異なる場合のみ）</label>
         <select id="morphSrc" title="形態素分割のもとになる層"></select>
@@ -569,7 +511,7 @@ html[data-theme="dark"] code{color:var(--accent-ink)}
     <span id="pgInfo" class="note" style="font-family:var(--mono)">0件</span>
     <button id="btnPgNext" disabled>次の5件 ▶</button>
     <span class="sep" style="width:1px;height:20px;background:var(--line)"></span>
-    <label id="bdrSetting" style="font-size:12px;color:var(--ink)" title="文末記号（詳細設定で変更可。既定 . 。 ! ? ！ ？）で文を区切り、形態素ごとに BOS/EOS/I を自動コーディング"><input type="checkbox" id="chkBdr"> 文境界(bdr)</label>
+    <label id="bdrSetting" style="font-size:12px;color:var(--ink)" title="ピリオドを文境界とし、形態素ごとに BOS/EOS/I を自動コーディング"><input type="checkbox" id="chkBdr"> 文境界(bdr)</label>
     <label style="font-size:12px;color:var(--ink)" title="空白と = を語境界とし、形態素ごとに BOW/EOW/I を自動コーディング"><input type="checkbox" id="chkWbdr"> 語境界(wbdr)</label>
   </div>
   <table>
@@ -778,10 +720,6 @@ $('projInput').addEventListener('change',async ev=>{
     activeSpk=speakers[0];renderSpkBar();
     tiersDef=Array.isArray(p.tiersDef)?p.tiersDef.filter(t=>t&&t.name):[];
     morphSrc=typeof p.morphSrc==='string'?p.morphSrc:'text';
-    applyMorphSeps(Array.isArray(p.morphSeps)?p.morphSeps.join(''):(typeof p.morphSeps==='string'?p.morphSeps:'-=+'));
-    if(typeof syncMorphSepInput==='function')syncMorphSepInput();
-    applyBdrSeps(Array.isArray(p.bdrSeps)?p.bdrSeps.join(''):(typeof p.bdrSeps==='string'?p.bdrSeps:'.。!?！？'));
-    if(typeof syncBdrSepInput==='function')syncBdrSepInput();
     // glossOn は morph親の層の有無から refreshTierUI で導出する
     // 旧形式: glossOn=true なのに morph親の層定義がなければ gloss・pos を補う
     if(p.glossOn&&!tiersDef.some(t=>t.parent==='morph'))tiersDef.push({name:'gloss',parent:'morph'},{name:'pos',parent:'morph'});
@@ -1708,31 +1646,13 @@ document.addEventListener('click',e=>{
   if(e.target.id==='helpModal'||e.target.id==='helpClose')$('helpModal').classList.remove('show');
 });
 
-/* ---------- 波形ワイプ（PiP）の移動・最小化 ＋ 集中モード ---------- */
-function setWaveMin(on){
-  const col=$('waveCol');
-  col.classList.toggle('min', on);
-  const b=$('pipMin'); b.textContent=on?'＋':'－'; b.title=on?'波形をひらく':'波形を最小化';
-  syncStickyTop();
-  if(!on&&env){draw();drawOvw();}
-}
-let waveAutoMin=true;   // 編集を始めたら波形を自動で最小化するか（手動でひらいたら止める）
+/* ---------- 波形ワイプ（PiP）の移動・最小化 ---------- */
 $('pipMin').addEventListener('click',e=>{
   e.stopPropagation();
-  const willMin=!$('waveCol').classList.contains('min');
-  waveAutoMin=willMin;          // 手動でひらいたら自動最小化を止め、手動でたたんだら再開
-  setWaveMin(willMin);
-});
-// 集中モード：パネル4の表でセルを編集し始めたら波形（パネル3）を最小化して表を広く使う
-$('cardTable').addEventListener('focusin',e=>{
-  if(!env||!waveAutoMin)return;
-  const t=e.target;
-  if(t&&(t.isContentEditable||t.closest('#tb'))) setWaveMin(true);
-});
-// 最小化中に見出しバーをクリックしたら波形を復元（？やボタンは各自の動作）
-$('cardWave').querySelector('h2').addEventListener('click',e=>{
-  if(e.target.closest('.pipbtns, .helpbtn'))return;
-  if($('waveCol').classList.contains('min')){ waveAutoMin=false; setWaveMin(false); }
+  const col=$('waveCol');
+  col.classList.toggle('min');
+  $('pipMin').textContent=col.classList.contains('min')?'＋':'－';
+  if(!col.classList.contains('min')&&env){draw();drawOvw()}
 });
 
 /* ---------- 選択区間の操作 ---------- */
@@ -1870,39 +1790,6 @@ let page=0, viewLayer='all', ctxLayer='text';   // 注釈表のページ・表�
 const PAGE=5;
 let morphSrc='text';   // morph層の親＝形態素分割のもとになる層（'text'＝テクスト、または区間系カスタム層名）
 function morphSrcText(s){return morphSrc==='text'?s.text:String((s.tv||{})[morphSrc]||'')}
-// 形態素の分割記号（ユーザー設定可。既定は - = +）。各関数はここから作る正規表現を使う
-let morphSeps=['-','=','+'];
-let SEP_SPLIT,SEP_LEAD,SEP_LEAD_G,SEP_ANY,SEP_TRAIL,SEP_HEAD_CAP;
-function rebuildSepRe(){
-  const cls=(morphSeps.map(c=>c.replace(/[\\\]\^\-]/g,'\\$&')).join(''))||'\\-=';
-  SEP_SPLIT=new RegExp('(?=['+cls+'])');
-  SEP_LEAD=new RegExp('^['+cls+']');
-  SEP_LEAD_G=new RegExp('^['+cls+']+');
-  SEP_ANY=new RegExp('['+cls+']');
-  SEP_TRAIL=new RegExp('(['+cls+'])\\s*$');
-  SEP_HEAD_CAP=new RegExp('^(['+cls+'])');
-}
-rebuildSepRe();
-function applyMorphSeps(str){
-  let arr=[...String(str==null?'':str).replace(/\s+/g,'')];
-  arr=arr.filter((ch,i)=>arr.indexOf(ch)===i);   // 重複除去
-  morphSeps=arr.length?arr:['-','=','+'];
-  rebuildSepRe();
-}
-// 文境界(bdr)の文末記号（ユーザー設定可。この記号で終わる形態素を EOS と判定）
-let bdrSeps=['.','。','!','?','！','？'];
-let EOS_RE;
-function rebuildBdrRe(){
-  const cls=(bdrSeps.map(c=>c.replace(/[\\\]\^\-]/g,'\\$&')).join(''))||'\\.';
-  EOS_RE=new RegExp('['+cls+']$');
-}
-rebuildBdrRe();
-function applyBdrSeps(str){
-  let arr=[...String(str==null?'':str).replace(/\s+/g,'')];
-  arr=arr.filter((ch,i)=>arr.indexOf(ch)===i);
-  bdrSeps=arr.length?arr:['.','。'];
-  rebuildBdrRe();
-}
 
 // 層構成プリセット（text・transは表の固定列。レイヤー名は text/udl/morph/gloss/pos/trans で統一）
 const PRESETS={
@@ -2028,31 +1915,12 @@ $('morphSrc').addEventListener('change',()=>{
   morphSrc=$('morphSrc').value;
   refreshTierUI();renderTable();
 });
-// 分割記号の設定
-function updateMorphSepHint(){
-  const h=$('morphSepHint'); if(!h)return;
-  const names={'-':'接辞','=':'接語','+':'複合'};
-  h.innerHTML=morphSeps.length
-    ? '現在の区切り：'+morphSeps.map(c=>'<code>'+escHtml(c)+'</code>'+(names[c]?'（'+names[c]+'）':'')).join(' ')
-    : '（記号なし＝語全体を1形態素として扱います）';
-}
-function syncMorphSepInput(){const i=$('morphSepInput');if(i)i.value=morphSeps.join('');updateMorphSepHint();}
-function reflowMorph(){if(typeof computeBoundaries==='function')computeBoundaries();renderTable();if(typeof renderContext==='function')renderContext();}
-if($('morphSepInput'))$('morphSepInput').addEventListener('input',()=>{applyMorphSeps($('morphSepInput').value);updateMorphSepHint();reflowMorph();});
-if($('btnMorphSepReset'))$('btnMorphSepReset').addEventListener('click',()=>{applyMorphSeps('-=+');syncMorphSepInput();reflowMorph();});
-updateMorphSepHint();
-// 文末記号（文境界 bdr）の設定
-function updateBdrSepHint(){const h=$('bdrSepHint');if(!h)return;h.innerHTML=bdrSeps.length?('現在の文末記号：'+bdrSeps.map(c=>'<code>'+escHtml(c)+'</code>').join(' ')):'（記号なし＝文末の自動判定なし）';}
-function syncBdrSepInput(){const i=$('bdrSepInput');if(i)i.value=bdrSeps.join('');updateBdrSepHint();}
-if($('bdrSepInput'))$('bdrSepInput').addEventListener('input',()=>{applyBdrSeps($('bdrSepInput').value);updateBdrSepHint();reflowMorph();});
-if($('btnBdrSepReset'))$('btnBdrSepReset').addEventListener('click',()=>{applyBdrSeps('.。!?！？');syncBdrSepInput();reflowMorph();});
-updateBdrSepHint();
 refreshTierUI();
 
 // テクストを空白で単語に、- = + で形態素に分割（区切り記号は後続形態素の頭に付く）
 function morphSplit(text){
   return String(text||'').trim().split(/\s+/).filter(Boolean)
-    .map(wd=>wd.split(SEP_SPLIT).filter(Boolean));
+    .map(wd=>wd.split(/(?=[-=+])/).filter(Boolean));
 }
 // 明示的な形態素（EAF取り込みなど）があればそれを使い、なければテキストから機械分割
 function hasExplicitMorphs(s){return Array.isArray(s.morphs)&&s.morphs.length>0}
@@ -2063,7 +1931,7 @@ function alignIGT(s){
   const words=[]; let cur=null, pos=0;
   for(let k=0;k<flat.length;k++){
     const surf=String(flat[k]==null?'':flat[k]);
-    const core=surf.replace(SEP_LEAD,'');
+    const core=surf.replace(/^[-=+]/,'');
     const g=gl[k]||'';
     let sep='', newWord=(cur===null);
     if(core){
@@ -2071,9 +1939,9 @@ function alignIGT(s){
       if(idx>=0){
         const gap=text.slice(pos,idx);
         if(/\s/.test(gap))newWord=true;                         // 直前との間に空白＝新しい語
-        else{const d=gap.match(SEP_ANY);sep=d?d[0]:(SEP_LEAD.test(surf)?surf[0]:'');}
+        else{const d=gap.match(/[-=+]/);sep=d?d[0]:(/^[-=+]/.test(surf)?surf[0]:'');}
         pos=idx+core.length;
-      }else if(SEP_LEAD.test(surf)){sep=surf[0];}               // テキスト未照合だが境界記号を持つ
+      }else if(/^[-=+]/.test(surf)){sep=surf[0];}               // テキスト未照合だが境界記号を持つ
     }
     if(newWord){cur={t:[],g:[]};words.push(cur);sep='';}
     cur.t.push(sep+core); cur.g.push((cur.g.length?sep:'')+g);
@@ -2100,7 +1968,7 @@ function ilgLineOf(s,f){
   }
   let k=0;
   return morphSplit(morphSrcText(s)).map(w=>w.map((m,j)=>{
-    const sep=SEP_LEAD.test(m)?m[0]:'-';
+    const sep=/^[-=+]/.test(m)?m[0]:'-';
     const v=(((s.tv||{})[f])||[])[k++]||'';
     return (j?sep:'')+v;
   }).join('')).join(' ');
@@ -2110,10 +1978,10 @@ function tierRowsOn(){return glossOn||segTiers().length>0}
 /* ---------- 文・語境界のコーディング（bdr / wbdr 層） ---------- */
 const hasBdr=()=>tiersDef.some(t=>t.name==='bdr');
 const hasWbdr=()=>tiersDef.some(t=>t.name==='wbdr');
-const isEosMorph=m=>EOS_RE.test(String(m||''));
+const isEosMorph=m=>/[.．。!?！？]$/.test(String(m||''));
 // 各形態素の直前にあった区切り文字列（テキストに対して flatMorphs を整列して復元）
 function morphDelims(s){
-  const ms=flatMorphs(s).map(m=>String(m).replace(SEP_LEAD_G,''));   // 機械分割の頭の区切りは外す
+  const ms=flatMorphs(s).map(m=>String(m).replace(/^[-=+]+/,''));   // 機械分割の頭の区切りは外す
   const text=String(morphSrcText(s)||'');
   const out=[]; let pos=0;
   for(const m of ms){
@@ -2866,7 +2734,7 @@ $('dlJson').addEventListener('click',()=>{
   dl(baseName()+'_tokens.json',JSON.stringify(out,null,2),'application/json');
 });
 $('dlProj').addEventListener('click',()=>{
-  dl(baseName()+'_project.json',JSON.stringify({wavName:wavFile?wavFile.name:'',glossOn,morphSrc,morphSeps,bdrSeps,tiersDef,speakers,segs,ignoredMiss,lexicon},null,1),'application/json');
+  dl(baseName()+'_project.json',JSON.stringify({wavName:wavFile?wavFile.name:'',glossOn,morphSrc,tiersDef,speakers,segs,ignoredMiss,lexicon},null,1),'application/json');
 });
 // ヘッダーの保存バー（書き出しカードと同じ処理を呼ぶ）
 [['hdrEaf','dlEaf'],['hdrTsv','dlTsv'],['hdrJson','dlJson'],['hdrZip','dlZip'],['hdrProj','dlProj']]
@@ -2905,9 +2773,9 @@ function morphInfo(s){
   const gl=(s.tv||{}).gloss||[], po=(s.tv||{}).pos||[];
   return ms.map((m,i)=>{
     let d='';
-    const pre=String(m).match(SEP_HEAD_CAP);
-    if(pre)d=pre[1]; else {const b=before[i]||''; const mm=b.match(SEP_TRAIL); d=mm?mm[1]:''}
-    return {form:m, head:String(m).replace(SEP_LEAD_G,''), type:d==='='?'clitic':d==='-'?'affix':'root',
+    const pre=String(m).match(/^([-=+])/);
+    if(pre)d=pre[1]; else {const b=before[i]||''; const mm=b.match(/([-=+])\s*$/); d=mm?mm[1]:''}
+    return {form:m, head:String(m).replace(/^[-=+]+/,''), type:d==='='?'clitic':d==='-'?'affix':'root',
       gloss:gl[i]||'', pos:po[i]||'', i};
   });
 }
@@ -3144,7 +3012,7 @@ function renderSearchResults(unit,res,msg){
   const rows=res.map(r=>{
     const s=segs[r.si];
     if(unit==='morph'){
-      const ms=flatMorphs(s).map(m=>String(m||'').replace(SEP_LEAD,''));
+      const ms=flatMorphs(s).map(m=>String(m||'').replace(/^[-=+]/,''));
       const left=ms.slice(0,r.mi).join(' '), key=ms[r.mi]||'', right=ms.slice(r.mi+1).join(' ');
       const sub=morphTiers().map(t=>{const v=((s.tv||{})[t.name]||[])[r.mi]||'';return v?(t.name+'='+v):'';}).filter(Boolean).join(' / ');
       return kwicRow(r.si,s.id,srchNeighbor(r.si,-1,'__text'),left,key,right,srchNeighbor(r.si,1,'__text'),sub,r.mi);
@@ -3152,7 +3020,7 @@ function renderSearchResults(unit,res,msg){
     // record単位：ハイライト可能な最初の条件を主役に
     const c=conds.find(c=>['contains','exact','regex'].includes(c.op)&&c.q!=='');
     if(c&&c.level==='morph'){
-      const ms=flatMorphs(s).map(m=>String(m||'').replace(SEP_LEAD,'')), vals=srchMorphVals(s,c.layer);
+      const ms=flatMorphs(s).map(m=>String(m||'').replace(/^[-=+]/,'')), vals=srchMorphVals(s,c.layer);
       let idx=vals.findIndex(v=>srchMatch(v,c.op,c.q));
       const left=idx>=0?ms.slice(0,idx).join(' '):ms.join(' '), key=idx>=0?ms[idx]:'', right=idx>=0?ms.slice(idx+1).join(' '):'';
       const sub=idx>=0?(c.layer+'='+(vals[idx]||'')):'';
@@ -3308,6 +3176,77 @@ $('dlDict').addEventListener('click',async()=>{
   }catch(e){alert('エラー：'+e.message)}
   finally{btn.disabled=false;btn.textContent=orig}
 });
+
+/* ---------- i18n：日本語 ⇄ English 切替（主要UI） ---------- */
+(function(){
+  const EN={
+    // ヘッダ・タブ・保存
+    "A simple, intuitive toolkit for transcription, annotation, glossing, and conversion.":"A simple, intuitive toolkit for transcription, annotation, glossing, and conversion.",
+    "下地理則の研究室":"Shimoji Lab","保存：":"Save:","プロジェクト途中保存":"Save project",
+    "注釈":"Annotate","検索":"Search","分析・辞書":"Analyze / Lexicon","🧭 使い方ツアー":"🧭 Guided tour","💬 フィードバック":"💬 Feedback",
+    // パネル1（開始）
+    "作業を始める":"Get started","どちらから始めますか？":"How would you like to start?",
+    "🆕 新規に始める":"🆕 Start new","📂 既存の作業を再開する":"📂 Resume existing work",
+    "新規":"New","既存再開":"Resume",
+    "＝音声（WAV）を読み込んで自動区切り→注釈。":"= load audio (WAV), auto-segment, then annotate.",
+    "＝音声を読み込んでから、以前の保存（.json）や ELAN（.eaf）を読み込み。":"= load the audio first, then a saved project (.json) or ELAN (.eaf).",
+    "① 音声ファイル（WAV・PCM）を選択":"① Choose an audio file (WAV / PCM)",
+    "未選択":"None selected","② プロジェクト（.json）を読み込む":"② Load a project (.json)",
+    "② ELANの .eaf を読み込む":"② Load an ELAN .eaf","← 最初に戻る":"← Back",
+    // パネル2（区間作成）
+    "区間を作る（手動 または 自動検出）":"Create segments (manual or auto-detect)",
+    "手動：":"Manual:","すると区間になります。":" makes it a segment.","自動：":"Auto:",
+    "自動検出を実行":"Run auto-detect","表示範囲だけ検出":"Detect visible range only","しきい値を自動推定":"Auto-estimate threshold",
+    "しきい値":"Threshold","自動":"auto","最小無音長（ms）":"Min. silence (ms)","最小区間長（ms）":"Min. segment (ms)",
+    "前後余白（ms）":"Padding (ms)","全区間をクリア":"Clear all segments",
+    // パネル3（波形）
+    "波形（区切りの確認・修正）":"Waveform (check / fix segments)","⤢ 大きく":"⤢ Larger","⤡ 小さく":"⤡ Smaller",
+    "話者：":"Speaker:","＋話者":"+ Speaker","全体表示":"Fit all","⟳ 自動区切りをやり直す":"⟳ Re-run auto-segmentation",
+    "◀ 前の区間":"◀ Prev","▶ 選択を再生":"▶ Play selection","▶ カーソルから":"▶ From cursor","■ 停止":"■ Stop",
+    "次の区間 ▶":"Next ▶","🗑 選択を削除":"🗑 Delete selected","← 前と結合":"← Merge prev","次と結合 →":"Merge next →",
+    "取りこぼし表示":"Show missed","確認再生":"Preview","✓ 区間に追加":"✓ Add as segment","無視":"Ignore",
+    // パネル4（注釈）
+    "注釈を付ける":"Annotate","層構成：":"Layers:","さらに層を追加（名前）":"Add a layer (name)","＋ 追加":"+ Add",
+    "詳細設定（morphの分割元）":"Advanced (morph split source)","表示レイヤー":"Show layer",
+    "◀ 前の5件":"◀ Prev 5","次の5件 ▶":"Next 5 ▶","文境界(bdr)":"Sentence bdry (bdr)","語境界(wbdr)":"Word bdry (wbdr)",
+    "文脈表示：":"Context:","クリックでそのレコードへ":"Click to jump to the record","すべてのレイヤー":"All layers",
+    "親：区間（text直下）":"Parent: segment (under text)","親：morph":"Parent: morph",
+    "text＋trans":"text + trans","text＋morph＋gloss＋trans":"text + morph + gloss + trans",
+    "text＋udl＋morph＋gloss＋trans（基底形から分割）":"text + udl + morph + gloss + trans (split from underlying)",
+    "カスタム（独自の構成）":"Custom","IDを連番で振り直す":"Renumber IDs",
+    // パネル5（書き出し）
+    "書き出し":"Export","EAF（ELAN用）":"EAF (for ELAN)","TSV（Excel対応）":"TSV (Excel-ready)",
+    "Word（.docx）":"Word (.docx)","切り出しWAVのZIP":"Per-segment WAV ZIP","glossを小型大文字":"gloss in small caps",
+    "プロジェクトを途中保存（.json）":"Save project (.json)","辞書をHTML＋音声でダウンロード（ZIP）":"Download lexicon as HTML + audio (ZIP)",
+    // 表ヘッダ
+    "text / trans":"text / trans"
+  };
+  let lang='ja'; try{lang=localStorage.getItem('blt_lang')||'ja';}catch(e){}
+  const skip=n=>{let el=n.nodeType===3?n.parentElement:n;
+    while(el){const t=el.tagName;
+      if(t==='SCRIPT'||t==='STYLE'||t==='TEXTAREA'||t==='INPUT'||t==='CANVAS'||t==='OPTION'&&false)return true;
+      if(el.getAttribute&&el.getAttribute('data-i18n-skip')!=null)return true;
+      if(el.isContentEditable)return true; el=el.parentElement;}
+    return false;};
+  function trNode(n){const raw=n.nodeValue,key=raw.trim();if(!key)return;
+    if(lang==='en'){const en=EN[key];if(en!=null&&n.__ja==null){n.__ja=raw;n.nodeValue=raw.replace(key,en);}}
+    else if(n.__ja!=null){n.nodeValue=n.__ja;n.__ja=null;}};
+  function walk(root){
+    if(root.nodeType===3){if(!skip(root))trNode(root);return;}
+    if(root.nodeType!==1)return;
+    const tw=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);const ns=[];
+    while(tw.nextNode())ns.push(tw.currentNode);
+    ns.forEach(n=>{if(!skip(n))trNode(n);});}
+  function applyLang(){document.documentElement.lang=lang==='en'?'en':'ja';
+    walk(document.body);
+    const tg=document.getElementById('langToggle');if(tg)tg.textContent=lang==='en'?'日本語':'English';}
+  new MutationObserver(ms=>{if(lang!=='en')return;
+    ms.forEach(m=>m.addedNodes.forEach(n=>{try{if(n.nodeType===1)walk(n);else if(n.nodeType===3&&!skip(n))trNode(n);}catch(e){}}));
+  }).observe(document.body,{childList:true,subtree:true});
+  const tg=document.getElementById('langToggle');
+  if(tg)tg.addEventListener('click',()=>{lang=lang==='en'?'ja':'en';try{localStorage.setItem('blt_lang',lang);}catch(e){}applyLang();});
+  applyLang();
+})();
 </script>
 
 <script>
@@ -3348,18 +3287,10 @@ $('dlDict').addEventListener('click',async()=>{
     {sel:'#bdrSetting', title:'④ 文境界の設定（パネル操作）', body:'パネル4の「<b>詳細設定</b>」を開き、<b>文境界をコーディング（bdr層・ピリオド基準）</b> にチェックを入れます（このチェックが実際に入ります）。text の<b>ピリオド(.)</b>を文末の手がかりにします。', place:'top', needsAudio:true, action:'demoBdr'},
     {sel:'#tb tr.glossrow[data-i="0"]', title:'→ bdr に BOS / EOS が付く', body:'チェックを入れると、各形態素へ <b>BOS（文頭）/ EOS（文末）/ I（文中）</b> が自動付与されます（例文なら <b>nkjaan=BOS … ca.=EOS</b>）。文脈表示にも <b>‖</b> で文の切れ目が出ます。', place:'bottom', needsAudio:true, hideWave:true, demoOnly:true},
     {sel:'#cardTable', title:'発話境界 ≠ 文境界（対比）', body:'BLTがポーズで区切った<b>区間＝発話</b>（発話境界）と、bdr の<b>ピリオド基準の文</b>（文境界）は<b>必ずしも一致しません</b>。連続する2つの発話で対比します：<br>① <i style="font-family:var(--ipa)">…sudac-i-i<b>,</b></i>（コンマ＝文は未完。言い直し bizin→nn=FRG→aparagi も含む）→ bdr の末尾は <b>I</b>（<b>EOSなし</b>）＝<b>発話末 ≠ 文末</b><br>② <i style="font-family:var(--ipa)">…nar-i-u-tar=ca<b>.</b></i>（ピリオド＝文末）→ bdr の末尾は <b>EOS</b>＝<b>発話末 ＝ 文末</b><br>このとおり、発話の切れ目は文の切れ目と<b>一致することも・しないことも</b>あります。<b>注釈は文を気にせず発話単位で進めてOK</b>（文構造は bdr 層が担います）。', place:'top', needsAudio:true, action:'demoUtt2', hideWave:true},
-    {sel:'#tierPreset', title:'層構成を選ぶ（プリセット）', body:'注釈の<b>層（レイヤー）</b>はここで切り替えます。<br>・<b>text＋trans</b>（最小）<br>・<b>＋morph＋gloss</b>（標準）<br>・<b>＋udl</b>（基底形つき）<br>をワンタッチで選べます。', place:'bottom', needsAudio:true, hideWave:true},
-    {sel:'#addTierGroup', title:'独自の層を追加してみる', body:'プリセット以外の層も自由に足せます。名前（例：<b>pos</b>＝品詞）を入れて「<b>＋ 追加</b>」を押すだけ。<br><b>いま実際に pos 層を追加しました</b> — 表に新しい行が増えています。', place:'bottom', needsAudio:true, hideWave:true, action:'demoAddLayer'},
-    {sel:'#newTierParent', title:'層の「親」＝粒度を選ぶ', body:'追加時に<b>親</b>を選びます—これが入力の粒度を決めます。<br>・<b>区間</b>＝1区間に1つ（<i>trans</i> のような層）<br>・<b>形態素</b>＝形態素ごと（<i>gloss・pos</i> のような層）<br>pos は「形態素」を親にしたので、形態素ごとに記入できます。', place:'bottom', needsAudio:true, hideWave:true, action:'demoAddLayer'},
-    {sel:'#tierChips', title:'追加した層はチップで管理', body:'追加した層はこの<b>チップ</b>に並びます（「← 形態素」など親も表示）。<br>不要になったら <b>✕</b> でいつでも削除できます。', place:'bottom', needsAudio:true, hideWave:true, action:'demoAddLayer'},
-    {sel:'#cardTable', title:'udl層：基底形の境界で morph 分割', body:'<b>udl層（基底形）</b>を加えると、morph は <b>表層の text</b> ではなく <b>udl の形態素境界</b>に従って分割されます。表層 text は区切らずそのまま、udl に境界を書くだけ。<br>下の表でも、<b>表層 text の <span style="background:var(--sel);color:#5a4200;border-radius:3px;padding:0 4px">midummasii</span></b> と、<b>udl の <span style="background:var(--sel);color:#5a4200;border-radius:3px;padding:0 4px">midum-as-i-i</span></b> をハイライトしています。表層と基底がずれていても、udl に書いた境界どおりに morph 分割されます。', place:'bottom', needsAudio:true, action:'demoUdl', hideWave:true, marks:[{sel:'#tb tr[data-i="0"] [data-k="text"]', find:'midummasii', tag:'表層 text'},{sel:'#tb tr.glossrow[data-i="0"] [data-t="udl"]', find:'midum-as-i-i', tag:'udl（基底形）'}]},
+    {sel:'#annoCtlLeft', title:'層（レイヤー）の追加・カスタマイズ', body:'注釈の<b>層</b>は自由に構成できます。<br>・<b>層構成</b>のプリセット：<i>text+trans</i> ／ <i>+morph+gloss</i> ／ <i>+udl</i> をワンタッチで切替。<br>・「<b>さらに層を追加</b>」で独自の層（例：<b>pos・kana・note</b> など）を追加できます。追加時に<b>親</b>を選びます — <b>区間</b>（trans のように1区間に1つ）か <b>形態素</b>（gloss のように形態素ごと）。<br>・追加した層は下の<b>チップ</b>に並び、✕でいつでも削除できます。', place:'top', needsAudio:true},
+    {sel:'#cardTable', title:'udl層：基底形の境界で morph 分割', body:'<b>udl層（基底形）</b>を加えると、morph は <b>表層の text</b> ではなく <b>udl の形態素境界</b>に従って分割されます。表層 text は区切らずそのまま、udl に境界を書くだけ。<br>例：<div style="background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:5px;padding:8px 12px;margin:8px 0;font-family:var(--ipa);font-size:16px"><b>midummasii</b>（表層）&nbsp;→&nbsp;<b>midum -as -i -i</b>（udl＝morph）</div>表層と基底がずれていても、udl に書いた境界どおりに morph 分割されます。', place:'bottom', needsAudio:true, action:'demoUdl', hideWave:true},
     {sel:'#cardExport', title:'⑤ 書き出し・保存', body:'仕上がったら <b>EAF / TSV / JSON / WAV ZIP</b> で書き出し。<b>プロジェクト途中保存</b>（.json）で、同じWAVを読み込めば続きから再開できます。', place:'top', needsAudio:true},
-    {sel:'#srchConds', title:'🔎 検索タブ：層で探す', body:'ここからは<b>検索タブ</b>です。各<b>層（text・gloss・morph など）</b>に条件を付けて、区間や形態素を探せます。<br>「<b>を含む／に一致／正規表現／空でない</b>」から選べます。<br><b>いま『text に dondon を含む』で検索しました。</b>', place:'bottom', needsAudio:true, tab:'search', fill:'demoSearch'},
-    {sel:'#srchResults', title:'検索結果から注釈へジャンプ', body:'結果は<b>KWIC（前後文脈付き）</b>で並びます。行のリンクを押すと<b>その区間へ（注釈タブに戻って）ジャンプ</b>します。<br>・複数条件を <b>AND／OR</b> で組み合わせ、<b>結果の単位（区間／形態素）</b>も選べます。', place:'top', needsAudio:true, tab:'search'},
-    {sel:'#anStats', title:'📊 分析・辞書タブ：集計', body:'ここからは<b>分析・辞書タブ</b>。まず<b>集計</b>で、区間数・語数・形態素数・異なる形態素数などが一目でわかります。', place:'bottom', needsAudio:true, tab:'analysis'},
-    {sel:'#anIndexCol', title:'形態素リスト（頻度・種類・品詞）', body:'使われた<b>形態素の一覧</b>です。<b>頻度順・字順・種類順（語根→接辞→接語）・品詞順</b>で並べ替え、形態素・グロスで絞り込めます。', place:'right', needsAudio:true, tab:'analysis'},
-    {sel:'#anDictCol', title:'辞書・用例＋ZIP書き出し', body:'左で形態素を選ぶと、<b>語義の編集</b>と<b>音声付きの用例</b>が出ます（いま先頭の形態素を開きました）。<br>右上の「<b>辞書をHTML＋音声でダウンロード（ZIP）</b>」で、用例音声つきの辞書を書き出せます。', place:'left', needsAudio:true, tab:'analysis', fill:'demoDict'},
-    {sel:'.bcite', title:'引用情報（DOI）', body:'BLTには DOI が付いています。研究で使ったら、このCITE欄の文献情報で引用してください。', place:'bottom', tab:'anno'},
+    {sel:'.bcite', title:'引用情報（DOI）', body:'BLTには DOI が付いています。研究で使ったら、このCITE欄の文献情報で引用してください。', place:'bottom'},
     {sel:'#fbOpen', title:'フィードバック歓迎', body:'改善点・気づいた点はこのボタンからお寄せください。このツアーは右上の「🧭 使い方ツアー」でいつでも見られます。', place:'left'}
   ];
   var spot, pop, idx=-1, watch=null, demoMode=false;
@@ -3509,38 +3440,7 @@ $('dlDict').addEventListener('click',async()=>{
       if(typeof renderTable==='function') renderTable();
     }catch(e){}
   }
-  function demoAddLayer(){
-    if(!demoMode) return;
-    try{
-      if(typeof tiersDef==='undefined') return;
-      if(!tiersDef.some(function(t){return t.name==='pos';})){
-        var pp=document.getElementById('newTierParent'); if(pp) pp.value='morph';
-        var nm=document.getElementById('newTierName'); if(nm) nm.value='pos';
-        var btn=document.getElementById('btnAddTier'); if(btn) btn.click();
-      }
-    }catch(e){}
-  }
-  function demoSearch(){
-    if(!demoMode) return;
-    try{
-      if(typeof switchTab==='function') switchTab('search');
-      var row=document.querySelector('#srchConds .srow'); if(!row) return;
-      var lay=row.querySelector('.s-layer'), op=row.querySelector('.s-op'), val=row.querySelector('.s-val');
-      if(lay){ var o=[].slice.call(lay.options).find(function(x){return x.value==='text';}); lay.value=o?o.value:lay.options[0].value; }
-      if(op) op.value='contains';
-      if(val) val.value='dondon';
-      if(typeof runSearch==='function') runSearch();
-    }catch(e){}
-  }
-  function demoDict(){
-    if(!demoMode) return;
-    try{
-      if(typeof switchTab==='function') switchTab('analysis');
-      var first=document.querySelector('#anIndex .anrow');
-      if(first) first.click();
-    }catch(e){}
-  }
-  var ACTIONS={demoDetect:demoDetect, demoText:demoText, demoGloss:demoGloss, demoBdr:demoBdr, demoIPA:demoIPA, demoUtt2:demoUtt2, demoUdl:demoUdl, demoAddLayer:demoAddLayer, demoSearch:demoSearch, demoDict:demoDict, demoSpk:demoSpk};
+  var ACTIONS={demoDetect:demoDetect, demoText:demoText, demoGloss:demoGloss, demoBdr:demoBdr, demoIPA:demoIPA, demoUtt2:demoUtt2, demoUdl:demoUdl, demoSpk:demoSpk};
   function isVisible(el){ if(!el) return false; var cs=getComputedStyle(el); if(cs.display==='none'||cs.visibility==='hidden') return false; var r=el.getBoundingClientRect(); return r.width>0&&r.height>0; }
   function clearWatch(){ if(watch){ clearInterval(watch); watch=null; } }
   function audioLoaded(){ var wv=document.getElementById('cardWave'); return (wv&&isVisible(wv))||(typeof segs!=='undefined'&&segs.length>0); }
@@ -3570,7 +3470,6 @@ $('dlDict').addEventListener('click',async()=>{
     clearWatch();
     var wc=waveCard(); if(wc) wc.style.display='';   // 波形を元に戻す
     clearIPAHighlight(); if(typeof hidePalette==='function') try{ hidePalette(); }catch(e){}
-    clearMarks();
     if(spot) spot.hidden=true; if(pop) pop.hidden=true; idx=-1;
     try{ localStorage.setItem('blt_tour_done','1'); }catch(e){}
     document.removeEventListener('keydown', onKey);
@@ -3596,47 +3495,7 @@ $('dlDict').addEventListener('click',async()=>{
     if(top<m) top=r.bottom+m; if(top+ph>vh-m) top=Math.max(m, r.top-ph-m);
     pop.style.top=top+'px'; pop.style.left=left+'px';
   }
-  function reposition(){ if(idx>=0 && idx<STEPS.length){ var el=document.querySelector(STEPS[idx].sel); if(el) place(el); drawMarks(); } }
-  // ---- 文中の該当部分ハイライト（marks）----
-  var markEls=[];
-  function clearMarks(){ for(var i=0;i<markEls.length;i++){ if(markEls[i].parentNode) markEls[i].parentNode.removeChild(markEls[i]); } markEls=[]; }
-  function findRangeRects(cell, find){
-    var txt=cell.textContent||'', at=txt.indexOf(find);
-    if(at<0) return null;
-    var walker=document.createTreeWalker(cell, NodeFilter.SHOW_TEXT, null), pos=0, node;
-    var sNode,sOff,eNode,eOff;
-    while((node=walker.nextNode())){
-      var len=node.nodeValue.length;
-      if(sNode==null && pos+len>at){ sNode=node; sOff=at-pos; }
-      if(sNode!=null && pos+len>=at+find.length){ eNode=node; eOff=at+find.length-pos; break; }
-      pos+=len;
-    }
-    if(sNode==null||eNode==null) return null;
-    var rg=document.createRange(); rg.setStart(sNode,sOff); rg.setEnd(eNode,eOff);
-    var rects=rg.getClientRects();
-    return rects.length?rects:null;
-  }
-  function drawMarks(){
-    clearMarks();
-    if(idx<0||idx>=STEPS.length) return;
-    var specs=STEPS[idx].marks; if(!specs) return;
-    specs.forEach(function(sp){
-      var cell=document.querySelector(sp.sel); if(!cell) return;
-      var rects=findRangeRects(cell, sp.find); if(!rects) return;
-      for(var i=0;i<rects.length;i++){
-        var r=rects[i]; if(r.width<1||r.height<1) continue;
-        var m=document.createElement('div'); m.className='tour-mark';
-        m.style.top=(r.top-2)+'px'; m.style.left=(r.left-2)+'px';
-        m.style.width=(r.width+4)+'px'; m.style.height=(r.height+4)+'px';
-        if(i===0 && sp.tag){ var t=document.createElement('span'); t.className='tour-mark-tag'; t.textContent=sp.tag; m.appendChild(t); }
-        document.body.appendChild(m); markEls.push(m);
-      }
-    });
-  }
-  // 実演（async）でセルが現れるまで数回リトライしてハイライトを描く
-  function scheduleMarks(n){
-    [120,300,600,1000,1600,2400].forEach(function(d){ setTimeout(function(){ if(idx===n) drawMarks(); }, d); });
-  }
+  function reposition(){ if(idx>=0 && idx<STEPS.length){ var el=document.querySelector(STEPS[idx].sel); if(el) place(el); } }
   function waveCard(){ return document.getElementById('waveCol') || (document.getElementById('wave')&&document.getElementById('wave').closest('.card')); }
   function go(n, dir){
     clearWatch();
@@ -3648,27 +3507,22 @@ $('dlDict').addEventListener('click',async()=>{
     if(!demoMode && (s.action || s.demoOnly)){ go(n+dir, dir); return; }
     // ステップ中にユーザーが操作した状態（セル編集・フォーカス・IPAパレット）をリセットしてデフォルトで進む
     try{ if(document.activeElement && document.activeElement!==document.body && document.activeElement.blur) document.activeElement.blur(); }catch(e){}
-    // タブをまたぐステップ：検索・分析タブに切り替え（既定は注釈タブ＝戻る操作でも復帰）
-    if(typeof switchTab==='function'){ try{ switchTab(s.tab || 'anno'); }catch(e){} }
     // 注釈の実演ステップでは sticky 波形を隠して表（インターリニア）を見せる
     var wc=waveCard();
     if(wc){
       var wasHidden=getComputedStyle(wc).display==='none';
       wc.style.display = s.hideWave ? 'none' : '';
-      if(typeof syncStickyTop==='function'){ try{ syncStickyTop(); }catch(e){} }   // 波形の表示切替でstickyオフセットが古くなるのを防ぐ
-      if(!s.hideWave && wasHidden){ setTimeout(function(){ try{ if(typeof draw==='function') draw(); if(typeof drawOvw==='function') drawOvw(); if(typeof syncStickyTop==='function') syncStickyTop(); reposition(); }catch(e){} },60); }
+      if(!s.hideWave && wasHidden){ setTimeout(function(){ try{ if(typeof draw==='function') draw(); if(typeof drawOvw==='function') drawOvw(); }catch(e){} },60); }
     }
     // IPAパレットは毎ステップ一旦リセット（IPAステップだけ後段のアクションで再表示）
     clearIPAHighlight(); if(typeof hidePalette==='function') try{ hidePalette(); }catch(e){}
     // 実演アクション（glossrow を生成・再描画することがあるので、ターゲット解決の前に実行）
     if(s.action && ACTIONS[s.action]){ try{ ACTIONS[s.action](); }catch(e){} }
-    if(s.fill && demoMode && ACTIONS[s.fill]){ try{ ACTIONS[s.fill](); }catch(e){} }
     var el=document.querySelector(s.sel);
     if(!el || !isVisible(el)){ go(n+dir, dir); return; }  // 非表示の要素はスキップ
     idx=n;
     if(s.scrollTop) window.scrollTo(0,0); else el.scrollIntoView({block:'center'});
     pop.innerHTML='<button type="button" class="tour-skip" aria-label="ツアーをスキップ" title="ツアーをスキップ（Escキーでも終了）">×</button>'
-      +'<div class="tour-bar"><i style="width:'+Math.round((n+1)/STEPS.length*100)+'%"></i></div>'
       +'<h4>'+s.title+'</h4><p>'+s.body+'</p>'
       +'<div class="tour-row"><span class="tour-step">'+(n+1)+' / '+STEPS.length
       +'<button type="button" class="tour-quit">スキップ</button></span>'
@@ -3686,8 +3540,6 @@ $('dlDict').addEventListener('click',async()=>{
     };
     var prev=pop.querySelector('.tour-prev'); if(prev) prev.onclick=function(){ go(idx-1, -1); };
     setTimeout(function(){ var e2=document.querySelector(s.sel); if(e2) place(e2); }, s.action?220:60);  // 実演で再描画する場合は少し待つ
-    clearMarks(); if(s.marks) scheduleMarks(n);   // 该当部分のハイライト（実演でセルが出たら描画）
-    [140,340,650].forEach(function(d){ setTimeout(function(){ if(idx===n){ if(typeof syncStickyTop==='function') try{ syncStickyTop(); }catch(e){} reposition(); } }, d); });  // レイアウト確定後にスポット位置を追従
     // 波形ステップ：読み込み後の自動検出でパネル1・2が隠れてレイアウトが動くので、数回追従させる
     if(s.scrollTop){ [500,1000,1700,2600].forEach(function(d){ setTimeout(function(){ if(idx===n){ window.scrollTo(0,0); reposition(); } }, d); }); }
     if(s.waitLoaded) startWatch();                        // 音声を読み込んだら自動で次へ
@@ -3702,22 +3554,6 @@ $('dlDict').addEventListener('click',async()=>{
   if(btn) btn.addEventListener('click', startTour);
   // 初回訪問時のみ自動起動
   try{ if(!localStorage.getItem('blt_tour_done')) setTimeout(startTour, 700); }catch(e){}
-})();
-</script>
-<script>
-/* テーマ（ライト／ダーク）切替 — 機能には影響しません */
-(function(){
-  var KEY='blt_theme', root=document.documentElement;
-  try{ if(localStorage.getItem(KEY)==='dark') root.setAttribute('data-theme','dark'); }catch(e){}
-  function sync(){ var b=document.getElementById('themeBtn'); if(b){ var d=root.getAttribute('data-theme')==='dark'; b.textContent=d?'☀':'☾'; b.title=d?'ライトモードに切替':'ダークモードに切替'; } }
-  var btn=document.getElementById('themeBtn');
-  if(btn) btn.addEventListener('click',function(){
-    var d=root.getAttribute('data-theme')==='dark';
-    if(d){ root.removeAttribute('data-theme'); } else { root.setAttribute('data-theme','dark'); }
-    try{ localStorage.setItem(KEY, d?'light':'dark'); }catch(e){}
-    sync();
-  });
-  sync();
 })();
 </script>
 </body>
