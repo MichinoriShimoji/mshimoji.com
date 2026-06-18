@@ -326,6 +326,8 @@ html[data-theme="dark"] .tour-mark .tour-mark-tag{color:#2a2010}
 /* テーマ切替ボタン */
 #themeBtn{background:var(--surface);color:var(--muted);border:1px solid var(--line);border-radius:20px;width:40px;height:34px;font-size:16px;cursor:pointer;align-self:center;padding:0;display:inline-flex;align-items:center;justify-content:center;transition:background .12s,color .12s,border-color .12s}
 #themeBtn:hover{background:var(--accent-soft);color:var(--accent-ink);border-color:var(--accent)}
+#langToggle{background:var(--surface);color:var(--accent);border:1px solid var(--accent);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700;cursor:pointer;align-self:center;transition:background .12s,color .12s}
+#langToggle:hover{background:var(--accent);color:#fff}
 /* ===== ダークモード ===== */
 html[data-theme="dark"]{
   --bg:#0f141c; --surface:#1a212c; --ink:#e7ebf2; --muted:#97a2b1;
@@ -380,6 +382,7 @@ html[data-theme="dark"] code{color:var(--accent-ink)}
     <button type="button" class="tab" data-tab="analysis">分析・辞書</button>
     <button type="button" id="tourBtn" title="BLTの使い方を順に案内します">🧭 使い方ツアー</button>
     <button type="button" id="themeBtn" title="ライト／ダークの切替" aria-label="テーマ切替">☾</button>
+    <button type="button" id="langToggle" data-i18n-skip title="Switch language / 言語切替">English</button>
   </div>
 </header>
 <main>
@@ -526,13 +529,13 @@ html[data-theme="dark"] code{color:var(--accent-ink)}
     <details style="margin:0 0 8px">
       <summary class="detbtn">詳細設定（形態素の分割記号・分割元）</summary>
       <div class="optrow" id="morphSepRow" style="margin:8px 0 6px">
-        <label class="note">形態素の<b>分割記号</b>（記号を続けて入力。既定 <code>-</code>接辞 ・ <code>=</code>接語 ・ <code>+</code>複合）</label>
+        <label class="note" id="morphSepLbl">形態素の<b>分割記号</b>（記号を続けて入力。既定 <code>-</code>接辞 ・ <code>=</code>接語 ・ <code>+</code>複合）</label>
         <input type="text" id="morphSepInput" value="-=+" spellcheck="false" autocomplete="off" title="これらの記号の手前で形態素に分割されます" style="width:96px;border:1px solid var(--line);border-radius:6px;padding:5px 8px;font-size:16px;font-family:var(--mono);letter-spacing:.18em">
         <button type="button" id="btnMorphSepReset" title="既定（- = +）に戻す">既定に戻す</button>
         <span class="note" id="morphSepHint"></span>
       </div>
       <div class="optrow" id="bdrSepRow" style="margin:8px 0 6px">
-        <label class="note"><b>文境界(bdr)の文末記号</b>（記号を続けて入力。この記号で終わる形態素を文末=EOSと判定）</label>
+        <label class="note" id="bdrSepLbl"><b>文境界(bdr)の文末記号</b>（記号を続けて入力。この記号で終わる形態素を文末=EOSと判定）</label>
         <input type="text" id="bdrSepInput" value=".。!?！？" spellcheck="false" autocomplete="off" title="この記号で終わる形態素が文末(EOS)になります" style="width:120px;border:1px solid var(--line);border-radius:6px;padding:5px 8px;font-size:16px;font-family:var(--mono);letter-spacing:.14em">
         <button type="button" id="btnBdrSepReset" title="既定に戻す">既定に戻す</button>
         <span class="note" id="bdrSepHint"></span>
@@ -634,7 +637,7 @@ html[data-theme="dark"] code{color:var(--accent-ink)}
 <div id="tabSearch" class="hidden">
 <div class="card">
   <h2><span class="steplabel">🔎</span>検索</h2>
-  <div class="note">層ごと・層同士の条件で、<b>区間（レコード）</b>や<b>形態素</b>を検索します。条件を足して AND / OR で組み合わせ、形態素レベルは「同じ形態素で揃える」も指定できます。</div>
+  <div class="note" id="srchIntro">層ごと・層同士の条件で、<b>区間（レコード）</b>や<b>形態素</b>を検索します。条件を足して AND / OR で組み合わせ、形態素レベルは「同じ形態素で揃える」も指定できます。</div>
   <div id="srchConds" style="margin-top:8px"></div>
   <div class="btns" style="margin:6px 0 10px"><button type="button" id="srchAdd" class="ghost">＋ 条件を追加</button></div>
   <div class="optrow" style="gap:16px;flex-wrap:wrap;align-items:center">
@@ -3334,6 +3337,37 @@ $('dlDict').addEventListener('click',async()=>{
 <script>
 /* アプリ内インタラクティブ・ガイドツアー（依存なし） */
 (function(){
+  function EN_ON(){ try{ return !!(window.__bltLangEN && window.__bltLangEN()); }catch(e){ return false; } }
+  // ツアーの英訳（日本語タイトルをキーに t=title, b=body）
+  var TOUR_EN={
+'BLTへようこそ':{t:'Welcome to BLT',b:'A field-data editing tool that runs entirely in your browser. This tour walks you through everything from <b>loading audio to annotation, glossing, and ELAN (EAF) export</b>.'},
+'① 作業を始める':{t:'① Get started',b:'First choose <b>“Start new”</b> or <b>“Resume existing work.”</b><br><b>New</b> = load audio (WAV) → auto-segment → annotate. <b>Resume</b> = load the audio, then a previous .json or ELAN .eaf.<br><span style="color:var(--muted)">▶ No audio of your own? Click “Next” to continue with the demo audio.</span>'},
+'② 自動区切り（無音検出で発話に分割）':{t:'② Auto-segment (split into utterances by silence)',b:'Once audio is loaded, press <b>“Run auto-detect”</b> in panel 2. Using silences as cues, the audio is <b>split into utterance segments (records) automatically</b>.<br>Leave <b>“Auto-estimate threshold”</b> on. If the cuts are off, adjust the threshold, min. silence and min. segment and re-run (boundaries can also be dragged on the waveform later).'},
+'→ 発話区間に分割されました':{t:'→ Split into utterance segments',b:'Pressing “Run auto-detect” splits the audio into <b>colored segments (utterances)</b> like this. Next we look at how to check and fix them.'},
+'波形で区間を確認・修正':{t:'Check / fix segments on the waveform',b:'This is the waveform of your audio. Segments (colored bands) can be <b>resized by dragging an edge</b> and <b>played by clicking + Space</b>. Speech left out of any segment (“missed”) is flagged with a <b>red band</b> — there is one in this demo too. Review with ◀▶ and “Preview”, then <b>“✓ Add as segment”</b> to keep it, or “Ignore”. Use <b>“⟳ Re-run auto-segmentation”</b> to tune the sensitivity.'},
+'複数話者に対応':{t:'Multiple speakers',b:'The waveform is <b>color-coded and split into lanes per speaker</b> (above, different colors per segment mean different speakers). Add speakers with <b>+ Speaker</b> below the waveform.<br><b>Different speakers may overlap in time</b> (not within one speaker), so conversational overlap is handled as-is.<br>Example: a <b>Speaker B</b> was added and the 2nd segment assigned to it (its color changes).'},
+'② 文字起こし（text）と訳（trans）':{t:'② Transcription (text) and translation (trans)',b:'Type the transcription in the <b>text</b> field and the translation in the <b>trans</b> field.<br>e.g. <i style="font-family:var(--ipa)">nkjaan=du anna=tu uja=tu tamamiga=ti asɨ ffa-gama=nu u-tar=ca.</i><br>Translation: “Long ago there were a mother, a father, and a child named Tamamiga.”'},
+'IPAパレットで発音記号を挿入':{t:'Insert phonetic symbols with the IPA palette',b:'Symbols that are hard to type go in via this <b>IPA palette</b> (it appears at the bottom while editing).<br>Here, after “<b>as</b>” we inserted <b style="outline:2px solid var(--sel);border-radius:3px;padding:0 3px">ɨ</b> (a central vowel) to make <b>asɨ</b>. Clicking a button in the vowels section inserts it at the cursor in the cell being edited.'},
+'morph層：形態素が自動で区切られる':{t:'morph layer: morphemes split automatically',b:'Using <b>-</b> (affix), <b>=</b> (clitic) and spaces in the text as cues, morphemes are split automatically into an interlinear display.<br>e.g. <i>nkjaan / =du / anna / =tu …</i> (the = clitic and - affix boundaries are kept).'},
+'③ gloss層：グロスを付ける':{t:'③ gloss layer: add glosses',b:'Enter a gloss in the field under each morpheme.<br>e.g. <b>nkjaan→昔 (long ago)</b>, <b>du→FOC</b>, <b>anna→母親 (mother)</b>, <b>tu→COM</b> … Now you have <b>text + morph + gloss + trans</b>.'},
+'④ 文境界の設定（パネル操作）':{t:'④ Sentence-boundary setting',b:'Open <b>“Advanced settings”</b> in panel 4 and check <b>“Code sentence boundaries (bdr layer, period-based).”</b> The <b>period (.)</b> in the text is used as the sentence-end cue.'},
+'→ bdr に BOS / EOS が付く':{t:'→ bdr gets BOS / EOS',b:'When checked, each morpheme is tagged <b>BOS (sentence start) / EOS (sentence end) / I (internal)</b> automatically (for the example, <b>nkjaan=BOS … ca.=EOS</b>). The context view also marks sentence breaks with <b>‖</b>.'},
+'発話境界 ≠ 文境界（対比）':{t:'Utterance boundary ≠ sentence boundary',b:'The <b>segment = utterance</b> that BLT cut at pauses (utterance boundary) and the <b>period-based sentence</b> of bdr (sentence boundary) <b>do not always coincide</b>. Compare two consecutive utterances:<br>① <i style="font-family:var(--ipa)">…sudac-i-i<b>,</b></i> (comma = sentence not finished; includes the repair bizin→nn=FRG→aparagi) → bdr ends in <b>I</b> (<b>no EOS</b>) = <b>utterance end ≠ sentence end</b><br>② <i style="font-family:var(--ipa)">…nar-i-u-tar=ca<b>.</b></i> (period = sentence end) → bdr ends in <b>EOS</b> = <b>utterance end = sentence end</b>.<br>So utterance breaks may or may not match sentence breaks. <b>You can annotate per utterance without worrying about sentences</b> (the bdr layer carries the sentence structure).'},
+'層構成を選ぶ（プリセット）':{t:'Choose a layer preset',b:'Switch annotation <b>layers</b> here:<br>· <b>text + trans</b> (minimal)<br>· <b>+ morph + gloss</b> (standard)<br>· <b>+ udl</b> (with underlying form)<br>— pick any in one click.'},
+'独自の層を追加してみる':{t:'Add your own layer',b:'You can freely add layers beyond the presets. Just type a name (e.g. <b>pos</b> = part of speech) and press <b>“+ Add.”</b><br><b>A pos layer was just added</b> — a new row appears in the table.'},
+'層の「親」＝粒度を選ぶ':{t:'Pick the layer’s “parent” = granularity',b:'When adding, choose a <b>parent</b> — this sets the input granularity.<br>· <b>Segment</b> = one per segment (a layer like <i>trans</i>)<br>· <b>Morpheme</b> = per morpheme (a layer like <i>gloss · pos</i>)<br>pos was given the “morpheme” parent, so you fill it in per morpheme.'},
+'追加した層はチップで管理':{t:'Manage added layers with chips',b:'Added layers line up as <b>chips</b> here (the parent is shown too, e.g. “← morpheme”).<br>Remove any with <b>✕</b> whenever you no longer need it.'},
+'udl層：基底形の境界で morph 分割':{t:'udl layer: split morphs by underlying-form boundaries',b:'Add a <b>udl layer (underlying form)</b> and morphemes are split by <b>the boundaries in udl</b> rather than the <b>surface text</b>. Leave the surface text unsegmented and just write the boundaries in udl.<br>In the table below, <b>surface text <span style="background:var(--sel);color:#5a4200;border-radius:3px;padding:0 4px">midummasii</span></b> and <b>udl <span style="background:var(--sel);color:#5a4200;border-radius:3px;padding:0 4px">midum-as-i-i</span></b> are highlighted. Even when surface and underlying differ, morphs split exactly as written in udl.'},
+'⑤ 書き出し・保存':{t:'⑤ Export / save',b:'When you are done, export as <b>EAF / TSV / JSON / WAV ZIP</b>. <b>Save project</b> (.json) lets you resume later by loading the same WAV.'},
+'🔎 検索タブ：層で探す':{t:'🔎 Search tab: search by layer',b:'Now the <b>Search tab</b>. Add conditions on each <b>layer (text, gloss, morph, …)</b> to find segments or morphemes.<br>Choose from <b>“contains / matches / regex / is not empty.”</b><br><b>Here we searched “text contains dondon.”</b>'},
+'検索結果から注釈へジャンプ':{t:'Jump from a result to its annotation',b:'Results are listed as <b>KWIC (with surrounding context)</b>. Click a row’s link to <b>jump to that segment (back in the Annotate tab)</b>.<br>· Combine multiple conditions with <b>AND / OR</b>, and choose the <b>result unit (segment / morpheme)</b>.'},
+'📊 分析・辞書タブ：集計':{t:'📊 Analyze / Lexicon tab: statistics',b:'Now the <b>Analyze / Lexicon tab</b>. The <b>statistics</b> show counts of segments, words, morphemes, distinct morphemes and more at a glance.'},
+'形態素リスト（頻度・種類・品詞）':{t:'Morpheme list (frequency / type / POS)',b:'A <b>list of all morphemes</b> used. Sort by <b>frequency, alphabet, type (root → affix → clitic) or part of speech</b>, and filter by morpheme or gloss.'},
+'辞書・用例＋ZIP書き出し':{t:'Dictionary, examples + ZIP export',b:'Select a morpheme on the left to see <b>sense editing</b> and <b>examples with audio</b> (the first morpheme is open now).<br>Use <b>“Download dictionary as HTML + audio (ZIP)”</b> at the top right to export a dictionary with example audio.'},
+'引用情報（DOI）':{t:'Citation (DOI)',b:'BLT has a DOI. If you use it in your research, please cite it using the reference in this CITE box.'},
+'フィードバック歓迎':{t:'Feedback welcome',b:'Share suggestions or issues via this button. You can reopen this tour anytime from “🧭 Guided tour” at the top right.'}
+  };
+  function stepTB(s){ if(EN_ON() && TOUR_EN[s.title]) return TOUR_EN[s.title]; return {t:s.title, b:s.body}; }
   var STEPS=[
     {sel:'#brand', title:'BLTへようこそ', body:'ブラウザだけで完結するフィールドデータ編集ツールです。<b>音声の読み込みから注釈・グロス・ELAN(EAF)書き出し</b>までを、このツアーで一通り案内します。', place:'bottom'},
     {sel:'#cardFile', title:'① 作業を始める', body:'まず <b>「新規に始める」</b>か<b>「既存の作業を再開する」</b>を選びます。<br><b>新規</b>＝音声（WAV）を読み込み→自動区切り→注釈。<b>既存再開</b>＝音声を読み込んでから、以前の .json や ELAN .eaf を読み込みます。<br><span style="color:var(--muted)">▶ お持ちの音声が無ければ「次へ」でデモ音声を使って続けられます。</span>', place:'bottom', waitLoaded:true},
@@ -3352,7 +3386,7 @@ $('dlDict').addEventListener('click',async()=>{
     {sel:'#addTierGroup', title:'独自の層を追加してみる', body:'プリセット以外の層も自由に足せます。名前（例：<b>pos</b>＝品詞）を入れて「<b>＋ 追加</b>」を押すだけ。<br><b>いま実際に pos 層を追加しました</b> — 表に新しい行が増えています。', place:'bottom', needsAudio:true, hideWave:true, action:'demoAddLayer'},
     {sel:'#newTierParent', title:'層の「親」＝粒度を選ぶ', body:'追加時に<b>親</b>を選びます—これが入力の粒度を決めます。<br>・<b>区間</b>＝1区間に1つ（<i>trans</i> のような層）<br>・<b>形態素</b>＝形態素ごと（<i>gloss・pos</i> のような層）<br>pos は「形態素」を親にしたので、形態素ごとに記入できます。', place:'bottom', needsAudio:true, hideWave:true, action:'demoAddLayer'},
     {sel:'#tierChips', title:'追加した層はチップで管理', body:'追加した層はこの<b>チップ</b>に並びます（「← 形態素」など親も表示）。<br>不要になったら <b>✕</b> でいつでも削除できます。', place:'bottom', needsAudio:true, hideWave:true, action:'demoAddLayer'},
-    {sel:'#cardTable', title:'udl層：基底形の境界で morph 分割', body:'<b>udl層（基底形）</b>を加えると、morph は <b>表層の text</b> ではなく <b>udl の形態素境界</b>に従って分割されます。表層 text は区切らずそのまま、udl に境界を書くだけ。<br>下の表でも、<b>表層 text の <span style="background:var(--sel);color:#5a4200;border-radius:3px;padding:0 4px">midummasii</span></b> と、<b>udl の <span style="background:var(--sel);color:#5a4200;border-radius:3px;padding:0 4px">midum-as-i-i</span></b> をハイライトしています。表層と基底がずれていても、udl に書いた境界どおりに morph 分割されます。', place:'bottom', needsAudio:true, action:'demoUdl', hideWave:true, marks:[{sel:'#tb tr[data-i="0"] [data-k="text"]', find:'midummasii', tag:'表層 text'},{sel:'#tb tr.glossrow[data-i="0"] [data-t="udl"]', find:'midum-as-i-i', tag:'udl（基底形）'}]},
+    {sel:'#cardTable', title:'udl層：基底形の境界で morph 分割', body:'<b>udl層（基底形）</b>を加えると、morph は <b>表層の text</b> ではなく <b>udl の形態素境界</b>に従って分割されます。表層 text は区切らずそのまま、udl に境界を書くだけ。<br>下の表でも、<b>表層 text の <span style="background:var(--sel);color:#5a4200;border-radius:3px;padding:0 4px">midummasii</span></b> と、<b>udl の <span style="background:var(--sel);color:#5a4200;border-radius:3px;padding:0 4px">midum-as-i-i</span></b> をハイライトしています。表層と基底がずれていても、udl に書いた境界どおりに morph 分割されます。', place:'bottom', needsAudio:true, action:'demoUdl', hideWave:true, marks:[{sel:'#tb tr[data-i="0"] [data-k="text"]', find:'midummasii', tag:'表層 text', tagEn:'surface text'},{sel:'#tb tr.glossrow[data-i="0"] [data-t="udl"]', find:'midum-as-i-i', tag:'udl（基底形）', tagEn:'udl (underlying)'}]},
     {sel:'#cardExport', title:'⑤ 書き出し・保存', body:'仕上がったら <b>EAF / TSV / JSON / WAV ZIP</b> で書き出し。<b>プロジェクト途中保存</b>（.json）で、同じWAVを読み込めば続きから再開できます。', place:'top', needsAudio:true},
     {sel:'#srchConds', title:'🔎 検索タブ：層で探す', body:'ここからは<b>検索タブ</b>です。各<b>層（text・gloss・morph など）</b>に条件を付けて、区間や形態素を探せます。<br>「<b>を含む／に一致／正規表現／空でない</b>」から選べます。<br><b>いま『text に dondon を含む』で検索しました。</b>', place:'bottom', needsAudio:true, tab:'search', fill:'demoSearch'},
     {sel:'#srchResults', title:'検索結果から注釈へジャンプ', body:'結果は<b>KWIC（前後文脈付き）</b>で並びます。行のリンクを押すと<b>その区間へ（注釈タブに戻って）ジャンプ</b>します。<br>・複数条件を <b>AND／OR</b> で組み合わせ、<b>結果の単位（区間／形態素）</b>も選べます。', place:'top', needsAudio:true, tab:'search'},
@@ -3564,7 +3598,7 @@ $('dlDict').addEventListener('click',async()=>{
   function ensure(){
     if(spot) return;
     spot=document.createElement('div'); spot.className='tour-spot'; spot.hidden=true; document.body.appendChild(spot);
-    pop=document.createElement('div'); pop.className='tour-pop'; pop.hidden=true; document.body.appendChild(pop);
+    pop=document.createElement('div'); pop.className='tour-pop'; pop.hidden=true; pop.setAttribute('data-i18n-skip',''); document.body.appendChild(pop);
   }
   function endTour(){
     clearWatch();
@@ -3628,7 +3662,7 @@ $('dlDict').addEventListener('click',async()=>{
         var m=document.createElement('div'); m.className='tour-mark';
         m.style.top=(r.top-2)+'px'; m.style.left=(r.left-2)+'px';
         m.style.width=(r.width+4)+'px'; m.style.height=(r.height+4)+'px';
-        if(i===0 && sp.tag){ var t=document.createElement('span'); t.className='tour-mark-tag'; t.textContent=sp.tag; m.appendChild(t); }
+        if(i===0 && sp.tag){ var t=document.createElement('span'); t.className='tour-mark-tag'; t.textContent=(EN_ON()&&sp.tagEn)?sp.tagEn:sp.tag; m.appendChild(t); }
         document.body.appendChild(m); markEls.push(m);
       }
     });
@@ -3667,21 +3701,22 @@ $('dlDict').addEventListener('click',async()=>{
     if(!el || !isVisible(el)){ go(n+dir, dir); return; }  // 非表示の要素はスキップ
     idx=n;
     if(s.scrollTop) window.scrollTo(0,0); else el.scrollIntoView({block:'center'});
-    pop.innerHTML='<button type="button" class="tour-skip" aria-label="ツアーをスキップ" title="ツアーをスキップ（Escキーでも終了）">×</button>'
+    var en=EN_ON(), tb=stepTB(s);
+    pop.innerHTML='<button type="button" class="tour-skip" aria-label="'+(en?'Skip tour':'ツアーをスキップ')+'" title="'+(en?'Skip the tour (or press Esc)':'ツアーをスキップ（Escキーでも終了）')+'">×</button>'
       +'<div class="tour-bar"><i style="width:'+Math.round((n+1)/STEPS.length*100)+'%"></i></div>'
-      +'<h4>'+s.title+'</h4><p>'+s.body+'</p>'
+      +'<h4>'+tb.t+'</h4><p>'+tb.b+'</p>'
       +'<div class="tour-row"><span class="tour-step">'+(n+1)+' / '+STEPS.length
-      +'<button type="button" class="tour-quit">スキップ</button></span>'
+      +'<button type="button" class="tour-quit">'+(en?'Skip':'スキップ')+'</button></span>'
       +'<span class="tour-btns">'
-      +(n>0?'<button type="button" class="tour-prev">戻る</button>':'')
-      +'<button type="button" class="tour-next">'+(n===STEPS.length-1?'完了':'次へ ›')+'</button>'
+      +(n>0?'<button type="button" class="tour-prev">'+(en?'Back':'戻る')+'</button>':'')
+      +'<button type="button" class="tour-next">'+(n===STEPS.length-1?(en?'Done':'完了'):(en?'Next ›':'次へ ›'))+'</button>'
       +'</span></div>';
     pop.hidden=false;
     pop.querySelector('.tour-skip').onclick=endTour;
     var qb=pop.querySelector('.tour-quit'); if(qb) qb.onclick=endTour;
     var nb=pop.querySelector('.tour-next');
     nb.onclick=function(){
-      if(s.waitLoaded && !audioLoaded()){ nb.textContent='デモ音声を読み込み中…'; nb.disabled=true; loadDemo(); }
+      if(s.waitLoaded && !audioLoaded()){ nb.textContent=en?'Loading demo audio…':'デモ音声を読み込み中…'; nb.disabled=true; loadDemo(); }
       else go(idx+1, 1);
     };
     var prev=pop.querySelector('.tour-prev'); if(prev) prev.onclick=function(){ go(idx-1, -1); };
@@ -3718,6 +3753,196 @@ $('dlDict').addEventListener('click',async()=>{
     sync();
   });
   sync();
+})();
+</script>
+<!-- ===== i18n: 日本語 ⇄ English（移植・拡張） ===== -->
+<script>
+/* ---------- i18n：日本語 ⇄ English 切替（主要UI） ---------- */
+(function(){
+  const EN={
+    // 追補（このセッションの新機能・取りこぼし分）
+    "母音":"Vowels","子音":"Consonants","超分節・声調":"Suprasegmentals / tone","補助記号":"Diacritics",
+    "▶ クリックで波形をひらく":"▶ Click to open the waveform",
+    "詳細設定（形態素の分割記号・分割元）":"Advanced settings (morpheme separators / source)",
+    "詳細設定（morphの分割元）":"Advanced settings (morpheme source)",
+    "既定に戻す":"Reset to default",
+    "レコードを作ると、ここに連続表示されます。":"Once you create records, they appear here in sequence.",
+    "morphをどの層から分割するか（表層と基底形が異なる場合のみ）":"Which layer to split morphemes from (only when surface and underlying forms differ)",
+    "左の形態素を選ぶと、語義の編集と用例（音声付き）が表示されます。":"Select a morpheme on the left to edit its sense and see examples (with audio).",
+    "条件を入力して「検索」を押してください。":"Enter conditions and press “Search.”",
+    "取りこぼし表示":"Show missed","話者：":"Speaker:","文脈表示：":"Context:","クリックでそのレコードへ":"Click to go to that record","表示レイヤー":"Display layer",
+    // 集計ラベル（分析・辞書タブ）
+    "レコード":"Records","文":"Sentences","語":"Words","異なり形態素":"Distinct morphemes",
+    // 読み込み・書き出しの進捗表示（固定文）
+    "音声をデコード中…":"Decoding audio…","波形を解析中…":"Analyzing waveform…","切り出し中…":"Extracting…",
+    // 分割記号・文末記号の現在値ヒント
+    "現在の区切り：":"Current separators: ","現在の文末記号：":"Current sentence-end marks: ",
+    "（接辞）":"(affix)","（接語）":"(clitic)","（複合）":"(compound)",
+    "（記号なし＝語全体を1形態素として扱います）":"(no symbols = treat the whole word as one morpheme)",
+    "（記号なし＝文末の自動判定なし）":"(no symbols = no automatic sentence-end detection)",
+    // ヘッダ・タブ・保存
+    "A simple, intuitive toolkit for transcription, annotation, glossing, and conversion.":"A simple, intuitive toolkit for transcription, annotation, glossing, and conversion.",
+    "下地理則の研究室":"Shimoji Lab","保存：":"Save:","プロジェクト途中保存":"Save project",
+    "注釈":"Annotate","検索":"Search","分析・辞書":"Analyze / Lexicon","🧭 使い方ツアー":"🧭 Guided tour","💬 フィードバック":"💬 Feedback",
+    // パネル1（開始）
+    "作業を始める":"Get started","どちらから始めますか？":"How would you like to start?",
+    "🆕 新規に始める":"🆕 Start new","📂 既存の作業を再開する":"📂 Resume existing work",
+    "新規":"New","既存再開":"Resume",
+    "＝音声（WAV）を読み込んで自動区切り→注釈。":"= load audio (WAV), auto-segment, then annotate.",
+    "＝音声を読み込んでから、以前の保存（.json）や ELAN（.eaf）を読み込み。":"= load the audio first, then a saved project (.json) or ELAN (.eaf).",
+    "① 音声ファイル（WAV・PCM）を選択":"① Choose an audio file (WAV / PCM)",
+    "未選択":"None selected","② プロジェクト（.json）を読み込む":"② Load a project (.json)",
+    "② ELANの .eaf を読み込む":"② Load an ELAN .eaf","← 最初に戻る":"← Back",
+    // パネル2（区間作成）
+    "区間を作る（手動 または 自動検出）":"Create segments (manual or auto-detect)",
+    "手動：":"Manual:","すると区間になります。":" makes it a segment.","自動：":"Auto:",
+    "自動検出を実行":"Run auto-detect","表示範囲だけ検出":"Detect visible range only","しきい値を自動推定":"Auto-estimate threshold",
+    "しきい値":"Threshold","自動":"auto","最小無音長（ms）":"Min. silence (ms)","最小区間長（ms）":"Min. segment (ms)",
+    "前後余白（ms）":"Padding (ms)","全区間をクリア":"Clear all segments",
+    // パネル3（波形）
+    "波形（区切りの確認・修正）":"Waveform (check / fix segments)","⤢ 大きく":"⤢ Larger","⤡ 小さく":"⤡ Smaller",
+    "話者：":"Speaker:","＋話者":"+ Speaker","全体表示":"Fit all","⟳ 自動区切りをやり直す":"⟳ Re-run auto-segmentation",
+    "◀ 前の区間":"◀ Prev","▶ 選択を再生":"▶ Play selection","▶ カーソルから":"▶ From cursor","■ 停止":"■ Stop",
+    "次の区間 ▶":"Next ▶","🗑 選択を削除":"🗑 Delete selected","← 前と結合":"← Merge prev","次と結合 →":"Merge next →",
+    "取りこぼし表示":"Show missed","確認再生":"Preview","✓ 区間に追加":"✓ Add as segment","無視":"Ignore",
+    // パネル4（注釈）
+    "注釈を付ける":"Annotate","層構成：":"Layers:","さらに層を追加（名前）":"Add a layer (name)","＋ 追加":"+ Add",
+    "詳細設定（morphの分割元）":"Advanced (morph split source)","表示レイヤー":"Show layer",
+    "◀ 前の5件":"◀ Prev 5","次の5件 ▶":"Next 5 ▶","文境界(bdr)":"Sentence bdry (bdr)","語境界(wbdr)":"Word bdry (wbdr)",
+    "文脈表示：":"Context:","クリックでそのレコードへ":"Click to jump to the record","すべてのレイヤー":"All layers",
+    "親：区間（text直下）":"Parent: segment (under text)","親：morph":"Parent: morph",
+    "text＋trans":"text + trans","text＋morph＋gloss＋trans":"text + morph + gloss + trans",
+    "text＋udl＋morph＋gloss＋trans（基底形から分割）":"text + udl + morph + gloss + trans (split from underlying)",
+    "カスタム（独自の構成）":"Custom","IDを連番で振り直す":"Renumber IDs",
+    // パネル5（書き出し）
+    "書き出し":"Export","EAF（ELAN用）":"EAF (for ELAN)","TSV（Excel対応）":"TSV (Excel-ready)",
+    "Word（.docx）":"Word (.docx)","切り出しWAVのZIP":"Per-segment WAV ZIP","glossを小型大文字":"gloss in small caps",
+    "プロジェクトを途中保存（.json）":"Save project (.json)","辞書をHTML＋音声でダウンロード（ZIP）":"Download lexicon as HTML + audio (ZIP)",
+    // 表ヘッダ
+    "text / trans":"text / trans",
+    // 開始ガイド文（flowMsg。<b>で分割された断片を順に英訳。キーは前後空白を含めない）
+    "：まず":": first load","①音声（WAV）":"① the audio (WAV)",
+    "を読み込みます。読み込むと下のパネルで自動区切り→注釈へ進めます。":"— load it; then segment below and annotate.",
+    "：":":","①対応する音声（WAV）":"① the matching audio (WAV)","→":"→",
+    "②保存ファイル（.json か ELAN .eaf）":"② the saved file (.json or ELAN .eaf)",
+    "の順に読み込みます。":"— load these in that order.",
+    "✓ 音声を読み込みました。次に":"✓ Audio loaded. Next, load","②":"②",
+    "保存ファイル（.json か ELAN .eaf）を読み込んでください。":"the saved file (.json or ELAN .eaf).",
+    "✓ 音声を読み込みました。下の":"✓ Audio loaded. Use",
+    "パネル2「自動検出を実行」":"Panel 2 “Run auto-detect”","で発話区間に分割します。":" to split it into utterance segments.",
+    // アラート（固定文）
+    "先にWAVファイルを読み込んでください":"Please load a WAV file first.",
+    "層の名前を入力してください":"Please enter a layer name.",
+    "先に挿入先のセル（text欄など）をクリックしてください":"Click a target cell (e.g. the text field) first.",
+    "先に音声・注釈を読み込んでください":"Load audio and annotations first.",
+    "注釈データがありません":"No annotation data.","音声（WAV）が読み込まれていません":"No audio (WAV) loaded.",
+    "注釈が入っています。削除しますか？":"This record has annotations. Delete it?",
+    "区間（注釈も含む）をすべて削除します。よろしいですか？":"Delete all segments (including annotations)?",
+    "注釈区間が見つかりません":"No annotation segments found.","XMLを解析できません":"Could not parse the XML.",
+    "テキスト層（時間整列）が見つかりません":"No time-aligned text tier found.",
+    // 検索タブ
+    "条件を入力して「検索」を押してください。":"Enter conditions and press “Search”.",
+    "＋ 条件を追加":"+ Add condition","組み合わせ：":"Combine:","すべて満たす（AND）":"Match all (AND)","いずれか満たす（OR）":"Match any (OR)",
+    "同じ形態素で揃える":"Same morpheme","形態素レベルの複数条件を、同じ1つの形態素が満たすことを要求します":"Require the morpheme-level conditions to be met by one and the same morpheme",
+    "結果の単位：":"Result unit:","区間（レコード）":"Segment (record)","形態素":"Morpheme",
+    "検索":"Search","を含む":"contains","に一致":"equals","正規表現":"regex","空でない":"non-empty","空":"empty",
+    "該当なし":"No matches","注釈で開く":"Open in Annotate",
+    "text（表層形）":"text (surface)","trans（訳）":"trans (translation)","spk（話者）":"spk (speaker)","morph（形態素）":"morph (morpheme)",
+    "区間レベル":"Segment level","形態素レベル":"Morpheme level",
+    // 分析・辞書タブ
+    "辞書":"Lexicon","語根":"root","接語":"clitic","接辞":"affix",
+    "全品詞":"All POS","全種類":"All types","頻度順":"By frequency","字順":"Alphabetical","品詞順":"By POS",
+    "種類順（語根→接辞→接語）":"By type (root → affix → clitic)",
+    "集計":"Summary","形態素リスト":"Morpheme list","辞書・用例":"Lexicon · examples",
+    "まず「注釈」タブで音声・注釈を読み込んでください。":"Load audio and annotations in the “Annotate” tab first.",
+    "左の形態素を選ぶと、語義の編集と用例（音声付き）が表示されます。":"Select a morpheme on the left to edit its sense and see examples (with audio).",
+    "語義（辞書用・自由に編集可）":"Sense (for the lexicon; freely editable)",
+    "左の見出しを選んでください。":"Select an entry on the left.","左の形態素を選んでください。":"Select a morpheme on the left.",
+    "↺ glossから取り込み直す":"↺ Re-import from gloss",
+    "※ここの編集は gloss層には反映されません（辞書だけに保存）":"Edits here do not change the gloss layer (saved only in the lexicon).",
+    "▶ 再生":"▶ Play","音声の場所：":"Audio location:","読み込んでいます…":"Loading…",
+    "辞書をHTML＋音声でダウンロード（ZIP）":"Download lexicon as HTML + audio (ZIP)",
+    "こちらから直接開く":"open directly here","注釈タブでこのレコードを開く":"Open this record in Annotate",
+    // ツアーのボタン
+    "次へ ›":"Next ›","完了":"Done","戻る":"Back","スキップ":"Skip"
+  };
+  // 数値混じりの動的文言（区間数・件数・秒など）はパターンで英訳
+  const PAT=[
+    [/^(\d+)区間　選択: #(\d+) ([\d.]+)–([\d.]+)s$/, m=>m[1]+' seg. — sel #'+m[2]+' '+m[3]+'–'+m[4]+'s'],
+    [/^(\d+)区間$/, m=>m[1]+' seg.'],
+    [/^(\d+)–(\d+) \/ (\d+)件$/, m=>m[1]+'–'+m[2]+' / '+m[3]],
+    [/^(\d+)件$/, m=>m[1]],
+    [/^⚠ 取りこぼし (\d+)件$/, m=>'⚠ Missed: '+m[1]],
+    [/^カーソル位置 ([\d.]+) 秒$/, m=>'Cursor '+m[1]+' s'],
+    [/^(.+)（区間層）$/, m=>m[1]+' (seg. layer)'],
+    [/^(.+)（形態素層）$/, m=>m[1]+' (morph layer)'],
+    [/^用例（(\d+)）$/, m=>'Examples ('+m[1]+')'],
+    [/^読み込み中… (\d+)%　\((\d+) MB\)$/, m=>'Loading… '+m[1]+'% ('+m[2]+' MB)'],
+    [/^読み込み中… (\d+)%$/, m=>'Loading… '+m[1]+'%'],
+    [/^切り出し中… (\d+)\/(\d+)$/, m=>'Extracting… '+m[1]+'/'+m[2]],
+    [/^音声切り出し中… (\d+)\/(\d+)$/, m=>'Extracting audio… '+m[1]+'/'+m[2]],
+    [/^(.+)のみ$/, m=>m[1]+' only']
+  ];
+  function applyPat(key){
+    for(const p of PAT){const m=key.match(p[0]);if(m)return p[1](m);}
+    const w=key.match(/^(.*[\d.]+) 秒$/); if(w&&/Hz/.test(key))return w[1]+' s';
+    return null;
+  }
+  // ヘルプ（?ポップアップ）の英訳：差し替え用 innerHTML
+  const HELP_EN={
+    srchIntro:'Search <b>segments (records)</b> or <b>morphemes</b> by conditions on a layer or across layers. Add conditions and combine them with AND / OR; at the morpheme level you can also require them to “match within the same morpheme.”',
+    morphSepLbl:'Morpheme <b>separators</b> (type symbols in a row; default <code>-</code> affix · <code>=</code> clitic · <code>+</code> compound)',
+    bdrSepLbl:'<b>Sentence-end marks (bdr)</b> (type symbols in a row; a morpheme ending in one of these is treated as sentence-final = EOS)',
+    helpFile:'<div class="note">Audio is expected to be uncompressed WAV (PCM). Files are never sent outside your browser — everything is processed locally, and the audio file itself is never modified.<br><br>To use “Load a project (.json)”, <b>load the matching WAV first</b> (the project does not contain the audio itself).</div>',
+    helpSeg:'<div class="note"><b>Manual:</b> drag over an empty part of the waveform to select a range, then <b>press Enter</b> to make it a segment. <b>Auto:</b> detects runs of speech (allowing very short silences) and segments them at once (you can fix them by hand afterwards).<br><br>Auto-detect estimates a threshold from the noise floor and speech level and uses a dual threshold (hysteresis) to find speech runs. Silences shorter than “Min. silence” are bridged into one segment (default: only runs ≥ 0.5 s). Re-running carries over your annotations by time overlap.</div>',
+    helpWave:'<div class="note"><b>Speakers (overlap-ready):</b> add one with “+ Speaker”; the selected chip is the “active speaker”. New segments belong to it, and <b>different speakers may overlap in time</b> (overlap within one speaker is not allowed). Per-speaker lanes appear below the waveform. EAF is exported split per speaker (e.g. <code>text@speaker</code> with PARTICIPANT) so overlaps open correctly in ELAN.<br><br><b>Red bands</b> = speech not inside any segment (possible “missed” audio). Use ◀ ▶ to jump, “Preview” to listen, <b>“✓ Add as segment”</b> to keep it, or <b>“Ignore”</b> to drop it from the count.<br><br><b>Click a segment = play it</b>. <b>Double-click a segment = edit</b> (cursor lands in that row\'s text cell).<br>Click empty space = drop the playback cursor (<b>Space = play/pause from cursor</b>)<br>Drag empty space = select a range → <b>Enter to confirm as a segment</b> (Esc to cancel)<br>Drag a segment edge = move the boundary<br><b>Alt + double-click = split the segment</b><br>Horizontal scroll (or Shift + wheel) = pan, vertical wheel = zoom<br><br>Buttons below: <b>◀ Prev / Next ▶</b> step through and play segments; <b>Play selection / From cursor / Stop</b> control playback; <b>🗑 Delete selected</b> only removes the segment and its annotation — the audio is never changed.</div>',
+    helpAnno:'<div class="note">Click a cell to edit. When you edit a text or gloss cell, the <b>IPA palette appears at the bottom</b>; click a symbol to insert it. Enter in the text field = next row. Start/end (seconds) are editable too.<br><br>With a morph layer, hyphen (-), equals (=) and plus (+) in the text <b>split it into morphemes</b>, and you fill layers under morph (gloss · pos by default) per morpheme (Enter = next morpheme). Add layers freely: parent “segment” gives one field per segment; “morph” or its children give one field per morpheme.<br><br>When surface and underlying forms differ (e.g. text <code>kaita</code> / underlying <code>kak-ta</code>), add a segment-level layer for the underlying form (e.g. <code>udl</code>) and set “morph split source” to it.<br><br>“Show layer” focuses on one layer (data is kept). Records show 5 at a time; use ◀ ▶ to move.</div>',
+    helpExport:'<div class="note">EAF exports <code>ID</code>, <code>text</code>, <code>trans</code> plus your layers with ELAN\'s parent-child structure (<code>trans</code> = Symbolic Association of text, <code>morph</code> = Symbolic Subdivision of text/udl, other layers = Symbolic Association to the chosen parent; type and constraint declarations included). Put it beside the WAV to open in ELAN.<br><br>TSV / JSON include every layer (morph layers merged into a gloss line, e.g. <code>go-EP-PST</code>). The ZIP holds a WAV per segment plus <code>manifest.csv</code>.<br><br>“Save project” stores segments, annotations, layer setup and the ignore list as JSON. To resume, load the same WAV first, then this JSON.</div>'
+  };
+  let lang='ja'; try{lang=localStorage.getItem('blt_lang')||'ja';}catch(e){}
+  const skip=n=>{let el=n.nodeType===3?n.parentElement:n;
+    while(el){const t=el.tagName;
+      if(t==='SCRIPT'||t==='STYLE'||t==='TEXTAREA'||t==='INPUT'||t==='CANVAS'||t==='OPTION'&&false)return true;
+      if(el.getAttribute&&el.getAttribute('data-i18n-skip')!=null)return true;
+      if(el.isContentEditable)return true; el=el.parentElement;}
+    return false;};
+  function trNode(n){const raw=n.nodeValue,key=raw.trim();if(!key)return;
+    if(lang==='en'){let en=EN[key];if(en==null)en=applyPat(key);if(en!=null&&n.__ja==null){n.__ja=raw;n.nodeValue=raw.replace(key,en);}}
+    else if(n.__ja!=null){n.nodeValue=n.__ja;n.__ja=null;}};
+  function walk(root){
+    if(root.nodeType===3){if(!skip(root))trNode(root);return;}
+    if(root.nodeType!==1)return;
+    const tw=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);const ns=[];
+    while(tw.nextNode())ns.push(tw.currentNode);
+    ns.forEach(n=>{if(!skip(n))trNode(n);});}
+  const PH={"さらに層を追加（名前）":"Add a layer (name)","値":"value",
+    "検索（形態素・グロス・語義）":"Search (morpheme / gloss / sense)","検索（形態素・グロス）":"Search (morpheme / gloss)",
+    "この形態素の語義・説明を記入（既定は gloss層から取り込み）":"Sense / note for this morpheme (defaults from the gloss layer)"};
+  function applyLang(){document.documentElement.lang=lang==='en'?'en':'ja';
+    walk(document.body);
+    // 入力欄プレースホルダ
+    document.querySelectorAll('[placeholder]').forEach(el=>{const o=el.getAttribute('placeholder');
+      if(lang==='en'){if(el.__phja==null&&PH[o]){el.__phja=o;el.setAttribute('placeholder',PH[o]);}}
+      else if(el.__phja!=null){el.setAttribute('placeholder',el.__phja);el.__phja=null;}});
+    // ヘルプ（?ポップアップ）の本文を丸ごと差し替え／復元
+    Object.keys(HELP_EN).forEach(id=>{const el=document.getElementById(id);if(!el)return;
+      if(lang==='en'){if(el.__ja==null)el.__ja=el.innerHTML;el.innerHTML=HELP_EN[id];}
+      else if(el.__ja!=null){el.innerHTML=el.__ja;el.__ja=null;}});
+    // 補間を含む動的バナー（取りこぼし）は専用の再描画で言語を反映
+    try{const mn=document.getElementById('missNote');if(mn&&!mn.classList.contains('hidden')&&typeof renderMissNoteText==='function')renderMissNoteText();}catch(e){}
+    const tg=document.getElementById('langToggle');if(tg)tg.textContent=lang==='en'?'日本語':'English';}
+  // アラート・確認ダイアログも英語化（固定文・数値文はパターンで。一致しなければ原文のまま）
+  const trMsg=m=>{m=String(m);if(lang==='en'){const k=m.trim();m=EN[k]||applyPat(k)||m;}return m;};
+  const _alert=window.alert.bind(window), _confirm=window.confirm.bind(window);
+  window.alert=function(msg){return _alert(trMsg(msg));};
+  window.confirm=function(msg){return _confirm(trMsg(msg));};
+  new MutationObserver(ms=>{if(lang!=='en')return;
+    ms.forEach(m=>m.addedNodes.forEach(n=>{try{if(n.nodeType===1)walk(n);else if(n.nodeType===3&&!skip(n))trNode(n);}catch(e){}}));
+  }).observe(document.body,{childList:true,subtree:true});
+  try{window.__bltLangEN=function(){return lang==='en';};}catch(e){}   // 他コード（ツアー等）が現在の言語を参照するため
+  const tg=document.getElementById('langToggle');
+  if(tg)tg.addEventListener('click',()=>{lang=lang==='en'?'ja':'en';try{localStorage.setItem('blt_lang',lang);}catch(e){}applyLang();});
+  applyLang();
 })();
 </script>
 </body>
