@@ -410,18 +410,24 @@ html[data-theme="dark"] code{color:var(--accent-ink)}
       <input type="file" id="wavInput" accept=".wav,audio/wav,audio/x-wav" hidden>
       <button type="button" id="btnPickMulti" title="話者ごとに別々のWAV（マイク別録音）を読み込みます">🎙 複数チャンネル（話者ごとのWAV）</button>
       <input type="file" id="multiWavInput" accept=".wav,audio/wav,audio/x-wav" multiple hidden>
-      <button type="button" id="btnDemoMulti" title="埋め込みのデモ音声を2チャンネル（話者A・B）として読み込み、複数チャンネルの動きを試せます">▶ デモ音声で試す（2チャンネル）</button>
       <span class="fname" id="wavName">未選択</span>
+    </div>
+    <div id="demoRow" class="note" style="margin:4px 0 0;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <span>はじめての方は</span>
+      <button type="button" id="btnDemoMulti" title="埋め込みのデモ音声を2チャンネル（話者A・B）として読み込み、複数チャンネルの動きを試せます">▶ デモ音声で試す（2チャンネル）</button>
     </div>
     <div id="loadProg" class="hidden" style="margin:4px 0 8px">
       <div id="loadBar" class="lbar"><i id="loadBarFill"></i></div>
       <div id="loadProgText" class="note" style="margin-top:4px"></div>
     </div>
-    <div class="filebox hidden" id="resumeStep2">
-      <button onclick="projInput.click()" id="btnResumeProj" disabled>② プロジェクト（.json）を読み込む</button>
-      <input type="file" id="projInput" accept=".json,application/json" hidden>
-      <button onclick="eafInput.click()" id="btnResumeEaf" disabled>② ELANの .eaf を読み込む</button>
-      <input type="file" id="eafInput" accept=".eaf,.xml,text/xml" hidden>
+    <div class="hidden" id="resumeStep2" style="border-top:1px solid var(--line);margin-top:12px;padding-top:10px">
+      <div class="note" style="margin:0 0 6px"><b>② 保存ファイルを読み込む</b>（.json か ELAN .eaf のどちらか）</div>
+      <div class="filebox">
+        <button onclick="projInput.click()" id="btnResumeProj" disabled>プロジェクト（.json）を読み込む</button>
+        <input type="file" id="projInput" accept=".json,application/json" hidden>
+        <button onclick="eafInput.click()" id="btnResumeEaf" disabled>ELANの .eaf を読み込む</button>
+        <input type="file" id="eafInput" accept=".eaf,.xml,text/xml" hidden>
+      </div>
     </div>
     <button type="button" id="btnStartBack" style="margin-top:8px;background:none;border:none;color:var(--accent);cursor:pointer;font-size:12px;padding:0">← 最初に戻る</button>
   </div>
@@ -768,6 +774,8 @@ function setStartMode(m){
   $('startChooser').classList.toggle('hidden', m!=null);
   $('startFlow').classList.toggle('hidden', m==null);
   $('resumeStep2').classList.toggle('hidden', m!=='resume');
+  // デモ音声は「お試し（新規）」専用。既存再開のときは出さない（②の選択を分かりやすく）
+  $('demoRow').style.display = (m==='resume') ? 'none' : '';
   if(m==='new')$('flowMsg').innerHTML='<b>新規</b>：まず <b>①音声（WAV）</b> を読み込みます。読み込むと下のパネルで自動区切り→注釈へ進めます。';
   else if(m==='resume')$('flowMsg').innerHTML='<b>既存再開</b>：<b>①対応する音声（WAV）</b> → <b>②保存ファイル（.json か ELAN .eaf）</b> の順に読み込みます。';
 }
@@ -4068,6 +4076,9 @@ $('dlDict').addEventListener('click',async()=>{
     "① 音声ファイル（WAV・PCM）を選択":"① Choose an audio file (WAV / PCM)",
     "未選択":"None selected","② プロジェクト（.json）を読み込む":"② Load a project (.json)",
     "② ELANの .eaf を読み込む":"② Load an ELAN .eaf","← 最初に戻る":"← Back",
+    "はじめての方は":"First time?",
+    "② 保存ファイルを読み込む":"② Load a saved file","（.json か ELAN .eaf のどちらか）":"(.json or ELAN .eaf — either one)",
+    "プロジェクト（.json）を読み込む":"Load a project (.json)","ELANの .eaf を読み込む":"Load an ELAN .eaf",
     // パネル2（区間作成）
     "区間を作る（手動 または 自動検出）":"Create segments (manual or auto-detect)",
     "手動：":"Manual:","すると区間になります。":" makes it a segment.","自動：":"Auto:",
