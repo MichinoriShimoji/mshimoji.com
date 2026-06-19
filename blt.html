@@ -522,10 +522,10 @@ html[data-theme="dark"] code{color:var(--accent-ink)}
         <option value="custom" disabled>カスタム（独自の構成）</option>
       </select>
       <span class="sep" style="width:1px;height:20px;background:var(--line)"></span>
-      <span id="addTierGroup" style="display:inline-flex;gap:8px;align-items:center">
-      <input type="text" id="newTierName" placeholder="さらに層を追加（名前）" style="width:130px;border:1px solid var(--line);border-radius:6px;padding:5px 8px;font-size:13px">
-      <select id="newTierParent"></select>
-      <button id="btnAddTier">＋ 追加</button>
+      <span id="addTierGroup" style="display:inline-flex;flex-wrap:wrap;gap:8px;align-items:center">
+      <input type="text" id="newTierName" placeholder="さらに層を追加（名前）" style="width:130px;flex:0 0 auto;border:1px solid var(--line);border-radius:6px;padding:5px 8px;font-size:13px">
+      <select id="newTierParent" style="flex:0 1 auto;max-width:100%"></select>
+      <button id="btnAddTier" style="white-space:nowrap;flex:0 0 auto">＋ 追加</button>
       </span>
     </div>
     <div id="tierChips" style="margin:0 0 8px"></div>
