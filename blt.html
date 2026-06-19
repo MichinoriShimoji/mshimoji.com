@@ -408,6 +408,9 @@ html[data-theme="dark"] code{color:var(--accent-ink)}
     <div class="filebox">
       <button id="btnPickWav" class="primary" onclick="wavInput.click()">① 音声ファイル（WAV・PCM）を選択</button>
       <input type="file" id="wavInput" accept=".wav,audio/wav,audio/x-wav" hidden>
+      <button type="button" id="btnPickMulti" title="話者ごとに別々のWAV（マイク別録音）を読み込みます">🎙 複数チャンネル（話者ごとのWAV）</button>
+      <input type="file" id="multiWavInput" accept=".wav,audio/wav,audio/x-wav" multiple hidden>
+      <button type="button" id="btnDemoMulti" title="埋め込みのデモ音声を2チャンネル（話者A・B）として読み込み、複数チャンネルの動きを試せます">▶ デモ音声で試す（2チャンネル）</button>
       <span class="fname" id="wavName">未選択</span>
     </div>
     <div id="loadProg" class="hidden" style="margin:4px 0 8px">
@@ -449,7 +452,7 @@ html[data-theme="dark"] code{color:var(--accent-ink)}
 <div class="card hidden" id="cardWave">
   <h2><span class="steplabel">3</span>波形（区切りの確認・修正）<button type="button" class="helpbtn" data-help="helpWave" data-title="波形の操作方法">?</button><span class="waveminhint">▶ クリックで波形をひらく</span><span class="pipbtns"><button type="button" id="btnWaveSize" title="波形を大きく／小さく">⤢ 大きく</button><button type="button" id="pipMin" title="最小化／復元">－</button></span></h2>
   <div class="helpsrc" id="helpWave">
-    <div class="note"><b>話者（オーバーラップ対応）：</b>「＋話者」で話者を追加し、チップで選んだ話者が「アクティブ話者」になります。新しく作る区間はアクティブ話者のものになり、<b>別話者どうしの区間は時刻が重なってもOK</b>です（同じ話者内の重なりは不可）。波形下部に話者ごとのレーンが並び、各レコードは自分の話者のレーンに表示されます。レーンのブロックをクリックするとその話者・レコードが選べます。spk列でも話者を変更できます。EAFは話者ごとに <code>text@話者</code> などのレイヤー（PARTICIPANT付き）に分けて書き出すので、ELANで重複発話が正しく開けます。<br><br><b>赤い帯</b>＝どの区間にも入っていない有音（取りこぼし候補）。◀ ▶で候補へジャンプすると仮選択になるので、「確認再生」で聞いて<b>「✓ 区間に追加」でレコード化</b>（Enterでも可）、対象外なら<b>「無視」で件数から除外</b>できます（無視はプロジェクト保存に記録されます）。<br><br><b>区間をクリック＝その区間を再生</b>。<b>区間をダブルクリック＝編集</b>（その行の text 欄にカーソルが入ります）。<br>何もない所をクリック＝再生カーソルを置く（<b>Space＝カーソルから再生／一時停止</b>）<br>何もない所をドラッグ＝範囲を選択 → <b>Enterで区間として確定</b>（Escで取消。確定前も端の調整や▶試聴ができます）<br>区間の端をドラッグ＝境界の移動（選択中はオレンジのつまみ）<br><b>Alt＋ダブルクリック＝区間を分割</b><br>横スクロール（またはShift＋ホイール）＝横移動、縦ホイール＝ズーム<br><br>下のボタン：<b>◀ 前の区間／次の区間 ▶</b>で区間を順に再生、<b>選択を再生／カーソルから／停止</b>で再生操作、<b>🗑 選択を削除</b>は区間の指定と注釈を削除するだけで音声データは変更されません。</div>
+    <div class="note"><b>話者（オーバーラップ対応）：</b>「＋話者」で話者を追加し、チップで選んだ話者が「アクティブ話者」になります。新しく作る区間はアクティブ話者のものになり、<b>別話者どうしの区間は時刻が重なってもOK</b>です（同じ話者内の重なりは不可）。波形下部に話者ごとのレーンが並び、各レコードは自分の話者のレーンに表示されます。レーンのブロックをクリックするとその話者・レコードが選べます。spk列でも話者を変更できます。<br><br><b>複数チャンネル（マイク別録音）：</b>パネル1の「🎙 複数チャンネル」から話者ごとのWAVを読み込むと、話者ごとに専用の波形が縦に並びます（すべて同時スタートの前提）。各波形バンド内をドラッグして区間を作る・端を動かすと、その話者の区間になります。「自動検出を実行」は各話者を自分のチャンネルで検出するため、他の話者の声（クロストーク）が混ざりません。再生・切り出しもその話者のチャンネルから行います。EAFは話者ごとに <code>text@話者</code> などのレイヤー（PARTICIPANT付き）に分けて書き出すので、ELANで重複発話が正しく開けます。<br><br><b>赤い帯</b>＝どの区間にも入っていない有音（取りこぼし候補）。◀ ▶で候補へジャンプすると仮選択になるので、「確認再生」で聞いて<b>「✓ 区間に追加」でレコード化</b>（Enterでも可）、対象外なら<b>「無視」で件数から除外</b>できます（無視はプロジェクト保存に記録されます）。<br><br><b>区間をクリック＝その区間を再生</b>。<b>区間をダブルクリック＝編集</b>（その行の text 欄にカーソルが入ります）。<br>何もない所をクリック＝再生カーソルを置く（<b>Space＝カーソルから再生／一時停止</b>）<br>何もない所をドラッグ＝範囲を選択 → <b>Enterで区間として確定</b>（Escで取消。確定前も端の調整や▶試聴ができます）<br>区間の端をドラッグ＝境界の移動（選択中はオレンジのつまみ）<br><b>Alt＋ダブルクリック＝区間を分割</b><br>横スクロール（またはShift＋ホイール）＝横移動、縦ホイール＝ズーム<br><br>下のボタン：<b>◀ 前の区間／次の区間 ▶</b>で区間を順に再生、<b>選択を再生／カーソルから／停止</b>で再生操作、<b>🗑 選択を削除</b>は区間の指定と注釈を削除するだけで音声データは変更されません。</div>
   </div>
   <div id="missNote" class="hidden"><span id="missNoteText"></span><button type="button" id="missNoteClose" title="閉じる">✕</button></div>
   <canvas id="ovw"></canvas>
@@ -673,11 +676,16 @@ const $=id=>document.getElementById(id);
 
 /* ---------- 状態 ---------- */
 let wavFile=null, wavInfo=null;     // PCM情報（切り出し用）
-let env=null;                        // {rate, rms, mn, mx, dur} 解析用エンベロープ
+let env=null;                        // {rate, rms, mn, mx, dur} 解析用エンベロープ（monoモード＝混合波形 / multiモード＝全話者の合成オーバビュー）
 let segs=[];                         // {t0,t1,id,spk,text,note,tv}（秒）
 let sel=-1;
 let view={t0:0,t1:1};
 const FR=200;                        // エンベロープ解像度（フレーム/秒）
+
+/* ---------- マルチチャンネル（話者ごとに別WAV：同時スタート前提） ---------- */
+let multiCh=false;                   // 複数チャンネルモードかどうか
+let tracks=[];                       // multi: [{spk,file,wavInfo,env,audio}] ／ mono: [{spk:null,file,wavInfo,env,audio}]（後方互換用に1件）
+function trackOf(spk){return tracks.find(t=>t.spk===spk)||null}
 
 /* ---------- 話者（オーバーラップ対応：話者ごとにトラック） ---------- */
 let speakers=['A'], activeSpk='A';   // 話者リストと、新規レコードの話者
@@ -702,13 +710,16 @@ function renderSpkBar(){
   const wrap=$('spkChips');if(!wrap)return;
   wrap.innerHTML=speakers.map(id=>{
     const n=segs.filter(s=>s.spk===id).length;
+    const tr=multiCh?trackOf(id):null;
     return '<span class="spkchip'+(id===activeSpk?' active':'')+'" data-spk="'+escHtml(id)
-      +'" style="'+(id===activeSpk?'border-color:'+spkColor(id)+';':'')+'">'
+      +'" style="'+(id===activeSpk?'border-color:'+spkColor(id)+';':'')+'"'
+      +(tr&&tr.name?' title="'+escHtml(tr.name)+'"':'')+'>'
       +'<span class="dot" style="background:'+spkColor(id)+'"></span>'+escHtml(id)
       +'<span class="note" style="font-size:10px">'+n+'</span>'
-      +(speakers.length>1?'<button type="button" class="x" data-delspk="'+escHtml(id)+'" title="この話者を削除">✕</button>':'')
+      +(!multiCh&&speakers.length>1?'<button type="button" class="x" data-delspk="'+escHtml(id)+'" title="この話者を削除">✕</button>':'')
       +'</span>';
   }).join('');
+  const add=$('btnAddSpk');if(add)add.style.display=multiCh?'none':'';   // multiモードでは話者＝トラックなので追加不可
 }
 function setActiveSpk(id){if(speakers.includes(id)){activeSpk=id;renderSpkBar()}}
 $('spkChips').addEventListener('click',e=>{
@@ -736,7 +747,20 @@ $('btnAddSpk').addEventListener('click',()=>{
 });
 
 /* ---------- ファイル読み込み ---------- */
-$('wavInput').addEventListener('change',ev=>{const f=ev.target.files[0];if(f)loadFile(f)});
+$('wavInput').addEventListener('change',ev=>{const f=ev.target.files[0];if(f)loadFile(f);ev.target.value='';});
+// 複数チャンネル：警告（同時スタート前提）を出してからファイル選択
+$('btnPickMulti').addEventListener('click',()=>{
+  if(confirm('複数チャンネルモードでは、話者ごとに別々のWAVを選びます（マイク別録音）。\n\n⚠ すべてのWAVは「同じ時刻にいっせいに録音を開始した」前提で、同じ時間軸に重ねて表示・検出します。録音開始がそろっていないとズレて表示されます。\n\n続けてWAVファイル（複数選択可）を選んでください。'))
+    $('multiWavInput').click();
+});
+$('multiWavInput').addEventListener('change',ev=>{const fs=ev.target.files;if(fs&&fs.length)loadFiles(fs);ev.target.value='';});
+// デモ音声で複数チャンネルを試す（埋め込みの2録音を話者A・Bとして読み込む）
+$('btnDemoMulti').addEventListener('click',()=>{
+  if(typeof BLT_DEMO_WAV_B64==='undefined'||typeof BLT_DEMO2_WAV_B64==='undefined'){alert('デモ音声がまだ準備できていません。少し待ってからもう一度お試しください。');return;}
+  const b64ToFile=(b64,name)=>{const bin=atob(b64),a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return new File([a],name,{type:'audio/wav'});};
+  if(!startMode)setStartMode('new');
+  loadFiles([b64ToFile(BLT_DEMO_WAV_B64,'demo_speakerA.wav'),b64ToFile(BLT_DEMO2_WAV_B64,'demo_speakerB.wav')]);
+});
 // ---- 開始ナビゲーション（新規／既存再開） ----
 let startMode=null;
 function setStartMode(m){
@@ -767,7 +791,9 @@ $('projInput').addEventListener('change',async ev=>{
     const p=JSON.parse(await f.text());
     if(!p.segs)throw new Error('プロジェクトファイルではありません');
     if(!env){alert('先にWAVファイルを読み込んでください');return}
-    if(p.wavName&&wavFile&&p.wavName!==wavFile.name&&!confirm('保存時のWAV名（'+p.wavName+'）と現在のWAV（'+wavFile.name+'）が違います。読み込みますか？'))return;
+    if(p.multiCh&&!multiCh&&!confirm('この保存は「複数チャンネル（話者ごとのWAV）」で作成されています（'+(p.trackFiles||[]).map(t=>t.spk+'='+t.name).join(' / ')+'）。\n単一の音声で読み込んでいますが、このまま続けますか？\n（本来は「🎙 複数チャンネル」から、保存時と同じ順番でWAVを選び直すのが正確です）'))return;
+    if(p.multiCh&&multiCh&&p.trackFiles&&p.trackFiles.length!==tracks.length&&!confirm('保存時は '+p.trackFiles.length+' チャンネル、現在は '+tracks.length+' チャンネルです。話者と音声の対応がずれる可能性があります。続けますか？'))return;
+    if(!p.multiCh&&p.wavName&&wavFile&&p.wavName!==wavFile.name&&!confirm('保存時のWAV名（'+p.wavName+'）と現在のWAV（'+wavFile.name+'）が違います。読み込みますか？'))return;
     speakers=Array.isArray(p.speakers)&&p.speakers.length?p.speakers.slice():['A'];
     segs=p.segs.map(s=>{
       const o={t0:+s.t0,t1:+s.t1,id:s.id||'',spk:s.spk||speakers[0],text:s.text||'',note:s.note||'',tv:(s.tv&&typeof s.tv==='object')?s.tv:{}};
@@ -965,7 +991,12 @@ function readArrayBuffer(file,onProg){
 }
 const nextFrame=()=>new Promise(r=>setTimeout(r,0));
 
+// 以前のマルチチャンネル用 audio 要素を解放（共有の player は除く）
+function clearTrackAudio(){
+  tracks.forEach(t=>{if(t.audio&&t.audio!==player){try{t.audio.pause()}catch(e){}if(t.audio.src)try{URL.revokeObjectURL(t.audio.src)}catch(e){}}});
+}
 async function loadFile(f){
+  clearTrackAudio();
   wavFile=f;
   $('wavName').textContent=f.name+'（'+(f.size/1048576).toFixed(1)+' MB）';
   $('wavName').classList.remove('ok');
@@ -981,7 +1012,10 @@ async function loadFile(f){
     ctx.close&&ctx.close();
     // ③ 波形を解析（同期処理なので、ラベルを描画してから実行）
     showLoad('波形を解析中…',90,true);await nextFrame();
-    buildEnvelope(buf);
+    env=buildEnvelope(buf);
+    multiCh=false;
+    tracks=[{spk:null,file:f,wavInfo,env,audio:player}];
+    applyWaveHeight();
     $('player').src&&URL.revokeObjectURL($('player').src);
     $('player').src=URL.createObjectURL(f);
     $('wavName').textContent=f.name+'　'+wavInfo.rate+' Hz / '+wavInfo.bits+' bit / '+wavInfo.ch+'ch / '+env.dur.toFixed(1)+' 秒';
@@ -996,6 +1030,50 @@ async function loadFile(f){
     onWavLoaded();   // ガイドフロー：新規→自動区切りへ／既存再開→.json・.eaf 読み込みへ誘導
   }catch(e){
     wavInfo=null;env=null;
+    hideLoad();
+    $('wavName').textContent='読み込み失敗';
+    alert('音声ファイルを読み込めませんでした：'+e.message);
+  }
+}
+// 複数チャンネル（話者ごとに別WAV・同時スタート前提）の読み込み
+async function loadFiles(fileList){
+  const files=Array.from(fileList).filter(f=>/\.wav$/i.test(f.name)||/wav/i.test(f.type));
+  if(!files.length){alert('WAV（PCM）ファイルを選んでください');return}
+  clearTrackAudio();
+  showLoad('読み込み中…',0,true);
+  const newTracks=[];
+  try{
+    for(let i=0;i<files.length;i++){
+      const f=files[i];
+      showLoad('読み込み中… '+f.name+'（'+(i+1)+'/'+files.length+'）',(i*100)/files.length,true);await nextFrame();
+      const wi=await parseWav(f);
+      const ab=await f.arrayBuffer();
+      const ctx=new (window.AudioContext||window.webkitAudioContext)();
+      const buf=await ctx.decodeAudioData(ab);
+      ctx.close&&ctx.close();
+      const e=buildEnvelope(buf);
+      const audio=new Audio();audio.src=URL.createObjectURL(f);audio.preload='auto';
+      bindAudio(audio);
+      newTracks.push({spk:String.fromCharCode(65+i),file:f,wavInfo:wi,env:e,audio,name:f.name});
+    }
+    multiCh=true;
+    tracks=newTracks;
+    speakers=tracks.map(t=>t.spk);activeSpk=speakers[0];
+    env=combinedEnv(tracks);
+    wavFile=tracks[0].file;wavInfo=tracks[0].wavInfo;
+    applyWaveHeight();
+    $('wavName').textContent=files.length+'チャンネル：'+tracks.map(t=>t.spk+'='+t.name).join(' / ')+'　'+env.dur.toFixed(1)+' 秒';
+    $('wavName').classList.add('ok');
+    ['cardFile','cardSeg','cardWave','cardAnnoCtl','cardTable','cardExport'].forEach(id=>$(id).classList.remove('hidden'));
+    setWaveCompact(false);
+    document.querySelectorAll('#saveBar button').forEach(b=>b.disabled=false);
+    view={t0:0,t1:Math.min(15,env.dur)};
+    renderSpkBar();
+    segs=[];sel=-1;pend=null;cursorT=null;ignoredMiss=[];lexicon={};anSel=null;afterSegChange();
+    hideLoad();
+    onWavLoaded();
+  }catch(e){
+    multiCh=false;tracks=[];env=null;wavInfo=null;
     hideLoad();
     $('wavName').textContent='読み込み失敗';
     alert('音声ファイルを読み込めませんでした：'+e.message);
@@ -1021,7 +1099,20 @@ function buildEnvelope(buf){
     for(let j=Math.max(0,k-W);j<=Math.min(m-1,k+W);j++){s+=rms[j];c++}
     srms[k]=s/c;
   }
-  env={rate:FR,rms,srms,mn,mx,dur:buf.duration};
+  return {rate:FR,rms,srms,mn,mx,dur:buf.duration};
+}
+// 全トラックを同じ時間軸に重ねた合成エンベロープ（オーバビュー・しきい値線・取りこぼし判定の共通土台）。同時スタート前提なのでオフセットなし
+function combinedEnv(trs){
+  const dur=Math.max(...trs.map(t=>t.env.dur));
+  const m=Math.ceil(dur*FR);
+  const mn=new Float32Array(m).fill(1), mx=new Float32Array(m).fill(-1), srms=new Float32Array(m);
+  trs.forEach(t=>{const e=t.env;
+    for(let k=0;k<e.mn.length&&k<m;k++){
+      if(e.mn[k]<mn[k])mn[k]=e.mn[k];
+      if(e.mx[k]>mx[k])mx[k]=e.mx[k];
+      if(e.srms[k]>srms[k])srms[k]=e.srms[k];
+    }});
+  return {rate:FR,rms:srms,srms,mn,mx,dur};
 }
 
 /* ---------- 自動トークン化 ---------- */
@@ -1045,11 +1136,12 @@ $('btnClear').addEventListener('click',()=>{
 });
 
 // RMS分布からしきい値（dB）を自動推定：ノイズ床（下位15%）と音声レベル（上位5%）の間に置く
-function autoThrDb(i0,i1){
+function autoThrDb(i0,i1,e){
+  e=e||env;
   const db=v=>20*Math.log10(v+1e-9);
   const arr=[];
   const step=Math.max(1,Math.floor((i1-i0)/20000));   // 長い録音はサンプリングして高速化
-  for(let i=i0;i<i1;i+=step)arr.push(env.srms[i]);
+  for(let i=i0;i<i1;i+=step)arr.push(e.srms[i]);
   if(!arr.length)return -40;
   arr.sort((x,y)=>x-y);
   const noise=db(arr[Math.floor(arr.length*0.15)]);
@@ -1060,12 +1152,13 @@ function autoThrDb(i0,i1){
   return Math.min(-15,Math.max(-65,thr));
 }
 // [a,b]秒の範囲内だけを対象に有音区間（ごく短い無音を含む塊）を検出して返す
-function runDetect(a,b){
-  const r=env.srms, i0=Math.max(0,Math.floor(a*FR)), i1=Math.min(r.length,Math.ceil(b*FR));
+function runDetect(a,b,e,spk){
+  e=e||env; spk=spk!=null?spk:activeSpk;
+  const r=e.srms, i0=Math.max(0,Math.floor(a*FR)), i1=Math.min(r.length,Math.ceil(b*FR));
   // しきい値：自動推定 or スライダー
   let thrDb;
   if($('thrAuto').checked){
-    thrDb=autoThrDb(i0,i1);
+    thrDb=autoThrDb(i0,i1,e);
     $('thrDb').value=Math.round(thrDb);
     $('thrDbVal').textContent=Math.round(thrDb)+' dB（自動）';
   }else{
@@ -1091,7 +1184,7 @@ function runDetect(a,b){
   });
   // 短すぎる塊を除外 → 秒に変換して余白
   const out=merged.filter(x=>(x[1]-x[0])/FR>=minSeg).map(x=>({
-    t0:Math.max(a,x[0]/FR-pad), t1:Math.min(b,x[1]/FR+pad), id:'',spk:activeSpk,text:'',note:'',tv:{}
+    t0:Math.max(a,x[0]/FR-pad), t1:Math.min(b,x[1]/FR+pad), id:'',spk:spk,text:'',note:'',tv:{}
   }));
   // 余白で重なったら隣と分け合う
   for(let i=1;i<out.length;i++){
@@ -1100,22 +1193,25 @@ function runDetect(a,b){
   return out;
 }
 // [a,b]秒の範囲の区間を自動検出の結果で置き換える（範囲外の区間・注釈は保持）
-function applyDetect(a,b){
+// spk＝対象話者（既定: アクティブ話者）, srcEnv＝検出に使うエンベロープ（既定: multiモードはその話者のチャンネル）, silent＝確認やビュー追従を省く（一括検出用）
+function applyDetect(a,b,spk,srcEnv,silent){
   if(!env)return;
-  // 自動検出はアクティブ話者のレコードだけを対象に置き換える（他話者は保持）
-  const inRange=s=>s.t1>a&&s.t0<b&&s.spk===activeSpk;
+  spk=spk!=null?spk:activeSpk;
+  srcEnv=srcEnv||(multiCh?(trackOf(spk)&&trackOf(spk).env):null)||env;
+  // 自動検出は対象話者のレコードだけを対象に置き換える（他話者は保持）
+  const inRange=s=>s.t1>a&&s.t0<b&&s.spk===spk;
   const affected=segs.filter(inRange);
   const hasMorphAnno=s=>(s.morphs&&s.morphs.length)||(s.tv&&Object.keys(s.tv).some(k=>{const v=s.tv[k];return Array.isArray(v)?v.some(Boolean):!!v}));
   const hasAnno=affected.some(s=>s.text||s.note||hasMorphAnno(s));
   const hasMorph=affected.some(hasMorphAnno);
-  const spkNote=speakers.length>1?'話者「'+activeSpk+'」の':'';
-  if(affected.length&&!confirm(
+  const spkNote=speakers.length>1?'話者「'+spk+'」の':'';
+  if(!silent&&affected.length&&!confirm(
      hasMorph
       ?'⚠ '+spkNote+'範囲内の'+affected.length+'区間には形態素・グロスなどの注釈が含まれています。\n自動区切りで区間の境界が変わると、これらの注釈が新しい区間に正しく対応しなくなる場合があります。\n（既存のEAFやプロジェクトを取り込んだ場合、通常この操作は不要です）\n\n本当に自動区切りで置き換えますか？'
       :hasAnno
       ?spkNote+'範囲内の'+affected.length+'区間は置き換えられ、入力済みの注釈は新しい区間と時間が重なるものに引き継がれます。よろしいですか？'
       :spkNote+'範囲内の'+affected.length+'区間を自動検出の結果で置き換えます。よろしいですか？'))return;
-  const fresh=runDetect(a,b);
+  const fresh=runDetect(a,b,srcEnv,spk);
   // 注釈の引き継ぎ（重なり最大の旧区間から）
   if(hasAnno){
     fresh.forEach(ns=>{
@@ -1130,6 +1226,7 @@ function applyDetect(a,b){
     });
   }
   segs=segs.filter(s=>!inRange(s)).concat(fresh);
+  if(silent)return fresh;   // 一括検出時は呼び出し側でまとめて後処理
   if(a<=0&&b>=env.dur-1e-9)renumber(false);
   afterSegChange();
   hideSetup();   // 検出が走ったらセットアップを隠してクリーンに
@@ -1150,7 +1247,25 @@ function applyDetect(a,b){
     }
   }
 }
-function detect(){applyDetect(0,env?env.dur:0)}
+function detect(){
+  if(!env)return;
+  if(multiCh){
+    // 各話者を「自分のチャンネル」で検出（クロストークが入らない）
+    const anyAnno=segs.some(s=>s.text||s.note||(s.morphs&&s.morphs.length)||(s.tv&&Object.keys(s.tv).some(k=>{const v=s.tv[k];return Array.isArray(v)?v.some(Boolean):!!v})));
+    if(anyAnno&&!confirm('全話者を、それぞれのチャンネルで自動検出します。入力済みの注釈は、時間が重なる新しい区間に引き継がれます。よろしいですか？'))return;
+    let first=null;
+    speakers.forEach(s=>{const tr=trackOf(s);if(!tr)return;const f=applyDetect(0,env.dur,s,tr.env,true);if(f&&f.length&&!first)first=f[0]});
+    renumber(false);
+    afterSegChange();
+    hideSetup();
+    sel=first?segs.indexOf(first):(segs.length?0:-1);
+    afterSelChange();
+    if(missed.length){showMissNote();focusMiss(missed[0]);}
+    else{$('missNote').classList.add('hidden');if(first){const span=Math.min(env.dur,20),t0=Math.max(0,Math.min(env.dur-span,first.t0-1));view={t0,t1:t0+span};draw();drawOvw();}}
+    return;
+  }
+  applyDetect(0,env.dur);
+}
 
 $('btnDetectView').addEventListener('click',()=>{
   if(!env)return;
@@ -1160,6 +1275,7 @@ $('btnDetectView').addEventListener('click',()=>{
 function setWaveCompact(on){
   $('waveCol').classList.toggle('compact3',on);
   $('btnWaveSize').textContent=on?'⤢ 大きく':'⤡ 小さく';
+  applyWaveHeight();
   if(env){draw();drawOvw()}
 }
 $('btnWaveSize').addEventListener('click',()=>setWaveCompact(!$('waveCol').classList.contains('compact3')));
@@ -1280,8 +1396,24 @@ $('btnMissIgnore').addEventListener('click',()=>{
   if(missed.length)$('btnMissNext').click();
   else{draw();drawOvw()}
 });
+function sanBase(name,fallback){return (name?name.replace(/\.wav$/i,''):fallback).replace(/[\\\/:*?"<>|\s]+/g,'_')}
+// IDの基（multiモードはその区間の話者の音声ファイル名、monoは読み込んだWAV名）
+function spkBaseName(spk){
+  if(multiCh){const t=trackOf(spk);if(t)return sanBase(t.name||(t.file&&t.file.name),'token')}
+  return sanBase(wavFile&&wavFile.name,'token');
+}
 function renumber(keepCustom){
-  const base=(wavFile?wavFile.name.replace(/\.wav$/i,''):'token').replace(/[\\\/:*?"<>|\s]+/g,'_');
+  if(multiCh){
+    // 話者ごとに、時間順で連番（クリップ名が話者ごとに 1 から振られる）
+    const totals={};segs.forEach(s=>totals[s.spk]=(totals[s.spk]||0)+1);
+    const cnt={};
+    segs.map((s,i)=>i).sort((x,y)=>segs[x].t0-segs[y].t0).forEach(i=>{
+      const s=segs[i], n=(cnt[s.spk]=(cnt[s.spk]||0)+1);
+      if(!keepCustom||!s.id){const w=Math.max(3,String(totals[s.spk]).length);s.id=spkBaseName(s.spk)+'_'+String(n).padStart(w,'0')}
+    });
+    return;
+  }
+  const base=sanBase(wavFile&&wavFile.name,'token');
   const w=String(segs.length).length>3?String(segs.length).length:3;
   segs.forEach((s,i)=>{if(!keepCustom||!s.id)s.id=base+'_'+String(i+1).padStart(w,'0')});
 }
@@ -1289,7 +1421,13 @@ $('btnRenumber').addEventListener('click',()=>{renumber(false);renderTable();});
 
 function fillIds(){
   // 空のIDに、既存の連番の続きを割り当てる（手動作成・分割で出来た区間用）
-  const base=(wavFile?wavFile.name.replace(/\.wav$/i,''):'token').replace(/[\\\/:*?"<>|\s]+/g,'_');
+  if(multiCh){
+    const mx={};
+    segs.forEach(s=>{const m=s.id&&s.id.match(/_(\d+)$/);if(m)mx[s.spk]=Math.max(mx[s.spk]||0,+m[1])});
+    segs.slice().sort((a,b)=>a.t0-b.t0).forEach(s=>{if(!s.id){mx[s.spk]=(mx[s.spk]||0)+1;s.id=spkBaseName(s.spk)+'_'+String(mx[s.spk]).padStart(3,'0')}});
+    return;
+  }
+  const base=sanBase(wavFile&&wavFile.name,'token');
   let mx=0;
   segs.forEach(s=>{const m=s.id&&s.id.match(/_(\d+)$/);if(m)mx=Math.max(mx,+m[1])});
   segs.forEach(s=>{if(!s.id)s.id=base+'_'+String(++mx).padStart(3,'0')});
@@ -1349,6 +1487,7 @@ function bandH(){return laneH()*speakers.length}
 function draw(){
   const [g,w,h]=fitCanvas(wave);
   if(!env)return;
+  if(multiCh)return drawMulti(g,w,h);
   const LH=laneH(), BH=bandH();
   const wy0=RULER_H, wy1=h-BH, cy=(wy0+wy1)/2, amp=(wy1-wy0)/2*0.92;
   const span=view.t1-view.t0;
@@ -1473,7 +1612,7 @@ function draw(){
   drawPlayhead(g,h);
 }
 function drawPlayhead(g,h){
-  const p=$('player');
+  const p=(typeof actAudio!=='undefined'&&actAudio)?actAudio:$('player');
   if(p.paused||p.currentTime<view.t0||p.currentTime>view.t1)return;
   const x=tx(p.currentTime);
   g.strokeStyle='#b4540f';g.lineWidth=2;
@@ -1502,6 +1641,122 @@ function drawOvw(){
   g.strokeRect(vx0+1,1,Math.max(4,vx1-vx0-2),h-2);
   g.lineWidth=1;
 }
+
+/* ---------- マルチチャンネル：話者ごとの波形を縦に積んで描画 ---------- */
+// 波形キャンバスの高さをモードに合わせて設定（mono は CSS にまかせる）
+function applyWaveHeight(){
+  if(multiCh){
+    const compact=$('waveCol').classList.contains('compact3');
+    const per=compact?54:80;
+    wave.style.height=(RULER_H+Math.max(1,speakers.length)*per)+'px';
+  }else{
+    wave.style.height='';
+  }
+}
+function drawMulti(g,w,h){
+  const N=Math.max(1,speakers.length), top=RULER_H, TH=(h-top)/N, span=view.t1-view.t0;
+  // 背景・ルーラー
+  g.fillStyle='#fff';g.fillRect(0,0,w,h);
+  g.fillStyle='#eef2f0';g.fillRect(0,0,w,RULER_H);
+  g.strokeStyle='#d3dad6';g.beginPath();g.moveTo(0,top+.5);g.lineTo(w,top+.5);g.stroke();
+  // 時間目盛り＋縦グリッド（全高）
+  const step=niceStep(span/Math.max(2,w/90));
+  g.font=MONO;
+  for(let t=Math.ceil(view.t0/step-1e-9)*step;t<=view.t1+1e-9;t+=step){
+    const x=Math.round(tx(t))+.5;
+    g.strokeStyle='#eef1f0';g.beginPath();g.moveTo(x,top);g.lineTo(x,h);g.stroke();
+    g.strokeStyle='#8da39b';g.beginPath();g.moveTo(x,RULER_H-6);g.lineTo(x,RULER_H);g.stroke();
+    g.fillStyle='#5e6c67';g.fillText(fmtTick(t,step),x+4,RULER_H-7);
+  }
+  // 各話者バンド
+  speakers.forEach((spk,si)=>{
+    const y0=top+si*TH, y1=y0+TH, cy=(y0+y1)/2, amp=TH/2*0.82;
+    const tr=trackOf(spk), e=tr?tr.env:null, col=spkColor(spk), act=spk===activeSpk;
+    if(act){g.fillStyle=hexA(col,.05);g.fillRect(0,y0,w,TH)}
+    if(si>0){g.strokeStyle='#d8ded9';g.beginPath();g.moveTo(0,y0+.5);g.lineTo(w,y0+.5);g.stroke()}
+    g.strokeStyle='#e7ece9';g.beginPath();g.moveTo(0,cy+.5);g.lineTo(w,cy+.5);g.stroke();
+    // 波形（その話者のenv）
+    if(e){
+      g.fillStyle=act?col:'#9aa3ab';
+      for(let x=0;x<w;x++){
+        const f0=Math.floor((view.t0+span*x/w)*FR), f1=Math.max(f0+1,Math.floor((view.t0+span*(x+1)/w)*FR));
+        if(f0>=e.mn.length)break;
+        let lo=1,hi=-1;
+        for(let f=f0;f<Math.min(f1,e.mn.length);f++){if(e.mn[f]<lo)lo=e.mn[f];if(e.mx[f]>hi)hi=e.mx[f]}
+        if(hi<lo)continue;
+        g.fillRect(x,cy-hi*amp,1,Math.max(1,(hi-lo)*amp));
+      }
+    }
+    // 話者ラベル（左上）＋ファイル名
+    g.font='bold 11px Menlo, Consolas, monospace';g.fillStyle=col;
+    g.fillText(spk+(tr&&tr.name?'  '+tr.name:''),5,y0+13);
+    g.font=MONO;
+    // しきい値線（スライダー操作直後・アクティブ話者のみ）
+    if(act&&Date.now()<thrShowUntil){
+      const thr=Math.pow(10,(+$('thrDb').value)/20);
+      g.strokeStyle='#b4540f';g.setLineDash([5,4]);g.beginPath();
+      g.moveTo(0,cy-thr*amp);g.lineTo(w,cy-thr*amp);g.moveTo(0,cy+thr*amp);g.lineTo(w,cy+thr*amp);
+      g.stroke();g.setLineDash([]);
+    }
+    // この話者の区間
+    segs.forEach((s,i)=>{
+      if(s.spk!==spk||s.t1<view.t0||s.t0>view.t1)return;
+      const x0=tx(s.t0),x1=tx(s.t1),seld=i===sel;
+      g.fillStyle=seld?'rgba(245,185,66,.22)':hexA(col,.12);
+      g.fillRect(x0,y0+1,x1-x0,TH-2);
+      g.strokeStyle=seld?'#d99a14':col;g.lineWidth=seld?2:1;
+      g.beginPath();g.moveTo(x0+.5,y0);g.lineTo(x0+.5,y1);g.moveTo(x1-.5,y0);g.lineTo(x1-.5,y1);g.stroke();g.lineWidth=1;
+      if(x1-x0>16){
+        g.fillStyle=seld?'#9a6b07':col;
+        g.fillText((x1-x0>80&&s.id)?(i+1)+'  '+s.id:String(i+1),x0+4,y1-5);
+      }
+      if(seld){[[x0],[x1]].forEach(([x])=>{g.fillStyle='#d99a14';g.fillRect(x-4,cy-11,8,22);g.strokeStyle='#fff';g.strokeRect(x-3.5,cy-10.5,7,21)})}
+    });
+  });
+  // 取りこぼし候補（合成env基準・全話者横断の上端赤帯）
+  if($('chkMissed').checked){
+    missed.forEach(m=>{
+      if(m.t1<view.t0||m.t0>view.t1)return;
+      const x0=tx(m.t0), wMis=Math.max(2,tx(m.t1)-x0);
+      g.fillStyle='rgba(217,38,38,.10)';g.fillRect(x0,top,wMis,h-top);
+      g.fillStyle='#d92626';g.fillRect(x0,top,wMis,4);
+    });
+  }
+  {
+    const p=pend?{a:Math.min(pend.t0,pend.t1),b:Math.max(pend.t0,pend.t1)}:null;
+    $('btnMissPlay').disabled=$('btnMissAdd').disabled=!p;
+    $('btnMissIgnore').disabled=!(p&&missed.some(m=>m.t0<p.b&&m.t1>p.a));
+  }
+  // ラバーバンド／仮選択（アクティブ話者バンド内）
+  const asi=Math.max(0,speakers.indexOf(activeSpk)), ay0=top+asi*TH, acy=ay0+TH/2;
+  const rub=(drag&&drag.mode==='create')?{t0:drag.ta,t1:drag.tb}:pend;
+  if(rub){
+    const a=Math.min(rub.t0,rub.t1),b=Math.max(rub.t0,rub.t1), x0=tx(a),x1=tx(b);
+    g.fillStyle='rgba(245,185,66,.25)';g.fillRect(x0,ay0,x1-x0,TH);
+    g.strokeStyle='#d99a14';g.setLineDash(drag?[]:[6,4]);
+    g.strokeRect(x0+.5,ay0+.5,Math.max(1,x1-x0),TH-1);g.setLineDash([]);
+    g.fillStyle='#9a6b07';g.fillText(a.toFixed(2)+' – '+b.toFixed(2)+' 秒（長さ '+(b-a).toFixed(2)+'）',x0+6,ay0+14);
+    if(!drag){
+      g.fillText('Enterで確定 ／ Escで取消',x0+6,ay0+28);
+      g.fillStyle='#d99a14';g.fillRect(x0-4,acy-11,8,22);g.fillRect(x1-4,acy-11,8,22);
+      g.strokeStyle='#fff';g.strokeRect(x0-3.5,acy-10.5,7,21);g.strokeRect(x1-3.5,acy-10.5,7,21);
+    }
+  }
+  // 再生カーソル（全高）
+  if(cursorT!=null&&cursorT>=view.t0&&cursorT<=view.t1){
+    const x=Math.round(tx(cursorT))+.5;
+    g.strokeStyle='#39424d';g.beginPath();g.moveTo(x,RULER_H);g.lineTo(x,h);g.stroke();
+    g.fillStyle='#39424d';g.beginPath();g.moveTo(x-5,RULER_H);g.lineTo(x+5,RULER_H);g.lineTo(x,RULER_H+7);g.closePath();g.fill();
+  }
+  drawPlayhead(g,h);
+}
+// ポインタY→話者バンド（multiモード）
+function bandAtY(y){
+  if(y<RULER_H)return speakers[0]||null;
+  const N=Math.max(1,speakers.length), TH=(wave.clientHeight-RULER_H)/N;
+  return speakers[Math.min(N-1,Math.max(0,Math.floor((y-RULER_H)/TH)))];
+}
+function spkAtY(y){return multiCh?bandAtY(y):laneSpkAt(y)}
 
 /* ---------- 波形操作 ---------- */
 let drag=null, pend=null;   // pend: Enter確定待ちの選択範囲 {t0,t1}
@@ -1571,8 +1826,8 @@ wave.addEventListener('pointerdown',e=>{
     if(Math.abs(x-p0)<=6){drag={mode:'pend0'};return}
     if(Math.abs(x-p1)<=6){drag={mode:'pend1'};return}
   }
-  // レーン内なら、その話者を対象に。メイン領域はアクティブ話者を対象に。
-  const laneSpk=laneSpkAt(y);
+  // レーン内（multiモードは波形バンド）なら、その話者を対象に。メイン領域はアクティブ話者を対象に。
+  const laneSpk=spkAtY(y);
   const targetSpk=laneSpk||activeSpk;
   if(laneSpk)setActiveSpk(laneSpk);
   const hit=hitTest(x,targetSpk);
@@ -1594,7 +1849,7 @@ wave.addEventListener('pointermove',e=>{
     }
     if(!cur){
       const y=e.clientY-wave.getBoundingClientRect().top;
-      const hit=hitTest(x,laneSpkAt(y)||activeSpk);
+      const hit=hitTest(x,spkAtY(y)||activeSpk);
       cur=(hit.mode==='edge0'||hit.mode==='edge1')?'ew-resize':(hit.mode==='inside'?'pointer':'crosshair');
     }
     wave.style.cursor=cur;
@@ -1638,7 +1893,7 @@ wave.addEventListener('pointerup',e=>{
 wave.addEventListener('dblclick',e=>{
   clearTimeout(clickPlayTimer);   // クリック再生をキャンセル
   const x=evX(e,wave), y=e.clientY-wave.getBoundingClientRect().top;
-  const hit=hitTest(x,laneSpkAt(y)||activeSpk);
+  const hit=hitTest(x,spkAtY(y)||activeSpk);
   if(hit.mode!=='inside'&&hit.mode!=='edge0'&&hit.mode!=='edge1')return;
   const i=hit.i, s=segs[i];
   if(e.altKey){   // Alt＋ダブルクリック＝分割（従来の分割機能を温存）
@@ -1818,38 +2073,47 @@ function mergeSel(dir){
 
 /* ---------- 再生 ---------- */
 const player=$('player');
+let actAudio=player;        // 現在再生に使っている audio 要素（mono: player ／ multi: 話者トラック）
 let playEnd=null,rafId=null;
-function playRange(t0,t1){
-  player.currentTime=t0;
+// 話者→その話者のチャンネルの audio 要素（monoモードは共有 player）
+function audioOf(spk){if(!multiCh)return player;const t=trackOf(spk);return t&&t.audio?t.audio:player}
+// すべての再生を止める（multiモードは各トラックも）
+function stopAll(){if(multiCh)tracks.forEach(t=>{if(t.audio)try{t.audio.pause()}catch(e){}});try{player.pause()}catch(e){}playEnd=null}
+// 再生・一時停止のたびに描画ループを回す（mono の player にも multi の各トラックにも同じ挙動を付与）
+function bindAudio(a){
+  a.addEventListener('play',()=>{
+    actAudio=a;cancelAnimationFrame(rafId);
+    const loop=()=>{
+      if(playEnd!==null&&a.currentTime>=playEnd){a.pause();playEnd=null}
+      draw();
+      if(!a.paused)rafId=requestAnimationFrame(loop);
+    };
+    rafId=requestAnimationFrame(loop);
+  });
+  a.addEventListener('pause',()=>{cancelAnimationFrame(rafId);draw()});
+}
+bindAudio(player);
+function playRange(t0,t1,spk){
+  stopAll();
+  actAudio=audioOf(spk!=null?spk:activeSpk);
+  try{actAudio.currentTime=Math.max(0,t0)}catch(e){}
   playEnd=t1;
-  player.play().catch(()=>{});
+  actAudio.play().catch(()=>{});
 }
 function playSeg(i){
   if(i<0||!segs[i])return;
-  playRange(segs[i].t0,segs[i].t1);
+  playRange(segs[i].t0,segs[i].t1,segs[i].spk);   // multiモードはその区間の話者チャンネルを再生
 }
-player.addEventListener('play',()=>{
-  cancelAnimationFrame(rafId);
-  const loop=()=>{
-    if(playEnd!==null&&player.currentTime>=playEnd){player.pause();playEnd=null}
-    draw();
-    if(!player.paused)rafId=requestAnimationFrame(loop);
-  };
-  rafId=requestAnimationFrame(loop);
-});
-player.addEventListener('pause',()=>{cancelAnimationFrame(rafId);draw()});
 $('btnPlaySel').addEventListener('click',()=>{
-  if(pend)playRange(Math.min(pend.t0,pend.t1),Math.max(pend.t0,pend.t1));
+  if(pend)playRange(Math.min(pend.t0,pend.t1),Math.max(pend.t0,pend.t1),activeSpk);
   else playSeg(sel);
 });
 function playFromCursor(){
   if(!env)return;
-  player.currentTime=cursorT!=null?cursorT:view.t0;
-  playEnd=null;   // 区間末尾で止まらず流し聴き
-  player.play().catch(()=>{});
+  playRange(cursorT!=null?cursorT:view.t0,null,activeSpk);   // 区間末尾で止まらず、アクティブ話者のチャンネルを流し聴き
 }
 $('btnPlayCur').addEventListener('click',playFromCursor);
-$('btnStop').addEventListener('click',()=>{player.pause();playEnd=null});
+$('btnStop').addEventListener('click',()=>stopAll());
 // Space＝カーソル位置から再生／一時停止（停止位置にカーソルが移る）
 window.addEventListener('keydown',e=>{
   if(e.isComposing||e.keyCode===229)return;   // IME変換中は無視
@@ -1859,7 +2123,7 @@ window.addEventListener('keydown',e=>{
   if(!env)return;
   e.preventDefault();
   if(ae&&ae.tagName==='BUTTON')ae.blur();   // Spaceでボタンが再発動しないように
-  if(!player.paused){cursorT=player.currentTime;player.pause()}
+  if(!actAudio.paused){cursorT=actAudio.currentTime;stopAll()}
   else playFromCursor();
 });
 
@@ -2826,7 +3090,9 @@ $('dlEaf').addEventListener('click',()=>{
   const eaf='<?xml version="1.0" encoding="UTF-8"?>\n'
     +'<ANNOTATION_DOCUMENT AUTHOR="" DATE="'+new Date().toISOString().slice(0,19)+'+00:00" FORMAT="3.0" VERSION="3.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.mpi.nl/tools/elan/EAFv3.0.xsd">\n'
     +'<HEADER MEDIA_FILE="" TIME_UNITS="milliseconds">\n'
-    +'  <MEDIA_DESCRIPTOR MEDIA_URL="file:///'+escXml(wavName)+'" MIME_TYPE="audio/x-wav" RELATIVE_MEDIA_URL="./'+escXml(wavName)+'"/>\n'
+    // multiモードでは全チャンネルのWAVをリンク（ELANは複数メディア対応：先頭が主メディア、以降は関連メディア）
+    +((multiCh&&tracks.length?tracks.map(t=>t.name||(t.file&&t.file.name)||wavName):[wavName])
+        .map(nm=>'  <MEDIA_DESCRIPTOR MEDIA_URL="file:///'+escXml(nm)+'" MIME_TYPE="audio/x-wav" RELATIVE_MEDIA_URL="./'+escXml(nm)+'"/>\n').join(''))
     +'</HEADER>\n'
     +'<TIME_ORDER>\n  '+ts.join('\n  ')+'\n</TIME_ORDER>\n'
     +tiers+'\n'
@@ -2869,7 +3135,8 @@ $('dlJson').addEventListener('click',()=>{
   dl(baseName()+'_tokens.json',JSON.stringify(out,null,2),'application/json');
 });
 $('dlProj').addEventListener('click',()=>{
-  dl(baseName()+'_project.json',JSON.stringify({wavName:wavFile?wavFile.name:'',glossOn,morphSrc,morphSeps,bdrSeps,tiersDef,speakers,segs,ignoredMiss,lexicon},null,1),'application/json');
+  const multi=multiCh?{multiCh:true,trackFiles:tracks.map(t=>({spk:t.spk,name:t.name||(t.file&&t.file.name)||''}))}:{};
+  dl(baseName()+'_project.json',JSON.stringify(Object.assign({wavName:wavFile?wavFile.name:'',glossOn,morphSrc,morphSeps,bdrSeps,tiersDef,speakers,segs,ignoredMiss,lexicon},multi),null,1),'application/json');
 });
 // ヘッダーの保存バー（書き出しカードと同じ処理を呼ぶ）
 [['hdrEaf','dlEaf'],['hdrTsv','dlTsv'],['hdrJson','dlJson'],['hdrZip','dlZip'],['hdrProj','dlProj']]
@@ -2885,7 +3152,8 @@ $('dlZip').addEventListener('click',async()=>{
       const s=segs[k];
       let fn=(s.id||'token_'+(k+1)).replace(/[\\\/:*?"<>|\s]+/g,'_')||'token_'+(k+1);
       if(used[fn])fn+='_'+(++used[fn]);else used[fn]=1;
-      zip.add(fn+'.wav',await clipWav(wavInfo,s.t0,s.t1));
+      const wi=multiCh?(trackOf(s.spk)&&trackOf(s.spk).wavInfo):wavInfo;   // multiモードはその区間の話者チャンネルから切り出す
+      zip.add(fn+'.wav',await clipWav(wi||wavInfo,s.t0,s.t1));
       csv.push([fn+'.wav',s.id,s.spk||'',s.text,s.note,s.t0.toFixed(3),s.t1.toFixed(3)]);
       btn.textContent='切り出し中… '+(k+1)+'/'+segs.length;
       if(k%10===0)await new Promise(r=>setTimeout(r,0));
@@ -3034,7 +3302,7 @@ $('anDict').addEventListener('click',e=>{
   const pl=e.target.closest('.explay');if(!pl)return;
   const si=+pl.dataset.si, s=segs[si];if(!s)return;
   if(pl.classList.contains('anjump')){switchTab('anno');sel=si;setActiveSpk(s.spk);afterSelChange();focusSeg(si);}
-  else playRange(s.t0,s.t1);
+  else playRange(s.t0,s.t1,s.spk);
 });
 // タブ切り替え
 function switchTab(name){
@@ -3293,7 +3561,8 @@ $('dlDict').addEventListener('click',async()=>{
     // 各レコードの音声をaudio/フォルダに
     for(let i=0;i<d.records.length;i++){
       const r=d.records[i];
-      zip.add('audio/'+r.clip,await clipWav(wavInfo,r.t0,r.t1));
+      const wi=multiCh?(trackOf(r.spk)&&trackOf(r.spk).wavInfo):wavInfo;
+      zip.add('audio/'+r.clip,await clipWav(wi||wavInfo,r.t0,r.t1));
       btn.textContent='音声切り出し中… '+(i+1)+'/'+d.records.length;
       if(i%10===0)await new Promise(res=>setTimeout(res,0));
     }
@@ -3760,6 +4029,12 @@ $('dlDict').addEventListener('click',async()=>{
 /* ---------- i18n：日本語 ⇄ English 切替（主要UI） ---------- */
 (function(){
   const EN={
+    // 複数チャンネル（話者ごとに別WAV）
+    "🎙 複数チャンネル（話者ごとのWAV）":"🎙 Multi-channel (one WAV per speaker)",
+    "▶ デモ音声で試す（2チャンネル）":"▶ Try with demo audio (2 channels)",
+    "WAV（PCM）ファイルを選んでください":"Please choose WAV (PCM) files.",
+    "複数チャンネルモードでは、話者ごとに別々のWAVを選びます（マイク別録音）。\n\n⚠ すべてのWAVは「同じ時刻にいっせいに録音を開始した」前提で、同じ時間軸に重ねて表示・検出します。録音開始がそろっていないとズレて表示されます。\n\n続けてWAVファイル（複数選択可）を選んでください。":"In multi-channel mode you choose a separate WAV for each speaker (one mic each).\n\n⚠ All WAVs are assumed to have started recording at the SAME instant, and are overlaid on one timeline for display and detection. If the recordings did not start together, they will appear misaligned.\n\nNext, choose the WAV files (multiple selection allowed).",
+    "全話者を、それぞれのチャンネルで自動検出します。入力済みの注釈は、時間が重なる新しい区間に引き継がれます。よろしいですか？":"Auto-detect every speaker on their own channel. Existing annotations carry over to the new overlapping segments. Proceed?",
     // 追補（このセッションの新機能・取りこぼし分）
     "母音":"Vowels","子音":"Consonants","超分節・声調":"Suprasegmentals / tone","補助記号":"Diacritics",
     "▶ クリックで波形をひらく":"▶ Click to open the waveform",
@@ -3895,7 +4170,7 @@ $('dlDict').addEventListener('click',async()=>{
     bdrSepLbl:'<b>Sentence-end marks (bdr)</b> (type symbols in a row; a morpheme ending in one of these is treated as sentence-final = EOS)',
     helpFile:'<div class="note">Audio is expected to be uncompressed WAV (PCM). Files are never sent outside your browser — everything is processed locally, and the audio file itself is never modified.<br><br>To use “Load a project (.json)”, <b>load the matching WAV first</b> (the project does not contain the audio itself).</div>',
     helpSeg:'<div class="note"><b>Manual:</b> drag over an empty part of the waveform to select a range, then <b>press Enter</b> to make it a segment. <b>Auto:</b> detects runs of speech (allowing very short silences) and segments them at once (you can fix them by hand afterwards).<br><br>Auto-detect estimates a threshold from the noise floor and speech level and uses a dual threshold (hysteresis) to find speech runs. Silences shorter than “Min. silence” are bridged into one segment (default: only runs ≥ 0.5 s). Re-running carries over your annotations by time overlap.</div>',
-    helpWave:'<div class="note"><b>Speakers (overlap-ready):</b> add one with “+ Speaker”; the selected chip is the “active speaker”. New segments belong to it, and <b>different speakers may overlap in time</b> (overlap within one speaker is not allowed). Per-speaker lanes appear below the waveform. EAF is exported split per speaker (e.g. <code>text@speaker</code> with PARTICIPANT) so overlaps open correctly in ELAN.<br><br><b>Red bands</b> = speech not inside any segment (possible “missed” audio). Use ◀ ▶ to jump, “Preview” to listen, <b>“✓ Add as segment”</b> to keep it, or <b>“Ignore”</b> to drop it from the count.<br><br><b>Click a segment = play it</b>. <b>Double-click a segment = edit</b> (cursor lands in that row\'s text cell).<br>Click empty space = drop the playback cursor (<b>Space = play/pause from cursor</b>)<br>Drag empty space = select a range → <b>Enter to confirm as a segment</b> (Esc to cancel)<br>Drag a segment edge = move the boundary<br><b>Alt + double-click = split the segment</b><br>Horizontal scroll (or Shift + wheel) = pan, vertical wheel = zoom<br><br>Buttons below: <b>◀ Prev / Next ▶</b> step through and play segments; <b>Play selection / From cursor / Stop</b> control playback; <b>🗑 Delete selected</b> only removes the segment and its annotation — the audio is never changed.</div>',
+    helpWave:'<div class="note"><b>Speakers (overlap-ready):</b> add one with “+ Speaker”; the selected chip is the “active speaker”. New segments belong to it, and <b>different speakers may overlap in time</b> (overlap within one speaker is not allowed). Per-speaker lanes appear below the waveform. EAF is exported split per speaker (e.g. <code>text@speaker</code> with PARTICIPANT) so overlaps open correctly in ELAN.<br><br><b>Multi-channel (one mic per speaker):</b> load a separate WAV per speaker via “🎙 Multi-channel” in Panel 1 and each speaker gets its own stacked waveform (all assumed to start at the same instant). Drag inside a speaker’s band to create/adjust segments for that speaker. “Run auto-detect” detects each speaker on their own channel, so no cross-talk leaks in; playback and clipping also use that speaker’s channel.<br><br><b>Red bands</b> = speech not inside any segment (possible “missed” audio). Use ◀ ▶ to jump, “Preview” to listen, <b>“✓ Add as segment”</b> to keep it, or <b>“Ignore”</b> to drop it from the count.<br><br><b>Click a segment = play it</b>. <b>Double-click a segment = edit</b> (cursor lands in that row\'s text cell).<br>Click empty space = drop the playback cursor (<b>Space = play/pause from cursor</b>)<br>Drag empty space = select a range → <b>Enter to confirm as a segment</b> (Esc to cancel)<br>Drag a segment edge = move the boundary<br><b>Alt + double-click = split the segment</b><br>Horizontal scroll (or Shift + wheel) = pan, vertical wheel = zoom<br><br>Buttons below: <b>◀ Prev / Next ▶</b> step through and play segments; <b>Play selection / From cursor / Stop</b> control playback; <b>🗑 Delete selected</b> only removes the segment and its annotation — the audio is never changed.</div>',
     helpAnno:'<div class="note">Click a cell to edit. When you edit a text or gloss cell, the <b>IPA palette appears at the bottom</b>; click a symbol to insert it. Enter in the text field = next row. Start/end (seconds) are editable too.<br><br>With a morph layer, hyphen (-), equals (=) and plus (+) in the text <b>split it into morphemes</b>, and you fill layers under morph (gloss · pos by default) per morpheme (Enter = next morpheme). Add layers freely: parent “segment” gives one field per segment; “morph” or its children give one field per morpheme.<br><br>When surface and underlying forms differ (e.g. text <code>kaita</code> / underlying <code>kak-ta</code>), add a segment-level layer for the underlying form (e.g. <code>udl</code>) and set “morph split source” to it.<br><br>“Show layer” focuses on one layer (data is kept). Records show 5 at a time; use ◀ ▶ to move.</div>',
     helpExport:'<div class="note">EAF exports <code>ID</code>, <code>text</code>, <code>trans</code> plus your layers with ELAN\'s parent-child structure (<code>trans</code> = Symbolic Association of text, <code>morph</code> = Symbolic Subdivision of text/udl, other layers = Symbolic Association to the chosen parent; type and constraint declarations included). Put it beside the WAV to open in ELAN.<br><br>TSV / JSON include every layer (morph layers merged into a gloss line, e.g. <code>go-EP-PST</code>). The ZIP holds a WAV per segment plus <code>manifest.csv</code>.<br><br>“Save project” stores segments, annotations, layer setup and the ignore list as JSON. To resume, load the same WAV first, then this JSON.</div>'
   };
