@@ -837,6 +837,7 @@ $('projInput').addEventListener('change',async ev=>{
     lexicon=(p.lexicon&&typeof p.lexicon==='object')?p.lexicon:{};
     sel=-1;afterSegChange();
     hideSetup();   // 復元した区間を自動区切りで上書きしないよう、検出パネルは隠す
+    markSaved();   // 復元直後を「保存済み」基準に
   }catch(e){alert('読み込めませんでした：'+e.message)}
   ev.target.value='';
 });
@@ -984,6 +985,7 @@ function importEaf(xmlText){
   ignoredMiss=[]; sel=-1;
   renderSpkBar(); refreshTierUI(); afterSegChange();
   hideSetup();   // 取り込んだ区間を自動区切りで上書きしないよう、検出パネルは隠す
+  markSaved();   // 取り込み直後を「保存済み」基準に
   alert('EAFを取り込みました：'+segs.length+'区間 / 話者 '+speakers.join('・')
     +(tiersDef.length?'\n層: '+tiersDef.map(t=>t.name).join('・'):'')
     +(segs.some(s=>Array.isArray(s.morphs)&&s.morphs.length)?'\n（形態素は元の区切りを保持しています）':''));
@@ -1046,6 +1048,7 @@ async function loadFile(f){
     segs=[];sel=-1;pend=null;cursorT=null;ignoredMiss=[];lexicon={};anSel=null;afterSegChange();
     hideLoad();
     onWavLoaded();   // ガイドフロー：新規→自動区切りへ／既存再開→.json・.eaf 読み込みへ誘導
+    markSaved();     // 読み込み直後を「保存済み」基準に
   }catch(e){
     wavInfo=null;env=null;
     hideLoad();
@@ -1090,6 +1093,7 @@ async function loadFiles(fileList){
     segs=[];sel=-1;pend=null;cursorT=null;ignoredMiss=[];lexicon={};anSel=null;afterSegChange();
     hideLoad();
     onWavLoaded();
+    markSaved();   // 読み込み直後を「保存済み」基準に
   }catch(e){
     multiCh=false;tracks=[];env=null;wavInfo=null;
     hideLoad();
@@ -1461,6 +1465,24 @@ function afterSegChange(){
 function updateInfo(){
   $('segInfo').textContent=segs.length+'区間'+(sel>=0&&segs[sel]?('　選択: #'+(sel+1)+' '+segs[sel].t0.toFixed(3)+'–'+segs[sel].t1.toFixed(3)+'s'):'');
 }
+
+/* ---------- 未保存の変更があるときは閉じる前に警告 ---------- */
+// 作業内容（プロジェクト保存と同じ中身）をJSON化したスナップショット。保存／読み込み時に基準を更新し、
+// 現在の状態が基準と違えば「未保存」とみなす（個々の編集箇所をフックせずに済む堅牢な方式）
+let savedSnap='';
+function workSnapshot(){
+  try{return JSON.stringify({glossOn,morphSrc,morphSeps,bdrSeps,tiersDef,speakers,segs,ignoredMiss,lexicon});}catch(e){return '';}
+}
+function markSaved(){savedSnap=workSnapshot();}   // 保存／読み込みの直後に呼ぶ＝この状態を「保存済み」基準にする
+function isDirty(){
+  if(!segs.length&&(typeof tiersDef==='undefined'||!tiersDef.length))return false;   // 何も作業していなければ警告しない
+  return workSnapshot()!==savedSnap;
+}
+window.addEventListener('beforeunload',e=>{
+  if(!isDirty())return;
+  e.preventDefault();
+  e.returnValue='';   // 一部ブラウザで必要。実際の文言はブラウザ既定（カスタム不可）
+});
 
 /* ---------- 波形描画 ---------- */
 const wave=$('wave'), ovw=$('ovw');
@@ -3196,6 +3218,7 @@ $('dlEaf').addEventListener('click',()=>{
     +types+constraints+'\n'
     +'</ANNOTATION_DOCUMENT>\n';
   dl(baseName()+'.eaf',eaf,'application/xml');
+  markSaved();   // EAFは再開可能な保存形式なので基準を更新
 });
 $('dlTsv').addEventListener('click',()=>{
   const san=s=>String(s).replace(/[\t\r\n]+/g,' ');
@@ -3234,6 +3257,7 @@ $('dlJson').addEventListener('click',()=>{
 $('dlProj').addEventListener('click',()=>{
   const multi=multiCh?{multiCh:true,trackFiles:tracks.map(t=>({spk:t.spk,name:t.name||(t.file&&t.file.name)||''}))}:{};
   dl(baseName()+'_project.json',JSON.stringify(Object.assign({wavName:wavFile?wavFile.name:'',glossOn,morphSrc,morphSeps,bdrSeps,tiersDef,speakers,segs,ignoredMiss,lexicon},multi),null,1),'application/json');
+  markSaved();   // プロジェクト保存＝この状態を「保存済み」基準に
 });
 // ヘッダーの保存バー（書き出しカードと同じ処理を呼ぶ）
 [['hdrEaf','dlEaf'],['hdrTsv','dlTsv'],['hdrJson','dlJson'],['hdrZip','dlZip'],['hdrProj','dlProj']]
