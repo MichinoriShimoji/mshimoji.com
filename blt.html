@@ -2135,11 +2135,24 @@ function mergeSel(dir){
 /* ---------- 再生 ---------- */
 const player=$('player');
 let actAudio=player;        // 現在再生に使っている audio 要素（mono: player ／ multi: 話者トラック）
-let playEnd=null,rafId=null;
+let playEnd=null,rafId=null,playStopTimer=null;
 // 話者→その話者のチャンネルの audio 要素（monoモードは共有 player）
 function audioOf(spk){if(!multiCh)return player;const t=trackOf(spk);return t&&t.audio?t.audio:player}
 // すべての再生を止める（multiモードは各トラックも）
-function stopAll(){if(multiCh)tracks.forEach(t=>{if(t.audio)try{t.audio.pause()}catch(e){}});try{player.pause()}catch(e){}playEnd=null}
+function stopAll(){clearTimeout(playStopTimer);if(multiCh)tracks.forEach(t=>{if(t.audio)try{t.audio.pause()}catch(e){}});try{player.pause()}catch(e){}playEnd=null}
+// 区間末（playEnd）でぴったり止める：rAFに頼らず、残り時間からタイマーで停止。seek遅延等で手前なら再スケジュール
+function scheduleStop(){
+  clearTimeout(playStopTimer);
+  if(playEnd==null||!actAudio||actAudio.paused)return;
+  const rate=actAudio.playbackRate||1;
+  const remainMs=(playEnd-actAudio.currentTime)/rate*1000;
+  if(remainMs<=4){try{actAudio.pause()}catch(e){}playEnd=null;return;}
+  playStopTimer=setTimeout(()=>{
+    if(!actAudio||actAudio.paused){playEnd=null;return;}
+    if(actAudio.currentTime>=playEnd-0.004){try{actAudio.pause()}catch(e){}playEnd=null;}
+    else scheduleStop();
+  },remainMs);
+}
 // 再生・一時停止のたびに描画ループを回す（mono の player にも multi の各トラックにも同じ挙動を付与）
 function bindAudio(a){
   a.addEventListener('play',()=>{
@@ -2152,15 +2165,19 @@ function bindAudio(a){
     };
     rafId=requestAnimationFrame(loop);
   });
-  a.addEventListener('pause',()=>{cancelAnimationFrame(rafId);draw();if($('paletteCard').classList.contains('show'))drawPalWave();});
+  a.addEventListener('pause',()=>{clearTimeout(playStopTimer);cancelAnimationFrame(rafId);draw();if($('paletteCard').classList.contains('show'))drawPalWave();});
+  // 再生位置が確定したら区間末停止を（再）スケジュール（seek直後の正確な currentTime で計算）
+  a.addEventListener('seeked',()=>{if(actAudio===a)scheduleStop();});
 }
 bindAudio(player);
 function playRange(t0,t1,spk){
   stopAll();
   actAudio=audioOf(spk!=null?spk:activeSpk);
-  try{actAudio.currentTime=Math.max(0,t0)}catch(e){}
+  const a=actAudio;
+  try{a.currentTime=Math.max(0,t0)}catch(e){}
   playEnd=t1;
-  actAudio.play().catch(()=>{});
+  a.play().then(()=>{actAudio=a;scheduleStop();}).catch(()=>{});
+  scheduleStop();
 }
 function playSeg(i){
   if(i<0||!segs[i])return;
