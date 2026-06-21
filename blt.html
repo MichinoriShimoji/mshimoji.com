@@ -2854,10 +2854,12 @@ function showPalette(){
   card.classList.toggle('min',palMin);
   setPalToggleLabel();
   applyPalPadding();
+  const fb=$('fbOpen'); if(fb)fb.style.display='none';   // フィードバックFABが「↑ 開く」等に被らないよう、パレット表示中は隠す
 }
 function hidePalette(){
   $('paletteCard').classList.remove('show');
   document.body.style.paddingBottom='';
+  const fb=$('fbOpen'); if(fb)fb.style.display='';   // パレットを閉じたらフィードバックFABを戻す
 }
 $('palToggle').addEventListener('mousedown',e=>e.preventDefault());   // フォーカス（入力位置）を奪わない
 $('palToggle').addEventListener('click',()=>{
