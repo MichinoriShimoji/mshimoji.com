@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>テクスト→地図ジェネレーター</title>
+<meta name="description" content="地名を含むテクストから注釈付きの日本白地図を3案自動生成。都道府県・市区町村・島・地方名を検出し、SVG/PNGで保存できます。すべてブラウザ内で完結。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="テクスト→地図ジェネレーター">
+<meta property="og:description" content="地名を含むテクストから注釈付きの日本白地図を3案自動生成。SVG/PNG保存対応、ブラウザ内で完結。">
+<meta property="og:url" content="https://michinorishimoji.github.io/mshimoji.com/textmap/">
+<!-- og:image (絶対URL) を追記するとSNSプレビューが充実します -->
+<meta name="twitter:card" content="summary">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+    background: #f4f4f2; color: #2b2b2b;
+    padding: 28px 20px 60px;
+    max-width: 1500px; margin: 0 auto;
+  }
+  h1 { font-size: 21px; font-weight: 600; margin-bottom: 4px; }
+  p.lead { font-size: 13px; color: #666; margin-bottom: 18px; }
+  .inputRow { display: flex; gap: 12px; align-items: stretch; margin-bottom: 12px; }
+  textarea {
+    flex: 1; min-height: 110px; padding: 12px 14px;
+    font: 14px/1.7 inherit; font-family: inherit;
+    border: 1px solid #ccc; border-radius: 10px; background: white;
+    resize: vertical;
+  }
+  textarea:focus { outline: 2px solid #8aa; }
+  #goBtn {
+    padding: 0 30px; font-size: 15px; font-family: inherit; font-weight: 600;
+    border: none; border-radius: 10px; background: #35524a; color: white;
+    cursor: pointer;
+  }
+  #goBtn:hover { background: #2a4139; }
+  .toolRow { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 8px; }
+  #shareBtn {
+    font-family: inherit; font-size: 12px; padding: 5px 14px;
+    border: 1px solid #9ab; border-radius: 7px; background: #eef2f3;
+    cursor: pointer; color: #234; white-space: nowrap;
+  }
+  #shareBtn:hover { background: #e0e8ea; }
+  #annotMode {
+    font-family: inherit; font-size: 12px; padding: 4px 8px;
+    border: 1px solid #9ab; border-radius: 7px; background: white; color: #234;
+  }
+  #chips { margin: 6px 0 18px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .note { font-size: 12px; color: #777; }
+  .chip {
+    font-family: inherit; font-size: 13px; padding: 4px 10px;
+    border: 1px solid #9ab; border-radius: 999px; background: #e8eef0;
+    cursor: pointer; color: #234;
+  }
+  .chip small { margin-left: 5px; color: #789; font-size: 10px; }
+  .chip.off { opacity: 0.4; text-decoration: line-through; }
+  .chip.amb { border-style: dashed; }
+  #results { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 16px; }
+  .card {
+    background: white; border-radius: 12px; overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .cardHead { padding: 10px 14px 8px; display: flex; align-items: baseline; gap: 10px; }
+  .cardHead b { font-size: 14px; }
+  .cardHead span { font-size: 11px; color: #888; }
+  .mapBox { border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
+  .mapBox svg { display: block; width: 100%; height: auto; }
+  .btns { padding: 8px 14px; display: flex; gap: 8px; }
+  .btns button {
+    font-family: inherit; font-size: 12px; padding: 5px 14px;
+    border: 1px solid #bbb; border-radius: 7px; background: #fafafa; cursor: pointer;
+  }
+  .btns button:hover { background: #eee; }
+  footer { margin-top: 26px; font-size: 11px; color: #999; line-height: 1.8; }
+</style>
+</head>
+<body>
+  <h1>テクスト→地図ジェネレーター</h1>
+  <p class="lead">
+    地名を含むテクストを入力すると、内容を解析して注釈付きの白地図を3案生成します。
+    都道府県・市区町村・町字（大字）・駅名・島・地方名を自動検出し、「県境」「市町村境界」などの語にも反応します。
+  </p>
+  <div class="inputRow">
+    <textarea id="inputText" placeholder="例: 琉球諸語は、北は奄美大島、喜界島、徳之島などと南下して、国境の島である与那国島まで続く琉球列島で話されている。行政区分としては鹿児島県と沖縄県の両方にまたがる。"></textarea>
+    <button id="goBtn">地図を生成<br><small style="font-weight:400">⌘+Enter</small></button>
+  </div>
+  <div class="toolRow">
+    <button id="shareBtn">共有リンクをコピー</button>
+    <label class="note" for="annotMode">注釈:</label>
+    <select id="annotMode">
+      <option value="full">地名ラベル+ドット</option>
+      <option value="dots">ドットのみ</option>
+      <option value="none">注釈なし</option>
+    </select>
+    <span class="note">生成するとテクストがURLに保存され、リンクを開くだけで同じ地図を再現できます</span>
+  </div>
+  <div id="chips"></div>
+  <div id="results"></div>
+  <footer>
+    地図データ出典: 国土交通省 国土数値情報 行政区域データ (N03) を
+    <a href="https://github.com/smartnews-smri/japan-topography">smartnews-smri/japan-topography</a>
+    が簡略化したものを同梱。すべての処理はブラウザ内で完結します (通信なし・file:// で動作)。
+  </footer>
+  <!-- ?v= はキャッシュバスター。ファイルを更新したら番号を上げる -->
+  <script src="data/japan_pref.js?v=5"></script>
+  <script src="data/japan_muni.js?v=5"></script>
+  <script src="data/places.js?v=5"></script>
+  <script src="data/chome.js?v=5"></script>
+  <script src="data/stations.js?v=5"></script>
+  <script src="app.js?v=5"></script>
+</body>
+</html>
