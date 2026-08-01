@@ -79,7 +79,7 @@
   <h1>テクスト→地図ジェネレーター</h1>
   <p class="lead">
     地名を含むテクストを入力すると、内容を解析して注釈付きの白地図を3案生成します。
-    都道府県・市区町村・町字（大字）・駅名・島・地方名を自動検出し、「県境」「市町村境界」などの語にも反応します。
+    都道府県・市区町村・町字（大字）・駅名・島・地方名・旧市町村・間切（沖縄）を自動検出し、「県境」「市町村境界」などの語にも反応します。
   </p>
   <div class="inputRow">
     <textarea id="inputText" placeholder="例: 琉球諸語は、北は奄美大島、喜界島、徳之島などと南下して、国境の島である与那国島まで続く琉球列島で話されている。行政区分としては鹿児島県と沖縄県の両方にまたがる。"></textarea>
@@ -103,11 +103,12 @@
     が簡略化したものを同梱。すべての処理はブラウザ内で完結します (通信なし・file:// で動作)。
   </footer>
   <!-- ?v= はキャッシュバスター。ファイルを更新したら番号を上げる -->
-  <script src="data/japan_pref.js?v=7"></script>
-  <script src="data/japan_muni.js?v=7"></script>
-  <script src="data/places.js?v=7"></script>
-  <script src="data/chome.js?v=7"></script>
-  <script src="data/stations.js?v=7"></script>
-  <script src="app.js?v=7"></script>
+  <script src="data/japan_pref.js?v=8"></script>
+  <script src="data/japan_muni.js?v=8"></script>
+  <script src="data/places.js?v=8"></script>
+  <script src="data/chome.js?v=8"></script>
+  <script src="data/stations.js?v=8"></script>
+  <script src="data/hist.js?v=8"></script>
+  <script src="app.js?v=8"></script>
 </body>
 </html>
