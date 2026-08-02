@@ -80,20 +80,24 @@
     <section class="section">
       <h2 class="section-title"><span class="ja-inline">主な機能</span><span class="en-inline">Features</span></h2>
       <ul class="feature-list ja">
-        <li>都道府県・市区町村・町字（大字、全国約11.8万件）・駅名（全国約8,900駅）・島・地方名を自動検出</li>
+        <li>都道府県・市区町村・町字（大字・小字、全国約18.5万件）・駅名（全国約8,900駅）・島・地方名・旧市町村・間切（沖縄）を自動検出</li>
         <li>「福岡市博多区の御供所町」のような住所文脈を理解し、焦点となる地名に自動でズーム</li>
         <li>同名の地名（例:「本町」は全国に約280か所）は文脈の市区町村・都道府県から自動で絞り込み</li>
-        <li>ヶ/ケなどの表記ゆれを吸収（「恋ヶ窪」でも「恋ケ窪」でもヒット）</li>
+        <li>ヶ/ケの表記ゆれに加え、旧字体・異体字（「山形縣」「米澤市」など約220字）も正規化してマッチ</li>
+        <li>方言形・現地語形のエイリアス（「ピサラ」=平良 など）に対応、綴りが近い語には「もしかして」候補を提案</li>
+        <li>生成後はラベルをドラッグで移動、ドットをクリックで拡大・縮小（調整結果は保存にも反映）</li>
         <li>「県境」「市町村境界」などの語に反応して境界線の表示を切り替え</li>
         <li>注釈モード（ラベル+ドット / ドットのみ / 注釈なし）を選択可能</li>
         <li>生成した地図はURLで共有可能（リンクを開くだけで同じ地図を再現）</li>
         <li>すべての処理はブラウザ内で完結（入力テクストが外部に送信されることはありません）</li>
       </ul>
       <ul class="feature-list en">
-        <li>Automatic detection of prefectures, municipalities, town/village-level place names (~118,000 nationwide), railway stations (~8,900), islands, and regions</li>
+        <li>Automatic detection of prefectures, municipalities, town/village-level place names (~185,000 nationwide), railway stations (~8,900), islands, regions, former municipalities, and Okinawan magiri districts</li>
         <li>Understands address context such as "御供所町, Hakata Ward, Fukuoka City" and automatically zooms to the focal place</li>
         <li>Ambiguous place names (e.g., ~280 places named "Honmachi") are resolved from the surrounding context</li>
-        <li>Handles orthographic variation such as ヶ/ケ</li>
+        <li>Handles orthographic variation such as ヶ/ケ as well as pre-reform kanji variants (e.g., 山形縣, 米澤市; ~220 characters)</li>
+        <li>Supports dialectal/vernacular name aliases (e.g., "Pisara" = Hirara) and offers "did you mean" suggestions for near-miss spellings</li>
+        <li>After generation, labels can be dragged and dots resized by clicking — adjustments are reflected in saved files</li>
         <li>Responds to words like 県境 (prefectural border) and 市町村境界 (municipal boundaries)</li>
         <li>Selectable annotation modes: labels + dots / dots only / no annotation</li>
         <li>Generated maps are shareable via URL</li>
