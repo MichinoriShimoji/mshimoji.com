@@ -56,6 +56,8 @@
   .chip small { margin-left: 5px; color: #789; font-size: 10px; }
   .chip.off { opacity: 0.4; text-decoration: line-through; }
   .chip.amb { border-style: dashed; }
+  .chip.sug { border-style: dashed; border-color: #c9a227; background: #faf5e4; color: #6b5a1e; }
+  .chip.sug small { color: #a08a30; }
   #results { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 16px; }
   .card {
     background: white; border-radius: 12px; overflow: hidden;
@@ -66,6 +68,9 @@
   .cardHead span { font-size: 11px; color: #888; }
   .mapBox { border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
   .mapBox svg { display: block; width: 100%; height: auto; }
+  .mapBox svg .lblg { cursor: grab; touch-action: none; }
+  .mapBox svg .lblg:active { cursor: grabbing; }
+  .mapBox svg .dot-hit { cursor: pointer; touch-action: none; }
   .btns { padding: 8px 14px; display: flex; gap: 8px; }
   .btns button {
     font-family: inherit; font-size: 12px; padding: 5px 14px;
@@ -80,6 +85,7 @@
   <p class="lead">
     地名を含むテクストを入力すると、内容を解析して注釈付きの白地図を3案生成します。
     都道府県・市区町村・町字（大字）・駅名・島・地方名・旧市町村・間切（沖縄）を自動検出し、「県境」「市町村境界」などの語にも反応します。
+    旧字体・異体字（澤/沢・龍/竜など）や方言形（ピサラ=平良など）にも対応し、綴りが近い未知の語には「もしかして」候補を提示します。
   </p>
   <div class="inputRow">
     <textarea id="inputText" placeholder="例: 琉球諸語は、北は奄美大島、喜界島、徳之島などと南下して、国境の島である与那国島まで続く琉球列島で話されている。行政区分としては鹿児島県と沖縄県の両方にまたがる。"></textarea>
@@ -94,6 +100,7 @@
       <option value="none">注釈なし</option>
     </select>
     <span class="note">生成するとテクストがURLに保存され、リンクを開くだけで同じ地図を再現できます</span>
+    <span class="note">生成後の地図では: ラベルをドラッグで移動 / 点をクリックで拡大・⌥+クリックで縮小 / ダブルクリックで元に戻す。保存には調整結果が反映されます</span>
   </div>
   <div id="chips"></div>
   <div id="results"></div>
@@ -103,12 +110,12 @@
     が簡略化したものを同梱。すべての処理はブラウザ内で完結します (通信なし・file:// で動作)。
   </footer>
   <!-- ?v= はキャッシュバスター。ファイルを更新したら番号を上げる -->
-  <script src="data/japan_pref.js?v=9"></script>
-  <script src="data/japan_muni.js?v=9"></script>
-  <script src="data/places.js?v=9"></script>
-  <script src="data/chome.js?v=9"></script>
-  <script src="data/stations.js?v=9"></script>
-  <script src="data/hist.js?v=9"></script>
-  <script src="app.js?v=9"></script>
+  <script src="data/japan_pref.js?v=11"></script>
+  <script src="data/japan_muni.js?v=11"></script>
+  <script src="data/places.js?v=11"></script>
+  <script src="data/chome.js?v=11"></script>
+  <script src="data/stations.js?v=11"></script>
+  <script src="data/hist.js?v=11"></script>
+  <script src="app.js?v=11"></script>
 </body>
 </html>
