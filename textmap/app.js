@@ -932,9 +932,8 @@ function acceptSuggestion(entry) {
 function renderProposals() {
   const grid = document.getElementById("results");
   grid.innerHTML = "";
-  const annotMode = document.getElementById("annotMode").value;
+  document.getElementById("editGuide").hidden = false;
   buildProposals(currentAnalysis).forEach(spec => {
-    spec.annotMode = annotMode;
     spec.edits = annEdits[spec.id] || (annEdits[spec.id] = {});
     const svg = renderMap(spec);
     const card = document.createElement("div");
@@ -944,6 +943,7 @@ function renderProposals() {
       <div class="btns">
         <button class="dl" data-fmt="svg">SVG保存</button>
         <button class="dl" data-fmt="png">PNG保存</button>
+        <button class="clr" title="この案のラベルと点をすべて消して白地図にする (「編集をリセット」で戻せます)">注釈を全部消す</button>
         <button class="rst" title="この案の移動・拡縮・文字編集・削除をすべて元に戻す">編集をリセット</button>
       </div>`;
     const svgEl = card.querySelector(".mapBox svg");
@@ -952,6 +952,15 @@ function renderProposals() {
     card.querySelectorAll(".dl").forEach(btn => {
       btn.onclick = () => download(svgEl.outerHTML, spec.id, btn.dataset.fmt);
     });
+    // 一括編集: この案の全注釈 (ラベル・ドット) を消して白地図にする
+    card.querySelector(".clr").onclick = () => {
+      svgEl.querySelectorAll("g.ann").forEach(g => {
+        const ed = spec.edits[g.dataset.id] || (spec.edits[g.dataset.id] = {});
+        ed.text = "";
+        ed.hideDot = true;
+      });
+      renderProposals();
+    };
     // この案の手動調整 (移動・拡縮・文字編集・削除) をすべて元に戻す
     card.querySelector(".rst").onclick = () => {
       annEdits[spec.id] = {};
@@ -1138,9 +1147,6 @@ function triggerDL(url, name) {
 document.getElementById("goBtn").onclick = () => generate();
 document.getElementById("inputText").addEventListener("keydown", e => {
   if ((e.metaKey || e.ctrlKey) && e.key === "Enter") generate();
-});
-document.getElementById("annotMode").addEventListener("change", () => {
-  if (currentAnalysis) renderProposals();
 });
 
 /* --- 共有リンク --- */

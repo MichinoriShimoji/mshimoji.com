@@ -42,10 +42,15 @@
     cursor: pointer; color: #234; white-space: nowrap;
   }
   #shareBtn:hover { background: #e0e8ea; }
-  #annotMode {
-    font-family: inherit; font-size: 12px; padding: 4px 8px;
-    border: 1px solid #9ab; border-radius: 7px; background: white; color: #234;
+  #editGuide {
+    margin: 4px 0 18px; padding: 12px 16px;
+    background: #eef2f0; border-left: 4px solid #35524a; border-radius: 8px;
+    font-size: 13px; line-height: 1.9; color: #2b3b36;
   }
+  #editGuide .egHead { margin-bottom: 4px; }
+  #editGuide ul { list-style: none; }
+  #editGuide li { display: inline-block; margin-right: 22px; }
+  #editGuide li b { color: #35524a; }
   #chips { margin: 6px 0 18px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
   .note { font-size: 12px; color: #777; }
   .chip {
@@ -93,28 +98,31 @@
   </div>
   <div class="toolRow">
     <button id="shareBtn">共有リンクをコピー</button>
-    <label class="note" for="annotMode">注釈:</label>
-    <select id="annotMode">
-      <option value="full">地名ラベル+ドット</option>
-      <option value="dots">ドットのみ</option>
-      <option value="none">注釈なし</option>
-    </select>
     <span class="note">生成するとテクストがURLに保存され、リンクを開くだけで同じ地図を再現できます</span>
-    <span class="note">生成後の地図では: ラベルも点もドラッグで移動 / ラベルはダブルクリックで文字編集 / 点はクリックで拡大・⌥+クリックで縮小 / 右クリックで削除 / 「編集をリセット」で全部元に戻る。保存には調整結果が反映されます</span>
   </div>
   <div id="chips"></div>
+  <div id="editGuide" hidden>
+    <div class="egHead">地図はまず注釈フルで生成されます。ここから先は<b>地図の上で直接編集</b>してください(結果はそのまま SVG / PNG 保存に反映):</div>
+    <ul>
+      <li><b>動かす</b> — ラベルも点（ドット）もドラッグでどこへでも。引き出し線は自動で付け外し</li>
+      <li><b>書き換える</b> — ラベルをダブルクリックして文字を編集</li>
+      <li><b>大きさを変える</b> — 点をクリックで拡大、⌥(Alt)+クリックで縮小</li>
+      <li><b>消す</b> — ラベルや点を右クリック（タッチは長押し）。「注釈を全部消す」で白地図だけにも</li>
+      <li><b>元に戻す</b> — ラベルは⌥+ダブルクリックで位置、点はダブルクリックで位置とサイズ。「編集をリセット」で案ごとに全部</li>
+    </ul>
+  </div>
   <div id="results"></div>
   <footer>
     地図データ出典: 国土交通省 国土数値情報 行政区域データ (N03, 2024年版) を
     簡略化して同梱 (許容誤差約50m)。すべての処理はブラウザ内で完結します (通信なし・file:// で動作)。
   </footer>
   <!-- ?v= はキャッシュバスター。ファイルを更新したら番号を上げる -->
-  <script src="data/japan_pref.js?v=13"></script>
-  <script src="data/japan_muni.js?v=13"></script>
-  <script src="data/places.js?v=13"></script>
-  <script src="data/chome.js?v=13"></script>
-  <script src="data/stations.js?v=13"></script>
-  <script src="data/hist.js?v=13"></script>
-  <script src="app.js?v=13"></script>
+  <script src="data/japan_pref.js?v=14"></script>
+  <script src="data/japan_muni.js?v=14"></script>
+  <script src="data/places.js?v=14"></script>
+  <script src="data/chome.js?v=14"></script>
+  <script src="data/stations.js?v=14"></script>
+  <script src="data/hist.js?v=14"></script>
+  <script src="app.js?v=14"></script>
 </body>
 </html>
