@@ -8,6 +8,8 @@
 /* ================= TopoJSON デコード ================= */
 
 function decodeTopo(topo, objName) {
+  // オブジェクト名はデータ再生成で変わりうるので、無ければ最初のキーを使う
+  if (!objName || !topo.objects[objName]) objName = Object.keys(topo.objects)[0];
   const tr = topo.transform;
   const arcs = topo.arcs.map(arc => {
     let x = 0, y = 0;
@@ -467,13 +469,15 @@ function makeProj(extent, w, h, pad) {
 function featPath(f, proj, extent) {
   let d = "";
   f.polys.forEach(rings => {
-    // ポリゴン全体が範囲外ならスキップ
-    let inside = false;
+    // ポリゴンの外接矩形が表示範囲と交差しなければスキップ。
+    // (「頂点が範囲内にあるか」で判定すると、大きなポリゴンの内部に
+    //  深くズームしたとき頂点が1つも入らず陸地ごと消えることがある)
+    let bx0 = 1e9, by0 = 1e9, bx1 = -1e9, by1 = -1e9;
     for (const pt of rings[0]) {
-      if (pt[0] >= extent[0] && pt[0] <= extent[2] &&
-          pt[1] >= extent[1] && pt[1] <= extent[3]) { inside = true; break; }
+      if (pt[0] < bx0) bx0 = pt[0]; if (pt[0] > bx1) bx1 = pt[0];
+      if (pt[1] < by0) by0 = pt[1]; if (pt[1] > by1) by1 = pt[1];
     }
-    if (!inside) return;
+    if (bx1 < extent[0] || bx0 > extent[2] || by1 < extent[1] || by0 > extent[3]) return;
     rings.forEach(r => {
       let rd = "", x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
       r.forEach((pt, i) => {
@@ -632,27 +636,30 @@ function renderMap(spec) {
     const id = "p|" + j.name + "|" + (nameSeq[j.name] = (nameSeq[j.name] || 0) + 1);
     const ed = edits[id] || {};
     const dx = ed.dx || 0, dy = ed.dy || 0, rs = ed.r || 1;
-    const showDot = mode !== "none" && (j.dot || mode === "dots");
+    const mx = ed.mx || 0, my = ed.my || 0;   // ドットの移動量 (ドラッグ)
+    const showDot = mode !== "none" && (j.dot || mode === "dots") && !ed.hideDot;
     const withLabel = mode === "full";
     if (!showDot && !withLabel) return;
     parts.push(`<g class="ann" data-id="${escA(id)}" data-px="${j.px.toFixed(1)}" data-py="${j.py.toFixed(1)}">`);
     if (showDot) {
-      parts.push(`<circle class="dot" cx="${j.px.toFixed(1)}" cy="${j.py.toFixed(1)}" r="${(dotR * rs).toFixed(1)}" data-r0="${dotR.toFixed(1)}" fill="#222" stroke="white" stroke-width="${(1.4 * zs).toFixed(1)}"/>`);
-      dotHits.push({ id, x: j.px, y: j.py, r: dotR * rs + 3 });
+      parts.push(`<circle class="dot" cx="${(j.px + mx).toFixed(1)}" cy="${(j.py + my).toFixed(1)}" r="${(dotR * rs).toFixed(1)}" data-r0="${dotR.toFixed(1)}" fill="#222" stroke="white" stroke-width="${(1.4 * zs).toFixed(1)}"/>`);
+      dotHits.push({ id, x: j.px + mx, y: j.py + my, r: dotR * rs + 3 });
     }
-    if (withLabel) {
-      const textW = j.name.length * fs + (j.box ? 14 : 4);
+    // ラベル文字はダブルクリックで編集可能 (ed.text)。空文字なら非表示
+    const disp = ed.text != null ? ed.text : j.name;
+    if (withLabel && disp !== "") {
+      const textW = disp.length * fs + (j.box ? 14 : 4);
       const pos = placeLabel(j.px, j.py, textW, fs + (j.box ? 10 : 2), placed, W, H);
       const b = pos.box;
-      // 引き出し線 (調整後のラベル位置から計算。近ければ非表示)
-      const lg = leaderGeom(j.px, j.py, [b[0] + dx, b[1] + dy, b[2] + dx, b[3] + dy]);
+      // 引き出し線 (調整後のドット位置・ラベル位置から計算。近ければ非表示)
+      const lg = leaderGeom(j.px + mx, j.py + my, [b[0] + dx, b[1] + dy, b[2] + dx, b[3] + dy]);
       parts.push(`<line class="lead" x1="${lg.x1.toFixed(1)}" y1="${lg.y1.toFixed(1)}" x2="${lg.x2.toFixed(1)}" y2="${lg.y2.toFixed(1)}" stroke="#777" stroke-width="${(0.8 * zs).toFixed(1)}"${lg.show ? "" : ' display="none"'}/>`);
       parts.push(`<g class="lblg" data-x0="${b[0].toFixed(1)}" data-y0="${b[1].toFixed(1)}" data-x1="${b[2].toFixed(1)}" data-y1="${b[3].toFixed(1)}" transform="translate(${dx.toFixed(1)},${dy.toFixed(1)})">`);
       if (j.box) {
         parts.push(`<rect x="${(pos.lx - 2).toFixed(1)}" y="${(pos.ly - fs - 4).toFixed(1)}" width="${textW}" height="${fs + 10}" rx="6" fill="white" stroke="#3a3a3a" stroke-width="1.1"/>`);
-        parts.push(`<text x="${(pos.lx + 5).toFixed(1)}" y="${(pos.ly + 1).toFixed(1)}" font-size="${fs}" fill="${C.ink}">${esc(j.name)}</text>`);
+        parts.push(`<text x="${(pos.lx + 5).toFixed(1)}" y="${(pos.ly + 1).toFixed(1)}" font-size="${fs}" fill="${C.ink}">${esc(disp)}</text>`);
       } else {
-        parts.push(`<text x="${pos.lx.toFixed(1)}" y="${pos.ly.toFixed(1)}" font-size="${fs}" fill="${C.ink}" stroke="white" stroke-width="3" paint-order="stroke">${esc(j.name)}</text>`);
+        parts.push(`<text x="${pos.lx.toFixed(1)}" y="${pos.ly.toFixed(1)}" font-size="${fs}" fill="${C.ink}" stroke="white" stroke-width="3" paint-order="stroke">${esc(disp)}</text>`);
       }
       parts.push(`</g>`);
     }
@@ -665,10 +672,12 @@ function renderMap(spec) {
     const id = "r|" + j.name;
     const ed = edits[id] || {};
     const dx = ed.dx || 0, dy = ed.dy || 0;
-    const w = j.name.length * fsR;
+    const disp = ed.text != null ? ed.text : j.name;
+    if (disp === "") return;
+    const w = disp.length * fsR;
     parts.push(`<g class="ann" data-id="${escA(id)}">` +
       `<g class="lblg" data-x0="${j.x.toFixed(1)}" data-y0="${(j.y - fsR).toFixed(1)}" data-x1="${(j.x + w).toFixed(1)}" data-y1="${(j.y + 4).toFixed(1)}" transform="translate(${dx.toFixed(1)},${dy.toFixed(1)})">` +
-      `<text x="${j.x.toFixed(1)}" y="${j.y.toFixed(1)}" font-size="${fsR}" fill="#4a4a4a">${esc(j.name)}</text>` +
+      `<text x="${j.x.toFixed(1)}" y="${j.y.toFixed(1)}" font-size="${fsR}" fill="#4a4a4a">${esc(disp)}</text>` +
       `</g></g>`);
   });
 
@@ -694,9 +703,11 @@ function renderMap(spec) {
         const id = "c|" + f.code;
         const ed = edits[id] || {};
         const dx = ed.dx || 0, dy = ed.dy || 0;
+        const disp = ed.text != null ? ed.text : f.name;
+        if (disp === "") return;
         parts.push(`<g class="ann" data-id="${escA(id)}">` +
           `<g class="lblg" data-x0="${box[0].toFixed(1)}" data-y0="${box[1].toFixed(1)}" data-x1="${box[2].toFixed(1)}" data-y1="${box[3].toFixed(1)}" transform="translate(${dx.toFixed(1)},${dy.toFixed(1)})">` +
-          `<text x="${px.toFixed(1)}" y="${py.toFixed(1)}" font-size="${fsC}" fill="#8f8f8f" text-anchor="middle" stroke="white" stroke-width="2.5" paint-order="stroke">${esc(f.name)}</text>` +
+          `<text x="${px.toFixed(1)}" y="${py.toFixed(1)}" font-size="${fsC}" fill="#8f8f8f" text-anchor="middle" stroke="white" stroke-width="2.5" paint-order="stroke">${esc(disp)}</text>` +
           `</g></g>`);
       });
   }
@@ -714,7 +725,7 @@ function renderMap(spec) {
   parts.push(`<text x="34" y="70" font-size="13" fill="#333" text-anchor="middle">北</text>`);
 
   // --- クレジット ---
-  parts.push(`<text x="${W - 8}" y="${H - 8}" font-size="9" fill="#aaa" text-anchor="end">出典: 国土数値情報(N03,N02), Geolonia住所データ, 歴史的行政区域データセット(CODH), 簡略化: smartnews-smri/japan-topography</text>`);
+  parts.push(`<text x="${W - 8}" y="${H - 8}" font-size="9" fill="#aaa" text-anchor="end">出典: 国土数値情報(N03,N02)を加工, Geolonia住所データ, 歴史的行政区域データセット(CODH)</text>`);
   parts.push(`</svg>`);
   return parts.join("\n");
 }
@@ -933,6 +944,7 @@ function renderProposals() {
       <div class="btns">
         <button class="dl" data-fmt="svg">SVG保存</button>
         <button class="dl" data-fmt="png">PNG保存</button>
+        <button class="rst" title="この案の移動・拡縮・文字編集・削除をすべて元に戻す">編集をリセット</button>
       </div>`;
     const svgEl = card.querySelector(".mapBox svg");
     attachAnnotEdit(svgEl, spec);
@@ -940,6 +952,11 @@ function renderProposals() {
     card.querySelectorAll(".dl").forEach(btn => {
       btn.onclick = () => download(svgEl.outerHTML, spec.id, btn.dataset.fmt);
     });
+    // この案の手動調整 (移動・拡縮・文字編集・削除) をすべて元に戻す
+    card.querySelector(".rst").onclick = () => {
+      annEdits[spec.id] = {};
+      renderProposals();
+    };
     grid.appendChild(card);
   });
 }
@@ -964,7 +981,9 @@ function attachAnnotEdit(svg, spec) {
       if (!lead || !lblg) return;
       const dx = ed.dx || 0, dy = ed.dy || 0;
       const d = lblg.dataset;
-      const lg = leaderGeom(px, py, [+d.x0 + dx, +d.y0 + dy, +d.x1 + dx, +d.y1 + dy]);
+      // ドットが動かされていれば (ed.mx/my) その位置から引く
+      const lg = leaderGeom(px + (ed.mx || 0), py + (ed.my || 0),
+                            [+d.x0 + dx, +d.y0 + dy, +d.x1 + dx, +d.y1 + dy]);
       lead.setAttribute("x1", lg.x1.toFixed(1));
       lead.setAttribute("y1", lg.y1.toFixed(1));
       lead.setAttribute("x2", lg.x2.toFixed(1));
@@ -991,35 +1010,99 @@ function attachAnnotEdit(svg, spec) {
       const end = () => { drag = null; };
       lblg.addEventListener("pointerup", end);
       lblg.addEventListener("pointercancel", end);
-      lblg.addEventListener("dblclick", () => {   // ダブルクリックで位置リセット
-        ed.dx = 0; ed.dy = 0;
-        lblg.setAttribute("transform", "translate(0,0)");
-        updateLeader();
+      // ダブルクリック: ラベル文字の編集 (空欄で非表示)。⌥+ダブルクリックで位置リセット
+      lblg.addEventListener("dblclick", e => {
+        if (e.altKey) {
+          ed.dx = 0; ed.dy = 0;
+          lblg.setAttribute("transform", "translate(0,0)");
+          updateLeader();
+          return;
+        }
+        const t = lblg.querySelector("text");
+        const cur = ed.text != null ? ed.text : (t ? t.textContent : "");
+        const val = prompt("ラベルの文字を編集 (空欄にすると非表示):", cur);
+        if (val === null) return;
+        ed.text = val;
+        renderProposals();   // 幅・引き出し線を含めて再描画 (編集値は保持される)
+      });
+      // 右クリック (タッチは長押し) でラベルを削除。「編集をリセット」で復元できる
+      lblg.addEventListener("contextmenu", e => {
+        e.preventDefault();
+        ed.text = "";
+        renderProposals();
       });
     }
   });
 
-  // ドットの拡縮は最前面の透明ヒット円で受ける (ラベル文字に覆われた
-  // ドットへのクリックがテキストに吸われるのを防ぐ)
+  // ドットの操作は最前面の透明ヒット円で受ける (ラベル文字に覆われた
+  // ドットへのクリックがテキストに吸われるのを防ぐ)。
+  // ドラッグで移動、クリックで拡大 (⌥/Shiftで縮小)、右クリックで削除、
+  // ダブルクリックで位置・サイズをリセット
   svg.querySelectorAll("circle.dot-hit").forEach(hit => {
     const g = svg.querySelector(`g.ann[data-id="${CSS.escape(hit.dataset.for)}"]`);
     const dot = g && g.querySelector(".dot");
     if (!dot) return;
-    const ed = edits[hit.dataset.for] || (edits[hit.dataset.for] = {});
+    const id = hit.dataset.for;
+    const ed = edits[id] || (edits[id] = {});
     const r0 = parseFloat(dot.dataset.r0);
+    const px = parseFloat(g.dataset.px), py = parseFloat(g.dataset.py);
+    const lead = g.querySelector(".lead"), lblg = g.querySelector(".lblg");
     const apply = () => {
+      dot.setAttribute("cx", (px + (ed.mx || 0)).toFixed(1));
+      dot.setAttribute("cy", (py + (ed.my || 0)).toFixed(1));
       dot.setAttribute("r", (r0 * (ed.r || 1)).toFixed(1));
+      hit.setAttribute("cx", (px + (ed.mx || 0)).toFixed(1));
+      hit.setAttribute("cy", (py + (ed.my || 0)).toFixed(1));
       hit.setAttribute("r", (r0 * (ed.r || 1) + 3).toFixed(1));
+      if (lead && lblg) {
+        const dx = ed.dx || 0, dy = ed.dy || 0;
+        const d = lblg.dataset;
+        const lg = leaderGeom(px + (ed.mx || 0), py + (ed.my || 0),
+                              [+d.x0 + dx, +d.y0 + dy, +d.x1 + dx, +d.y1 + dy]);
+        lead.setAttribute("x1", lg.x1.toFixed(1));
+        lead.setAttribute("y1", lg.y1.toFixed(1));
+        lead.setAttribute("x2", lg.x2.toFixed(1));
+        lead.setAttribute("y2", lg.y2.toFixed(1));
+        if (lg.show) lead.removeAttribute("display");
+        else lead.setAttribute("display", "none");
+      }
     };
+    let drag = null, moved = false;
+    hit.addEventListener("pointerdown", e => {
+      e.preventDefault();
+      drag = { start: toSvg(e), mx0: ed.mx || 0, my0: ed.my || 0 };
+      moved = false;
+      hit.setPointerCapture(e.pointerId);
+    });
+    hit.addEventListener("pointermove", e => {
+      if (!drag) return;
+      const p = toSvg(e);
+      const nx = drag.mx0 + p.x - drag.start.x;
+      const ny = drag.my0 + p.y - drag.start.y;
+      // 3px 未満はクリック扱い (拡縮) にするため動かさない
+      if (!moved && Math.hypot(nx - drag.mx0, ny - drag.my0) < 3) return;
+      moved = true;
+      ed.mx = nx; ed.my = ny;
+      apply();
+    });
+    const end = () => { drag = null; };
+    hit.addEventListener("pointerup", end);
+    hit.addEventListener("pointercancel", end);
     hit.addEventListener("click", e => {          // クリックで拡大、⌥/Shiftで縮小
+      if (moved) { moved = false; return; }       // ドラッグ直後の click は無視
       let r = ed.r || 1;
       r = (e.altKey || e.shiftKey) ? r / 1.25 : r * 1.25;
       ed.r = Math.max(0.4, Math.min(3, r));
       apply();
     });
-    hit.addEventListener("dblclick", () => {      // ダブルクリックでサイズリセット
-      ed.r = 1;
+    hit.addEventListener("dblclick", () => {      // ダブルクリックで位置・サイズをリセット
+      ed.r = 1; ed.mx = 0; ed.my = 0;
       apply();
+    });
+    hit.addEventListener("contextmenu", e => {    // 右クリックでドットを削除
+      e.preventDefault();
+      ed.hideDot = true;
+      renderProposals();
     });
   });
 }

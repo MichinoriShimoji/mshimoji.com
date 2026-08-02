@@ -72,9 +72,9 @@ data/stations.js     駅辞書: [駅名, 市区町村コード, 経度, 緯度] 
 
 ## データ出典・ライセンス
 
-- 行政区域ポリゴン: 国土交通省「国土数値情報（行政区域データ N03）」を
-  [smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography)
-  が簡略化したデータ（2021年版）を同梱しています。
+- 行政区域ポリゴン: 国土交通省「国土数値情報（行政区域データ N03、2024年版）」を
+  mapshaper で簡略化（許容誤差約50m・市区町村単位に集約）して同梱しています
+  （再生成手順は開発リポジトリの scripts/build_topo.sh）。
   利用の際は国土数値情報の出典明記が必要です（地図内クレジットに記載済み）。
 - 駅辞書: 国土交通省「国土数値情報（鉄道データ N02、2024年版）」の駅位置から生成。
 - 町字辞書: [Geolonia 住所データ](https://github.com/geolonia/japanese-addresses)
