@@ -233,6 +233,18 @@ const DICT = (() => {
     add(name, "magiri", { name, lon, lat, muniCode, prefCode: "47" });
   });
 
+  // 追加の島辞書 (Wikidata由来, islands_ext.js)。手作り辞書 (places.js) が正で、
+  // 同名キーが既にあればスキップする (竹富島などが曖昧化しないように)。
+  // 3文字以上・「島」で終わる名前のみ収録済み (「大島」等の一般語は手作りのみ)
+  {
+    const taken0 = new Set([...map.values()].map(e => norm(e.key)));
+    (window.ISLANDS_EXT || []).forEach(([name, muniCode, lon, lat]) => {
+      if (taken0.has(norm(name))) return;
+      add(name, "island", { name, lon, lat, muniCode: muniCode || null,
+                            prefCode: muniCode ? muniCode.slice(0, 2) : null });
+    });
+  }
+
   // 町字 (大字レベル, Geolonia住所データ由来)
   // 一般語と同形で誤検出しやすい名前はストップワードとして除外
   // 実在の町字だが一般語として頻出し誤検出の害が大きいもの

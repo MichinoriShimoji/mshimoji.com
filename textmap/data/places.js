@@ -95,6 +95,12 @@ window.EXTRA_PLACES = [
   { name: "下甑島",     type: "island", lon: 129.72,  lat: 31.65, muni: "46215" },
 
   // --- 島 (その他全国) ---
+  // 2文字の島名はWikidata一括辞書の対象外 (一般語との誤爆回避) なので、
+  // よく言及されるものだけここに手動登録する
+  { name: "直島",       type: "island", lon: 133.995, lat: 34.46, muni: "37364" },
+  { name: "飛島",       type: "island", lon: 139.55,  lat: 39.19, muni: "06204" },
+  { name: "粟島",       type: "island", lon: 139.26,  lat: 38.46, muni: "15482" },
+  { name: "粟島",       type: "island", lon: 133.63,  lat: 34.27, muni: "37202" },
   { name: "種子島",     type: "island", lon: 130.97,  lat: 30.60 },
   { name: "屋久島",     type: "island", lon: 130.50,  lat: 30.34 },
   { name: "佐渡島",     type: "island", lon: 138.35,  lat: 38.05 },
