@@ -92,7 +92,13 @@
   }
   .cardHead { padding: 10px 14px 8px; display: flex; align-items: baseline; gap: 10px; }
   .cardHead b { font-size: 14px; }
-  .cardHead span { font-size: 11px; color: #888; }
+  .cardHead > span { font-size: 11px; color: #888; }
+  .zoomCtl { margin-left: auto; display: flex; gap: 4px; }
+  .zoomCtl button {
+    font-family: inherit; font-size: 12px; padding: 2px 9px;
+    border: 1px solid #bbb; border-radius: 6px; background: #fafafa; cursor: pointer;
+  }
+  .zoomCtl button:hover { background: #eee; }
   .mapBox { border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
   .mapBox svg { display: block; width: 100%; height: auto; }
   .mapBox svg .lblg { cursor: grab; touch-action: none; }
@@ -143,6 +149,7 @@
       <li><b>大きさを変える</b> — 点をクリックで拡大、⌥(Alt)+クリックで縮小</li>
       <li><b>消す</b> — ラベルや点を右クリック（タッチは長押し）。「注釈を全部消す」で白地図だけにも</li>
       <li><b>元に戻す</b> — ラベルは⌥+ダブルクリックで位置、点はダブルクリックで位置とサイズ。「編集をリセット」で案ごとに全部</li>
+      <li><b>ズーム</b> — マウスホイールか「＋/−」ボタンで拡大縮小、地図の何もない所をドラッグで表示範囲を移動。「範囲リセット」で自動の範囲へ</li>
     </ul>
   </div>
   <div id="results"></div>
@@ -155,12 +162,12 @@
     (<a href="https://github.com/MichinoriShimoji/japan-text-map">GitHub</a>)
   </footer>
   <!-- ?v= はキャッシュバスター。ファイルを更新したら番号を上げる -->
-  <script src="data/japan_pref.js?v=17"></script>
-  <script src="data/japan_muni.js?v=17"></script>
-  <script src="data/places.js?v=17"></script>
-  <script src="data/chome.js?v=17"></script>
-  <script src="data/stations.js?v=17"></script>
-  <script src="data/hist.js?v=17"></script>
-  <script src="app.js?v=17"></script>
+  <script src="data/japan_pref.js?v=18"></script>
+  <script src="data/japan_muni.js?v=18"></script>
+  <script src="data/places.js?v=18"></script>
+  <script src="data/chome.js?v=18"></script>
+  <script src="data/stations.js?v=18"></script>
+  <script src="data/hist.js?v=18"></script>
+  <script src="app.js?v=18"></script>
 </body>
 </html>

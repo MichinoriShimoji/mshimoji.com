@@ -62,12 +62,18 @@ window.EXTRA_PLACES = [
   { name: "竹島",       type: "island", lon: 131.867, lat: 37.243, muni: "32528" },
 
   // --- 集落・通称 (公式の大字・小字データに現れない地名) ---
-  { name: "佐良浜",     type: "point", lon: 125.183, lat: 24.840, muni: "47214" },
-  { name: "池間添",     type: "point", lon: 125.186, lat: 24.838, muni: "47214" },
-  { name: "前里添",     type: "point", lon: 125.180, lat: 24.842, muni: "47214" },
-  { name: "仲地",       type: "point", lon: 125.155, lat: 24.822, muni: "47214" },
-  { name: "国仲",       type: "point", lon: 125.163, lat: 24.827, muni: "47214" },
-  { name: "佐和田",     type: "point", lon: 125.135, lat: 24.833, muni: "47214" },
+  // 伊良部島の集落。座標は地理院タイル注記 (居住地名, 2.5万分の1) より (2026-08-03取得)。
+  // 全国に同名の町字がある名前は type: "chome" にして文脈解決に乗せる
+  // (伊良部島・宮古島市の言及がなければ既定で除外され、誤った場所に点を打たない)。
+  // 「伊良部」は島名と同語幹のため point として登録 (chome だと冗長除外の対象になる)
+  { name: "佐良浜",     type: "chome", lon: 125.207, lat: 24.842, muni: "47214" },
+  { name: "池間添",     type: "chome", lon: 125.209, lat: 24.839, muni: "47214" },
+  { name: "前里添",     type: "chome", lon: 125.207, lat: 24.845, muni: "47214" },
+  { name: "仲地",       type: "chome", lon: 125.173, lat: 24.821, muni: "47214" },
+  { name: "国仲",       type: "chome", lon: 125.167, lat: 24.827, muni: "47214" },
+  { name: "佐和田",     type: "chome", lon: 125.164, lat: 24.843, muni: "47214" },
+  { name: "長浜",       type: "chome", lon: 125.168, lat: 24.839, muni: "47214" },
+  { name: "伊良部",     type: "point", lon: 125.179, lat: 24.819, muni: "47214" },
 
   // --- 島 (その他全国) ---
   { name: "種子島",     type: "island", lon: 130.97,  lat: 30.60 },

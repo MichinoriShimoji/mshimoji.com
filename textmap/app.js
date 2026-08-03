@@ -121,11 +121,13 @@ const prefFeats = decodeTopo(window.PREF_TOPO, "prefectures").map(f => {
 const prefByCode = {};
 prefFeats.forEach(f => prefByCode[f.code] = f);
 
-const muniFeats = decodeTopo(window.MUNI_TOPO, "N03-21_210101").map(f => ({
+// N03-2024 の属性: 政令指定都市の区は N03_004=市名, N03_005=区名 (N03_003は空)。
+// 郡部の町村は N03_003=郡名, N03_004=町村名。区は N03_005 を名前に、市名をグループに使う
+const muniFeats = decodeTopo(window.MUNI_TOPO, "muni").map(f => ({
   ...f,
   pref: f.props.N03_001,
-  group: f.props.N03_003 || "",
-  name: f.props.N03_004 || "",
+  group: f.props.N03_005 ? (f.props.N03_004 || "") : (f.props.N03_003 || ""),
+  name: f.props.N03_005 || f.props.N03_004 || "",
   code: f.props.N03_007 || "",
 })).filter(f => f.name && f.name !== "所属未定地");
 muniFeats.forEach(f => {
@@ -231,7 +233,11 @@ const DICT = (() => {
   Object.entries(window.CHOME).forEach(([muniCode, arr]) => {
     arr.forEach(([name, lon, lat]) => {
       if (CHOME_STOP.has(name)) return;
-      add(name, "chome", { name, lon, lat, muniCode, prefCode: muniCode.slice(0, 2) });
+      // 接頭の「字」「大字」は剥がしてキーにする (青森の「大字◯◯」、沖縄の「字◯◯」など)。
+      // テクスト側は「字長浜」と書かれても中の「長浜」でマッチできる
+      const stripped = name.replace(/^大?字/, "");
+      const key = stripped.length >= 2 ? stripped : name;
+      add(key, "chome", { name, lon, lat, muniCode, prefCode: muniCode.slice(0, 2) });
     });
   });
 
@@ -302,7 +308,8 @@ function analyzeText(text, accepted = new Set()) {
     // 方言形エイリアスなど)
     const kanaCh = KATA_ONLY.test(e.nkey) ? KATA_CH
                  : HIRA_ONLY.test(e.nkey) ? HIRA_CH : null;
-    let idx = 0, hit = false;
+    let idx = 0;
+    const spans = [];
     while ((idx = ntext.indexOf(e.nkey, idx)) !== -1) {
       const end = idx + e.nkey.length;
       const okBoundary = !kanaCh ||
@@ -310,11 +317,11 @@ function analyzeText(text, accepted = new Set()) {
          !(end < ntext.length && kanaCh.test(ntext[end])));
       if (okBoundary && !claimed.some(c => idx < c[1] && c[0] < end)) {
         claimed.push([idx, end]);
-        hit = true;
+        spans.push([idx, end]);
       }
       idx = end;
     }
-    if (hit) found.push({ ...e, excluded: false, ambiguous: false });
+    if (spans.length) found.push({ ...e, spans, excluded: false, ambiguous: false });
   }
 
   // 「もしかして」から採用された地名を追加
@@ -339,6 +346,24 @@ function analyzeText(text, accepted = new Set()) {
     }
   });
 
+  // 政令市・郡の言及で、同名の区・町村を解決する (「仙台市青葉区」の青葉区は
+  // 横浜市にもあるが、仙台市が出ていれば仙台市の区に絞れる)
+  const cityMembers = new Set();
+  found.forEach(e => {
+    if (e.kind === "city" && !e.excluded)
+      e.cands.forEach(c => c.members.forEach(m => cityMembers.add(m.code)));
+  });
+  found.forEach(e => {
+    if (e.kind === "muni" && e.excluded && e.ambiguous) {
+      const inCity = e.cands.filter(c => cityMembers.has(c.code));
+      if (inCity.length >= 1) {
+        e.cands = inCity;
+        e.excluded = false;
+        e.ambiguous = false;
+      }
+    }
+  });
+
   // 文脈の市区町村コード (町字・駅の解決に使う)
   const ctxMuni = new Set();
   found.forEach(e => {
@@ -347,9 +372,25 @@ function analyzeText(text, accepted = new Set()) {
     if (e.kind === "city") e.cands.forEach(c => c.members.forEach(m => ctxMuni.add(m.code)));
   });
 
-  // 町字・駅・旧市町村・間切・島・地点の曖昧解決: 市区町村 → 都道府県 の順で文脈を見る
+  // 島・地点の曖昧解決を先に行い、その所属市町村も文脈に加える
+  // (「伊良部島の佐和田」のように、島の言及で町字の同名候補を絞れるようにする)
   found.forEach(e => {
-    if (["chome", "station", "hist", "magiri", "island", "point"].includes(e.kind) && e.cands.length > 1) {
+    if ((e.kind === "island" || e.kind === "point") && e.cands.length > 1) {
+      let inCtx = e.cands.filter(c => ctxMuni.has(c.muniCode));
+      if (!inCtx.length) inCtx = e.cands.filter(c => ctx.has(c.prefCode));
+      if (inCtx.length >= 1) e.cands = inCtx;
+      else { e.ambiguous = true; e.excluded = true; }
+    }
+  });
+  found.forEach(e => {
+    if (e.excluded) return;
+    if (e.kind === "island" || e.kind === "point" || e.kind === "magiri")
+      e.cands.forEach(c => { if (c.muniCode) ctxMuni.add(c.muniCode); });
+  });
+
+  // 町字・駅・旧市町村・間切の曖昧解決: 市区町村 → 都道府県 の順で文脈を見る
+  found.forEach(e => {
+    if (["chome", "station", "hist", "magiri"].includes(e.kind) && e.cands.length > 1) {
       let inCtx = e.cands.filter(c => ctxMuni.has(c.muniCode));
       if (!inCtx.length) inCtx = e.cands.filter(c => ctx.has(c.prefCode));
       if (inCtx.length >= 1) e.cands = inCtx;
@@ -357,11 +398,12 @@ function analyzeText(text, accepted = new Set()) {
     }
   });
 
-  // 市町村名・島名と同語幹の町字は冗長マッチとみなして除外
-  // (例: 「深浦町」言及時の「深浦方言」の深浦 = 深浦町内の大字「深浦」、
-  //      「池間島」言及時の「池間方言」の池間 = 池間島の小字「池間」)。
-  // 語幹が一致すれば町字の所在は問わない (「五木方言」の五木が
-  // 他県の同名町字にマッチして残るのを防ぐ)
+  // 市町村名・島名と同語幹の町字は、「〜方言」「〜弁」「〜語」のような
+  // 言語名の複合語の中でだけマッチした場合に冗長とみなして除外する
+  // (例: 「深浦町」言及時の「深浦方言」の深浦、「池間島」言及時の「池間方言」の池間。
+  //  語幹が一致すれば町字の所在は問わない — 「五木方言」の五木が他県の同名町字に
+  //  マッチして残るのを防ぐ)。単独で現れた場合 (「伊良部島の伊良部」など) は
+  //  実在の集落への言及なので残す
   const muniStems = new Set();
   found.forEach(e => {
     if (e.kind === "muni" && !e.excluded)
@@ -375,7 +417,10 @@ function analyzeText(text, accepted = new Set()) {
   found.forEach(e => {
     if (e.kind !== "chome" || e.excluded) return;
     const k = norm(e.key);
-    if (muniStems.has(k) || islandStems.has(k)) e.excluded = true;
+    if (!muniStems.has(k) && !islandStems.has(k)) return;
+    const compoundOnly = (e.spans || []).every(([, end]) =>
+      end < ntext.length && /[方弁語]/.test(ntext[end]));
+    if (compoundOnly) e.excluded = true;
   });
 
   // 表示フラグ
@@ -867,11 +912,12 @@ let currentAnalysis = null;
 let currentText = "";
 let acceptedSug = new Set();   // 採用済みの「もしかして」提案 ("key kind")
 let annEdits = {};             // 注釈の手動調整 {specId: {annId: {dx,dy,r}}}
+let zoomExt = {};              // 手動ズーム・パン後の表示範囲 {specId: extent}
 
 function generate(updateHash = true) {
   const text = document.getElementById("inputText").value.trim();
   if (!text) return;
-  if (text !== currentText) { acceptedSug = new Set(); annEdits = {}; }
+  if (text !== currentText) { acceptedSug = new Set(); annEdits = {}; zoomExt = {}; }
   currentText = text;
   currentAnalysis = analyzeText(text, acceptedSug);
   renderChips();
@@ -936,26 +982,46 @@ function renderProposals() {
   document.getElementById("editGuide").hidden = false;
   buildProposals(currentAnalysis).forEach(spec => {
     spec.edits = annEdits[spec.id] || (annEdits[spec.id] = {});
-    const svg = renderMap(spec);
+    const defaultExtent = spec.extent;
+    if (zoomExt[spec.id]) spec.extent = zoomExt[spec.id];
     const card = document.createElement("div");
     card.className = "card";
-    card.innerHTML = `<div class="cardHead"><b>${spec.title}</b><span>${spec.desc}</span></div>
-      <div class="mapBox">${svg}</div>
+    card.innerHTML = `<div class="cardHead"><b>${spec.title}</b><span>${spec.desc}</span>
+        <span class="zoomCtl">
+          <button class="zi" title="拡大 (ホイールでも)">＋</button>
+          <button class="zo" title="縮小 (ホイールでも)">−</button>
+          <button class="zr" title="自動で決めた表示範囲に戻す">範囲リセット</button>
+        </span></div>
+      <div class="mapBox"></div>
       <div class="btns">
         <button class="dl" data-fmt="svg">SVG保存</button>
         <button class="dl" data-fmt="png">PNG保存</button>
         <button class="clr" title="この案のラベルと点をすべて消して白地図にする (「編集をリセット」で戻せます)">注釈を全部消す</button>
         <button class="rst" title="この案の移動・拡縮・文字編集・削除をすべて元に戻す">編集をリセット</button>
       </div>`;
-    const svgEl = card.querySelector(".mapBox svg");
-    attachAnnotEdit(svgEl, spec);
+    const box = card.querySelector(".mapBox");
+    // この案だけを再描画する (ズーム・パン時に使う)。注釈の編集値は再適用される
+    const rerender = () => {
+      box.innerHTML = renderMap(spec);
+      attachAnnotEdit(box.querySelector("svg"), spec);
+    };
+    rerender();
+    attachZoomPan(box, spec, rerender);
     // 保存は編集後の現在の状態を書き出す
     card.querySelectorAll(".dl").forEach(btn => {
-      btn.onclick = () => download(svgEl.outerHTML, spec.id, btn.dataset.fmt);
+      btn.onclick = () => download(box.querySelector("svg").outerHTML, spec.id, btn.dataset.fmt);
     });
+    // ズーム操作
+    card.querySelector(".zi").onclick = () => zoomBy(spec, 1 / 1.5, null, rerender);
+    card.querySelector(".zo").onclick = () => zoomBy(spec, 1.5, null, rerender);
+    card.querySelector(".zr").onclick = () => {
+      delete zoomExt[spec.id];
+      spec.extent = defaultExtent;
+      rerender();
+    };
     // 一括編集: この案の全注釈 (ラベル・ドット) を消して白地図にする
     card.querySelector(".clr").onclick = () => {
-      svgEl.querySelectorAll("g.ann").forEach(g => {
+      box.querySelectorAll("g.ann").forEach(g => {
         const ed = spec.edits[g.dataset.id] || (spec.edits[g.dataset.id] = {});
         ed.text = "";
         ed.hideDot = true;
@@ -969,6 +1035,76 @@ function renderProposals() {
     };
     grid.appendChild(card);
   });
+}
+
+/* --- ズーム・パン: 表示範囲 (extent) を操作して再描画する --- */
+
+const ZOOM_MIN_SPAN = 0.015, ZOOM_MAX_SPAN = 45;
+
+// factor<1 で拡大、>1 で縮小。anchor ([lon,lat]) を支点に伸縮する (nullなら中心)
+function zoomBy(spec, factor, anchor, rerender) {
+  const e = spec.extent;
+  const maxSpan = Math.max(e[2] - e[0], e[3] - e[1]);
+  let f = factor;
+  if (maxSpan * f < ZOOM_MIN_SPAN) f = ZOOM_MIN_SPAN / maxSpan;
+  if (maxSpan * f > ZOOM_MAX_SPAN) f = ZOOM_MAX_SPAN / maxSpan;
+  const ax = anchor ? anchor[0] : (e[0] + e[2]) / 2;
+  const ay = anchor ? anchor[1] : (e[1] + e[3]) / 2;
+  const ne = [ax - (ax - e[0]) * f, ay - (ay - e[1]) * f,
+              ax + (e[2] - ax) * f, ay + (e[3] - ay) * f];
+  zoomExt[spec.id] = ne;
+  spec.extent = ne;
+  rerender();
+}
+
+// makeProj と同じ計算で、クライアント座標 → 経緯度
+function clientToLonLat(rect, extent, cx, cy) {
+  const W = 820, H = 620, pad = 24;
+  const vx = (cx - rect.left) * W / rect.width;
+  const vy = (cy - rect.top) * H / rect.height;
+  const midLat = (extent[1] + extent[3]) / 2;
+  const k = Math.cos(midLat * Math.PI / 180);
+  const dx = (extent[2] - extent[0]) * k, dy = extent[3] - extent[1];
+  const s = Math.min((W - 2 * pad) / dx, (H - 2 * pad) / dy);
+  const ox = (W - s * dx) / 2, oy = (H - s * dy) / 2;
+  return [extent[0] + (vx - ox) / (s * k), extent[3] - (vy - oy) / s];
+}
+
+// mapBox (再描画してもDOMが残る親) にホイールズームと背景ドラッグのパンを付ける
+function attachZoomPan(box, spec, rerender) {
+  box.addEventListener("wheel", e => {
+    e.preventDefault();
+    const anchor = clientToLonLat(box.getBoundingClientRect(), spec.extent, e.clientX, e.clientY);
+    zoomBy(spec, e.deltaY > 0 ? 1.3 : 1 / 1.3, anchor, rerender);
+  }, { passive: false });
+
+  let pan = null, raf = 0;
+  box.addEventListener("pointerdown", e => {
+    // ラベル・ドットの操作は妨げない (それらは自身のハンドラで処理)
+    if (e.target.closest(".lblg") || e.target.closest(".dot-hit")) return;
+    if (e.button !== 0) return;
+    e.preventDefault();
+    pan = { x: e.clientX, y: e.clientY, ext: spec.extent.slice() };
+    box.setPointerCapture(e.pointerId);
+  });
+  box.addEventListener("pointermove", e => {
+    if (!pan) return;
+    const rect = box.getBoundingClientRect();
+    const W = 820, H = 620, pad = 24;
+    const midLat = (pan.ext[1] + pan.ext[3]) / 2;
+    const k = Math.cos(midLat * Math.PI / 180);
+    const dx = (pan.ext[2] - pan.ext[0]) * k, dy = pan.ext[3] - pan.ext[1];
+    const s = Math.min((W - 2 * pad) / dx, (H - 2 * pad) / dy);
+    const dLon = (e.clientX - pan.x) * (W / rect.width) / (s * k);
+    const dLat = (e.clientY - pan.y) * (H / rect.height) / s;
+    const ne = [pan.ext[0] - dLon, pan.ext[1] + dLat, pan.ext[2] - dLon, pan.ext[3] + dLat];
+    zoomExt[spec.id] = ne;
+    spec.extent = ne;
+    if (!raf) raf = requestAnimationFrame(() => { raf = 0; rerender(); });
+  });
+  const endPan = () => { pan = null; };
+  box.addEventListener("pointerup", endPan);
+  box.addEventListener("pointercancel", endPan);
 }
 
 /* --- 注釈の手動調整: ラベルはドラッグで移動、ドットはクリックで拡縮 --- */
