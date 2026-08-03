@@ -1,0 +1,33 @@
+cff-version: 1.2.0
+message: >-
+  研究で本ツールを使用した場合は、以下の情報で引用してください。
+  If you use this tool in your research, please cite it as below.
+type: software
+title: "テクスト→地図ジェネレーター (Japan Text-to-Map Generator)"
+authors:
+  - family-names: Shimoji
+    given-names: Michinori
+    # ORCID をお持ちなら次の行のコメントを外して記入してください
+    # orcid: "https://orcid.org/0000-0000-0000-0000"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.21766019"
+    description: "全バージョン共通の concept DOI"
+repository-code: "https://github.com/MichinoriShimoji/japan-text-map"
+url: "https://michinorishimoji.github.io/japan-text-map/"
+license: MIT
+version: 1.0.0
+date-released: 2026-08-03
+abstract: >-
+  地名を含む日本語テクストから地名を辞書ベースで検出し、注釈付きの白地図
+  (SVG/PNG) を3案自動生成するブラウザ完結型ツール。言語学・方言学の分布記述を
+  主な用途とし、市区町村・町字・駅・島・旧市町村・間切 (沖縄) など約19万件の
+  地名辞書と、国土数値情報 (N03, 2024年版) に基づく行政区域ポリゴンを同梱する。
+  生成後はラベル・ドットをドラッグ等で直接編集でき、編集結果が保存に反映される。
+keywords:
+  - dialectology
+  - linguistics
+  - cartography
+  - Japanese
+  - linguistic geography
+  - map generation

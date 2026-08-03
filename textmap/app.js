@@ -724,7 +724,8 @@ function renderMap(spec) {
   parts.push(`<path d="M34 16 L29 27 L39 27 Z" fill="#333"/>`);
   parts.push(`<text x="34" y="70" font-size="13" fill="#333" text-anchor="middle">北</text>`);
 
-  // --- クレジット ---
+  // --- クレジット (2行: 作図ツールのDOIとデータ出典) ---
+  parts.push(`<text x="${W - 8}" y="${H - 19}" font-size="9" fill="#aaa" text-anchor="end">作図: テクスト→地図ジェネレーター (doi:10.5281/zenodo.21766019)</text>`);
   parts.push(`<text x="${W - 8}" y="${H - 8}" font-size="9" fill="#aaa" text-anchor="end">出典: 国土数値情報(N03,N02)を加工, Geolonia住所データ, 歴史的行政区域データセット(CODH)</text>`);
   parts.push(`</svg>`);
   return parts.join("\n");
