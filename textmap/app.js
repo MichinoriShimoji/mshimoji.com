@@ -1389,10 +1389,13 @@ function attachAnnotEdit(svg, spec) {
         ed.text = val;
         renderProposals();   // 幅・引き出し線を含めて再描画 (編集値は保持される)
       });
-      // 右クリック (タッチは長押し) でラベルを削除。「編集をリセット」で復元できる
+      // 右クリック (タッチは長押し) でラベルをドットごと削除。
+      // ラベルだけ消したい場合はダブルクリック→空欄 (ドットは残る)。
+      // 「編集をリセット」で復元できる
       lblg.addEventListener("contextmenu", e => {
         e.preventDefault();
         ed.text = "";
+        ed.hideDot = true;
         renderProposals();
       });
     }
