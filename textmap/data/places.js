@@ -75,6 +75,25 @@ window.EXTRA_PLACES = [
   { name: "長浜",       type: "chome", lon: 125.168, lat: 24.839, muni: "47214" },
   { name: "伊良部",     type: "point", lon: 125.179, lat: 24.819, muni: "47214" },
 
+  // --- 島 (伊豆諸島・小笠原) ---
+  { name: "伊豆大島",   type: "island", lon: 139.395, lat: 34.73, muni: "13361" },
+  { name: "利島",       type: "island", lon: 139.28,  lat: 34.52, muni: "13362" },
+  { name: "新島",       type: "island", lon: 139.26,  lat: 34.37, muni: "13363" },
+  { name: "式根島",     type: "island", lon: 139.21,  lat: 34.33, muni: "13363" },
+  { name: "神津島",     type: "island", lon: 139.15,  lat: 34.21, muni: "13364" },
+  { name: "三宅島",     type: "island", lon: 139.52,  lat: 34.08, muni: "13381" },
+  { name: "御蔵島",     type: "island", lon: 139.60,  lat: 33.87, muni: "13382" },
+  { name: "八丈島",     type: "island", lon: 139.79,  lat: 33.11, muni: "13401" },
+  { name: "八丈小島",   type: "island", lon: 139.69,  lat: 33.13, muni: "13401" },
+  { name: "青ヶ島",     type: "island", lon: 139.76,  lat: 32.46, muni: "13402" },
+  { name: "父島",       type: "island", lon: 142.19,  lat: 27.07, muni: "13421" },
+  { name: "母島",       type: "island", lon: 142.16,  lat: 26.63, muni: "13421" },
+
+  // --- 島 (甑島列島, 薩摩川内市) ---
+  { name: "上甑島",     type: "island", lon: 129.855, lat: 31.855, muni: "46215" },
+  { name: "中甑島",     type: "island", lon: 129.82,  lat: 31.78, muni: "46215" },
+  { name: "下甑島",     type: "island", lon: 129.72,  lat: 31.65, muni: "46215" },
+
   // --- 島 (その他全国) ---
   { name: "種子島",     type: "island", lon: 130.97,  lat: 30.60 },
   { name: "屋久島",     type: "island", lon: 130.50,  lat: 30.34 },
@@ -199,6 +218,11 @@ window.REGIONS = [
   { name: "奄美群島",   bbox: [128.2, 26.9, 130.2, 28.6] },
   { name: "沖縄諸島",   bbox: [126.6, 26.0, 128.4, 27.2] },
   { name: "宮古諸島",   bbox: [124.5, 24.4, 125.6, 25.1] },
+  { name: "伊豆諸島",   bbox: [138.9, 32.3, 139.95, 34.85] },
+  // 「小笠原」単独は諸島への言及とみなす (本土の同名町字より優先される)
+  { name: "小笠原諸島", bbox: [140.85, 24.2, 142.35, 27.8] },
+  { name: "小笠原",     bbox: [140.85, 24.2, 142.35, 27.8] },
+  { name: "甑島列島",   bbox: [129.6, 31.55, 129.95, 31.92] },
   { name: "八重山諸島", bbox: [122.8, 23.9, 124.5, 24.8] },
 ];
 

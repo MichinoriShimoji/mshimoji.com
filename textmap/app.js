@@ -525,6 +525,17 @@ function analyzeText(text, accepted = new Set()) {
     if (compoundOnly) e.excluded = true;
   });
 
+  // 「〜方言」の複合語をまたいで切り出された町字を除外する
+  // (「里方言」の「里方」が実在の町字にマッチする類。マッチ末尾が「方」で
+  //  直後が「言」なら、テクスト上は「◯◯方言」の一部とみなす)
+  found.forEach(e => {
+    if (e.kind !== "chome" || e.excluded) return;
+    if (!/方$/.test(norm(e.key))) return;
+    const compoundOnly = (e.spans || []).every(([, end]) =>
+      end < ntext.length && ntext[end] === "言");
+    if (compoundOnly) e.excluded = true;
+  });
+
   // 表示フラグ
   const flags = {
     prefBorder: /県境|府県境|都道府県.{0,3}境/.test(text),
