@@ -81,6 +81,7 @@
       <h2 class="section-title"><span class="ja-inline">主な機能</span><span class="en-inline">Features</span></h2>
       <ul class="feature-list ja">
         <li>都道府県・市区町村・町字（大字・小字、全国約18.5万件）・駅名（全国約8,900駅）・島・地方名・旧市町村・間切（沖縄）を自動検出</li>
+        <li>駅や路線名が出てくると鉄道路線も描画（「西武線」のような会社名は、言及された駅を通る路線に自動で絞り込み）。大学・学校・病院などのランドマーク約4.4万件にも対応</li>
         <li>「福岡市博多区の御供所町」のような住所文脈を理解し、焦点となる地名に自動でズーム</li>
         <li>同名の地名（例:「本町」は全国に約280か所）は文脈の市区町村・都道府県から自動で絞り込み</li>
         <li>ヶ/ケの表記ゆれに加え、旧字体・異体字（「山形縣」「米澤市」など約220字）も正規化してマッチ</li>
@@ -92,6 +93,7 @@
       </ul>
       <ul class="feature-list en">
         <li>Automatic detection of prefectures, municipalities, town/village-level place names (~185,000 nationwide), railway stations (~8,900), islands, regions, former municipalities, and Okinawan magiri districts</li>
+        <li>Railway lines are drawn when stations or line names appear (company names like "Seibu Line" are narrowed to lines serving the mentioned stations); ~44,000 landmarks (universities, schools, hospitals) are also supported</li>
         <li>Understands address context such as "御供所町, Hakata Ward, Fukuoka City" and automatically zooms to the focal place</li>
         <li>Ambiguous place names (e.g., ~280 places named "Honmachi") are resolved from the surrounding context</li>
         <li>Handles orthographic variation such as ヶ/ケ as well as pre-reform kanji variants (e.g., 山形縣, 米澤市; ~220 characters)</li>
@@ -106,10 +108,10 @@
     <section class="section">
       <h2 class="section-title"><span class="ja-inline">出典表記について</span><span class="en-inline">Attribution</span></h2>
       <p class="ja" style="line-height:1.8; text-align:justify;">
-        地図データには国土数値情報（行政区域データN03・鉄道データN02）および
+        地図データには国土数値情報（行政区域N03・鉄道N02・学校P29・医療機関P04）および
         Geolonia住所データ（CC BY 4.0）を使用しています。生成される地図にはクレジットが記載されます。
         トリミング等でクレジットを外して論文・書籍等に掲載する場合は、
-        「国土数値情報（行政区域データN03・鉄道データN02）およびGeolonia住所データを加工して作成」等の出典表記をお願いします。
+        「国土数値情報（行政区域N03・鉄道N02・学校P29・医療機関P04）およびGeolonia住所データを加工して作成」等の出典表記をお願いします。
       </p>
       <p class="en" style="line-height:1.8; text-align:justify;">
         The map data is based on the National Land Numerical Information (Administrative Boundaries N03 and Railways N02)

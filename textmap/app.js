@@ -164,6 +164,13 @@ const VARIANT_PAIRS =
 const VMAP = new Map();
 for (let i = 0; i < VARIANT_PAIRS.length; i += 2)
   VMAP.set(VARIANT_PAIRS[i], VARIANT_PAIRS[i + 1]);
+// 全角英数字→半角 (「ＪＲ東京総合病院」のような施設名表記に多い)
+for (let i = 0; i < 26; i++) {
+  VMAP.set(String.fromCharCode(0xFF21 + i), String.fromCharCode(65 + i));
+  VMAP.set(String.fromCharCode(0xFF41 + i), String.fromCharCode(97 + i));
+}
+for (let i = 0; i < 10; i++)
+  VMAP.set(String.fromCharCode(0xFF10 + i), String.fromCharCode(48 + i));
 
 function norm(s) {
   let out = "";
@@ -229,7 +236,8 @@ const DICT = (() => {
   // 町字 (大字レベル, Geolonia住所データ由来)
   // 一般語と同形で誤検出しやすい名前はストップワードとして除外
   // 実在の町字だが一般語として頻出し誤検出の害が大きいもの
-  const CHOME_STOP = new Set(["一部", "離島", "本島", "海岸", "山地", "平野", "高原", "渡り"]);
+  const CHOME_STOP = new Set(["一部", "離島", "本島", "海岸", "山地", "平野", "高原", "渡り",
+                              "学校", "病院", "大学", "駅前"]);
   Object.entries(window.CHOME).forEach(([muniCode, arr]) => {
     arr.forEach(([name, lon, lat]) => {
       if (CHOME_STOP.has(name)) return;
@@ -241,17 +249,66 @@ const DICT = (() => {
     });
   });
 
-  // 駅: 正式名+「駅」は常に登録
-  window.STATIONS.forEach(([name, muniCode, lon, lat]) => {
+  // ランドマーク (学校・病院、landmarks.js)。cls は 大学/高校/病院 などの種別
+  (window.LANDMARKS || []).forEach(([name, muniCode, lon, lat, cls]) => {
+    const cand = { name, lon, lat, muniCode, prefCode: muniCode.slice(0, 2), cls };
+    const keys = new Set([name]);
+    // 「青森県立深浦高等学校」→「深浦高等学校」のような設置者接頭辞を
+    // 剥がした形でも引けるようにする (剥がした残りが短すぎるものは除く:
+    // 「横浜市立大学」→「大学」のような校名自体が短いケース)
+    const stripped = name.replace(/^(国立|私立|公立)/, "")
+                         .replace(/^[^\s]{1,6}?[都道府県市町村区]立/, "");
+    // 「盛岡市立高等学校」のように固有名部分が無い校名では、剥がした残りが
+    // 一般語になるので登録しない
+    if (stripped !== name && stripped.length >= 4 &&
+        !/^(高等学校|中学校|小学校|大学|短期大学|高等専門学校|病院)$/.test(stripped))
+      keys.add(stripped);
+    // 高等学校⇔高校 の表記ゆれキー
+    [...keys].forEach(k => {
+      if (/高等学校$/.test(k)) keys.add(k.replace(/高等学校$/, "高校"));
+      else if (/高校$/.test(k)) keys.add(k.replace(/高校$/, "高等学校"));
+    });
+    keys.forEach(k => add(k, "landmark", cand));
+  });
+
+  // 鉄道路線 (rail.js)。cand.rails は window.RAIL の添字リスト
+  const RAIL_STOP = new Set(["本線", "新幹線"]);   // 単独では一般的すぎる名前
+  const railByName = new Map();
+  (window.RAIL || []).forEach((r, idx) => {
+    if (!railByName.has(r.n)) railByName.set(r.n, []);
+    railByName.get(r.n).push(idx);
+  });
+  railByName.forEach((idxs, name) => {
+    if (RAIL_STOP.has(name)) return;
+    const cand = { name, rails: idxs };
+    add(name, "rail", cand);
+    // ◯◯本線⇔◯◯線 の表記ゆれキー (実在の別路線名は上書きしない)
+    let alt = null;
+    if (/本線$/.test(name)) alt = name.replace(/本線$/, "線");
+    else if (/線$/.test(name) && !/(新幹線|本線)$/.test(name)) alt = name.replace(/線$/, "本線");
+    if (alt && alt.length >= 3 && !railByName.has(alt)) add(alt, "rail", cand);
+    // 「4号線(中央線)」のような併記名は括弧内でも引けるようにする
+    const m = name.match(/[(（]([^)）]+)[)）]/);
+    if (m && m[1].length >= 2 && !RAIL_STOP.has(m[1])) add(m[1], "rail", cand);
+  });
+
+  // 会社の通称 (「西武線」など、places.js の RAILCO)。
+  // rail キーの後に登録する (同名衝突時は具体的な路線名を優先)
+  (window.RAILCO || []).forEach(([alias, company]) => {
+    add(alias, "railco", { name: alias, company });
+  });
+
+  // 駅: 正式名+「駅」は常に登録。lines は rail.js の添字 (乗り入れ路線)
+  window.STATIONS.forEach(([name, muniCode, lon, lat, lines]) => {
     add(name + "駅", "station",
-        { name: name + "駅", lon, lat, muniCode, prefCode: muniCode.slice(0, 2) });
+        { name: name + "駅", lon, lat, muniCode, prefCode: muniCode.slice(0, 2), lines: lines || [] });
   });
   // 駅名単独 (「恋ヶ窪」等) は、3文字以上かつ他の地名と衝突しない場合のみ登録
   // (「大学前」のような一般語の暴発と、市町村名等との二重マッチを防ぐ)
   const taken = new Set([...map.values()].map(e => norm(e.key)));
-  window.STATIONS.forEach(([name, muniCode, lon, lat]) => {
+  window.STATIONS.forEach(([name, muniCode, lon, lat, lines]) => {
     if (name.length >= 3 && !taken.has(norm(name))) {
-      add(name, "station", { name, lon, lat, muniCode, prefCode: muniCode.slice(0, 2) });
+      add(name, "station", { name, lon, lat, muniCode, prefCode: muniCode.slice(0, 2), lines: lines || [] });
     }
   });
 
@@ -388,13 +445,58 @@ function analyzeText(text, accepted = new Set()) {
       e.cands.forEach(c => { if (c.muniCode) ctxMuni.add(c.muniCode); });
   });
 
-  // 町字・駅・旧市町村・間切の曖昧解決: 市区町村 → 都道府県 の順で文脈を見る
+  // 同名ランドマークでも互いに近接していれば同一機関のキャンパス群とみなして
+  // 全部残す (東京大学の本郷・駒場・柏など)。全国に散る同名校は曖昧扱いのまま
   found.forEach(e => {
-    if (["chome", "station", "hist", "magiri"].includes(e.kind) && e.cands.length > 1) {
+    if (e.kind !== "landmark" || e.cands.length <= 1) return;
+    let b = null;
+    e.cands.forEach(c => { b = mergeBbox(b, [c.lon, c.lat, c.lon, c.lat]); });
+    if (b[2] - b[0] < 0.6 && b[3] - b[1] < 0.6) e.campus = true;
+  });
+
+  // 町字・駅・旧市町村・間切・ランドマークの曖昧解決:
+  // 市区町村 → 都道府県 の順で文脈を見る
+  found.forEach(e => {
+    if (e.campus) return;
+    if (["chome", "station", "hist", "magiri", "landmark"].includes(e.kind) && e.cands.length > 1) {
       let inCtx = e.cands.filter(c => ctxMuni.has(c.muniCode));
       if (!inCtx.length) inCtx = e.cands.filter(c => ctx.has(c.prefCode));
       if (inCtx.length >= 1) e.cands = inCtx;
       else { e.ambiguous = true; e.excluded = true; }
+    }
+  });
+
+  // 駅・ランドマークの言及も市区町村の文脈に加えて、曖昧のままの
+  // 町字・旧市町村・間切を再試行する (「恋ヶ窪で下車…国分寺まで」の
+  // 国分寺は、恋ヶ窪駅が国分寺市にあることから絞れる)
+  found.forEach(e => {
+    if (e.excluded) return;
+    if ((e.kind === "station" || e.kind === "landmark") && e.cands.length === 1 && e.cands[0].muniCode)
+      ctxMuni.add(e.cands[0].muniCode);
+  });
+  found.forEach(e => {
+    if (["chome", "hist", "magiri"].includes(e.kind) && e.excluded && e.ambiguous) {
+      const inCtx = e.cands.filter(c => ctxMuni.has(c.muniCode));
+      if (inCtx.length >= 1) {
+        e.cands = inCtx;
+        e.excluded = false;
+        e.ambiguous = false;
+      }
+    }
+  });
+
+  // それでも曖昧なままの町字が、文脈の市区町村にある駅名と一致するなら
+  // 駅として拾い直す (「中央線で国分寺まで行き」の国分寺 = 国分寺駅)
+  found.forEach(e => {
+    if (e.kind !== "chome" || !e.excluded || !e.ambiguous) return;
+    const st = DICT_BY_ID.get(e.key + "駅 station");
+    if (!st) return;
+    const inCtx = st.cands.filter(c => ctxMuni.has(c.muniCode));
+    if (inCtx.length === 1) {
+      e.kind = "station";
+      e.cands = inCtx;
+      e.excluded = false;
+      e.ambiguous = false;
     }
   });
 
@@ -631,6 +733,64 @@ function renderMap(spec) {
     if (d) parts.push(`<path d="${d}" fill="${C.muniHi}" fill-opacity="0.55" stroke="#555" stroke-width="0.6" stroke-linejoin="round"/>`);
   });
 
+  // --- 鉄道路線 ---
+  // 路線名の言及 (rail) はその路線を描く。会社の通称 (railco, 「西武線」など) は、
+  // 言及された駅を通るその会社の路線だけに絞る (「西武線で恋ヶ窪へ」→国分寺線)。
+  // 駅から特定できないときはその会社の全路線 (表示範囲でクリップされる)
+  const railIdx = new Set();
+  active.forEach(i => {
+    if (i.kind === "rail")
+      i.cands.forEach(c => c.rails.forEach(x => railIdx.add(x)));
+  });
+  const railComps = [];
+  active.forEach(i => { if (i.kind === "railco") railComps.push(i.cands[0].company); });
+  if (railComps.length) {
+    const stLines = new Set();
+    active.forEach(i => {
+      if (i.kind === "station")
+        i.cands.forEach(c => (c.lines || []).forEach(x => stLines.add(x)));
+    });
+    railComps.forEach(comp => {
+      let hit = false;
+      stLines.forEach(x => { if (window.RAIL[x].c === comp) { railIdx.add(x); hit = true; } });
+      if (!hit) window.RAIL.forEach((r, x) => { if (r.c === comp) railIdx.add(x); });
+    });
+  }
+  const railLabelJobs = [];
+  if (railIdx.size) {
+    let dRail = "";
+    railIdx.forEach(x => {
+      const r = window.RAIL[x];
+      const inPts = [];
+      (r.s || []).forEach(seg => {
+        let bx0 = 1e9, by0 = 1e9, bx1 = -1e9, by1 = -1e9;
+        seg.forEach(p => {
+          if (p[0] < bx0) bx0 = p[0]; if (p[0] > bx1) bx1 = p[0];
+          if (p[1] < by0) by0 = p[1]; if (p[1] > by1) by1 = p[1];
+        });
+        if (bx1 < extent[0] || bx0 > extent[2] || by1 < extent[1] || by0 > extent[3]) return;
+        let d = "";
+        seg.forEach((p, i) => {
+          d += (i ? "L" : "M") + proj.x(p[0]).toFixed(1) + " " + proj.y(p[1]).toFixed(1);
+          if (p[0] >= extent[0] && p[0] <= extent[2] && p[1] >= extent[1] && p[1] <= extent[3])
+            inPts.push(p);
+        });
+        dRail += d;
+      });
+      if (inPts.length) {
+        // ラベル位置の候補: 中点を第一候補に、線上の別の点も控えとして持つ
+        const cand = [0.5, 0.3, 0.7, 0.15, 0.85].map(f =>
+          inPts[Math.min(inPts.length - 1, Math.floor(inPts.length * f))]);
+        railLabelJobs.push({ name: r.n,
+          pts: cand.map(p => [proj.x(p[0]), proj.y(p[1])]) });
+      }
+    });
+    if (dRail) {
+      parts.push(`<path d="${dRail}" fill="none" stroke="white" stroke-width="${(3.2 * zs).toFixed(1)}" stroke-linejoin="round" stroke-linecap="round"/>`);
+      parts.push(`<path d="${dRail}" fill="none" stroke="#3d3d3d" stroke-width="${(1.4 * zs).toFixed(1)}" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="${(7 * zs).toFixed(1)} ${(3.5 * zs).toFixed(1)}"/>`);
+    }
+  }
+
   // --- 地方の破線囲み (bbox 型の region のみ、注釈なしモードでは省略) ---
   if (mode !== "none") active.forEach(i => {
     if (i.kind !== "region" || !i.cands[0].bbox) return;
@@ -655,7 +815,7 @@ function renderMap(spec) {
         if (lon < extent[0] || lon > extent[2] || lat < extent[1] || lat > extent[3]) return;
         labelJobs.push({ name: i.key, px: proj.x(lon), py: proj.y(lat), dot: true, box: boxLabels });
       });
-    } else if (["island", "point", "chome", "station", "hist", "magiri"].includes(i.kind)) {
+    } else if (["island", "point", "chome", "station", "hist", "magiri", "landmark"].includes(i.kind)) {
       i.cands.forEach(c => {
         if (c.lon < extent[0] || c.lon > extent[2] || c.lat < extent[1] || c.lat > extent[3]) return;
         labelJobs.push({ name: i.key, px: proj.x(c.lon), py: proj.y(c.lat), dot: i.kind !== "island", box: boxLabels });
@@ -726,6 +886,37 @@ function renderMap(spec) {
       `</g></g>`);
   });
 
+  // --- 路線名ラベル (ドラッグ可能。表示範囲内の路線の中間点に置く) ---
+  if (mode === "full" && railLabelJobs.length) {
+    const fsL = Math.round(12 * zs);
+    const seenRail = new Set();
+    railLabelJobs.forEach(j => {
+      if (seenRail.has(j.name)) return;
+      seenRail.add(j.name);
+      const id = "rl|" + j.name;
+      const ed = edits[id] || {};
+      const disp = ed.text != null ? ed.text : j.name;
+      if (disp === "") return;
+      const w = disp.length * fsL;
+      // 他のラベルと重ならない位置を線上の候補点から選ぶ
+      let px = null, py = null, box = null;
+      for (const [cx, cy] of j.pts) {
+        const b = [cx - w / 2, cy - fsL, cx + w / 2, cy + 4];
+        if (b[0] < 4 || b[2] > W - 4 || b[1] < 4 || b[3] > H - 4) continue;
+        if (placed.some(p => b[0] < p[2] && p[0] < b[2] && b[1] < p[3] && p[1] < b[3])) continue;
+        px = cx; py = cy; box = b;
+        break;
+      }
+      if (!box) return;
+      placed.push(box);
+      const dx = ed.dx || 0, dy = ed.dy || 0;
+      parts.push(`<g class="ann" data-id="${escA(id)}">` +
+        `<g class="lblg" data-x0="${box[0].toFixed(1)}" data-y0="${box[1].toFixed(1)}" data-x1="${box[2].toFixed(1)}" data-y1="${box[3].toFixed(1)}" transform="translate(${dx.toFixed(1)},${dy.toFixed(1)})">` +
+        `<text x="${px.toFixed(1)}" y="${py.toFixed(1)}" font-size="${fsL}" fill="#4d4d4d" text-anchor="middle" stroke="white" stroke-width="3" paint-order="stroke">${esc(disp)}</text>` +
+        `</g></g>`);
+    });
+  }
+
   // --- 周辺の市区町村名 (文脈ラベル) ---
   // ズームが深いときだけ、範囲内の市区町村名を控えめなグレーで表示する。
   // 面積の大きい順に最大12件。対象 (強調塗り) と重なるラベルは除外
@@ -771,7 +962,7 @@ function renderMap(spec) {
 
   // --- クレジット (2行: 作図ツールのDOIとデータ出典) ---
   parts.push(`<text x="${W - 8}" y="${H - 19}" font-size="9" fill="#aaa" text-anchor="end">作図: テクスト→地図ジェネレーター (doi:10.5281/zenodo.21766019)</text>`);
-  parts.push(`<text x="${W - 8}" y="${H - 8}" font-size="9" fill="#aaa" text-anchor="end">出典: 国土数値情報(N03,N02)を加工, Geolonia住所データ, 歴史的行政区域データセット(CODH)</text>`);
+  parts.push(`<text x="${W - 8}" y="${H - 8}" font-size="9" fill="#aaa" text-anchor="end">出典: 国土数値情報(N03,N02,P29,P04)を加工, Geolonia住所データ, 歴史的行政区域データセット(CODH)</text>`);
   parts.push(`</svg>`);
   return parts.join("\n");
 }
@@ -791,7 +982,7 @@ function contextInfo(items) {
   const act = items.filter(i => !i.excluded);
   const points = new Set();
   act.forEach(i => {
-    if (i.kind === "chome" || i.kind === "station")
+    if (i.kind === "chome" || i.kind === "station" || i.kind === "landmark")
       i.cands.forEach(c => points.add(c.muniCode));
   });
   const mentioned = new Set();
@@ -827,10 +1018,10 @@ function targetExtent(items) {
   });
   if (b) return { bbox: b, level: "region" };
 
-  // 点的な地名 (町字・駅は狭い余白、島・地点は広め)
+  // 点的な地名 (町字・駅・ランドマークは狭い余白、島・地点は広め)
   let pts = null;
   act.forEach(i => {
-    if (["chome", "station", "hist", "magiri"].includes(i.kind)) {
+    if (["chome", "station", "hist", "magiri", "landmark"].includes(i.kind)) {
       i.cands.forEach(c => {
         pts = mergeBbox(pts, [c.lon - 0.02, c.lat - 0.02, c.lon + 0.02, c.lat + 0.02]);
       });
@@ -856,10 +1047,30 @@ function targetExtent(items) {
   if (pts) return { bbox: pts, level: "point" };
   if (mb) return { bbox: mb, level: "muni" };
 
+  // 路線だけが言及された場合は、その路線の広がりを範囲にする
+  let rb = null;
+  act.forEach(i => {
+    if (i.kind === "rail")
+      i.cands.forEach(c => c.rails.forEach(x => { rb = mergeBbox(rb, railBbox(x)); }));
+  });
+  if (rb) return { bbox: rb, level: "muni" };
+
   act.forEach(i => {
     if (i.kind === "pref") b = mergeBbox(b, i.cands[0].mbox);
   });
   return b ? { bbox: b, level: "pref" } : null;
+}
+
+// 路線の外接矩形 (初回参照時に計算してキャッシュ)
+const railBboxCache = new Map();
+function railBbox(idx) {
+  if (railBboxCache.has(idx)) return railBboxCache.get(idx);
+  let b = null;
+  ((window.RAIL[idx] || {}).s || []).forEach(seg => seg.forEach(p => {
+    b = mergeBbox(b, [p[0], p[1], p[0], p[1]]);
+  }));
+  railBboxCache.set(idx, b || JAPAN_BBOX);
+  return railBboxCache.get(idx);
 }
 
 function clampBbox(b, lim) {
@@ -906,7 +1117,14 @@ function buildProposals(analysis) {
 const KIND_LABEL = { pref: "都道府県", muni: "市町村", city: "市・郡",
                      island: "島", point: "地点", region: "地方",
                      chome: "町字", station: "駅",
-                     hist: "旧市町村", magiri: "間切" };
+                     hist: "旧市町村", magiri: "間切",
+                     rail: "路線", railco: "路線" };
+
+// チップの種別表示。ランドマークは大学/高校/病院などの実種別を出す
+function kindLabel(item) {
+  if (item.kind === "landmark") return (item.cands[0] && item.cands[0].cls) || "施設";
+  return KIND_LABEL[item.kind] || item.kind;
+}
 
 let currentAnalysis = null;
 let currentText = "";
@@ -941,7 +1159,7 @@ function renderChips() {
     const c = document.createElement("button");
     c.className = "chip" + (item.excluded ? " off" : "") + (item.ambiguous ? " amb" : "");
     const alias = item.aliasOf ? "=" + esc(item.aliasOf) + "・" : "";
-    c.innerHTML = `${esc(item.key)}<small>${alias}${KIND_LABEL[item.kind] || item.kind}${item.ambiguous ? "・曖昧" : ""}</small>`;
+    c.innerHTML = `${esc(item.key)}<small>${alias}${kindLabel(item)}${item.ambiguous ? "・曖昧" : ""}</small>`;
     if (item.ambiguous)
       c.title = "同名の自治体が複数あるため既定では除外。クリックで全候補を表示します。";
     c.onclick = () => {

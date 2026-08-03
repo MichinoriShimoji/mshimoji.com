@@ -129,7 +129,8 @@
     ▶ 解説記事: <a href="https://note.com/lingfieldwork/n/n55ff8b169b1e" target="_blank" rel="noopener">「テクストを貼るだけで言語・方言の分布地図ができるツールを作った」（note）</a>
   </p>
   <p class="subnote">
-    都道府県・市区町村・町字（大字・小字）・駅名・島・地方名・旧市町村・間切（沖縄）を自動検出。「県境」「市町村境界」などの語にも反応します。
+    都道府県・市区町村・町字（大字・小字）・駅名・鉄道路線・学校・病院・島・地方名・旧市町村・間切（沖縄）を自動検出。「県境」「市町村境界」などの語にも反応します。
+    駅や路線名（「中央線」「西武線」など）が出てくると鉄道路線も地図に描かれます。
     旧字体・異体字（澤/沢・龍/竜など）や方言形（ピサラ=平良など）にも対応し、綴りが近い未知の語には「もしかして」候補を提示します。
   </p>
   <div class="inputRow">
@@ -162,12 +163,14 @@
     (<a href="https://github.com/MichinoriShimoji/japan-text-map">GitHub</a>)
   </footer>
   <!-- ?v= はキャッシュバスター。ファイルを更新したら番号を上げる -->
-  <script src="data/japan_pref.js?v=18"></script>
-  <script src="data/japan_muni.js?v=18"></script>
-  <script src="data/places.js?v=18"></script>
-  <script src="data/chome.js?v=18"></script>
-  <script src="data/stations.js?v=18"></script>
-  <script src="data/hist.js?v=18"></script>
-  <script src="app.js?v=18"></script>
+  <script src="data/japan_pref.js?v=19"></script>
+  <script src="data/japan_muni.js?v=19"></script>
+  <script src="data/places.js?v=19"></script>
+  <script src="data/chome.js?v=19"></script>
+  <script src="data/stations.js?v=19"></script>
+  <script src="data/rail.js?v=19"></script>
+  <script src="data/landmarks.js?v=19"></script>
+  <script src="data/hist.js?v=19"></script>
+  <script src="app.js?v=19"></script>
 </body>
 </html>
