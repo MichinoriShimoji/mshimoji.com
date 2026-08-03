@@ -9,18 +9,34 @@
 <meta property="og:title" content="テクスト→地図ジェネレーター">
 <meta property="og:description" content="地名を含むテクストから注釈付きの日本白地図を3案自動生成。SVG/PNG保存対応、ブラウザ内で完結。">
 <meta property="og:url" content="https://michinorishimoji.github.io/mshimoji.com/textmap/">
-<!-- og:image (絶対URL) を追記するとSNSプレビューが充実します -->
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://michinorishimoji.github.io/mshimoji.com/textmap/ogp.png">
+<meta name="twitter:card" content="summary_large_image">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --accent: #ec3013; --accent-dark: #c22a0f; --ink: #1f1f1f; }
   body {
     font-family: 'Hiragino Sans', 'Noto Sans JP', sans-serif;
-    background: #f4f4f2; color: #2b2b2b;
-    padding: 28px 20px 60px;
+    background: #f3f2f2; color: #2b2b2b;
+    padding: 34px 20px 60px;
     max-width: 1500px; margin: 0 auto;
   }
-  h1 { font-size: 21px; font-weight: 600; margin-bottom: 4px; }
-  p.lead { font-size: 13px; color: #666; margin-bottom: 18px; }
+  .eyebrow {
+    color: var(--accent); font-weight: 700; font-size: 13px;
+    letter-spacing: .28em; margin-bottom: 12px;
+  }
+  h1 {
+    font-size: clamp(26px, 3.6vw, 40px); font-weight: 700; color: var(--ink);
+    line-height: 1.4; letter-spacing: .01em; margin-bottom: 12px;
+  }
+  h1 .accent { color: var(--accent); }
+  p.lead { font-size: 14px; color: #555; margin-bottom: 14px; max-width: 780px; }
+  .badges { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 8px; }
+  .badge {
+    font-size: 13px; font-weight: 600; padding: 6px 14px;
+    border: 1.5px solid #222; background: white; color: var(--ink);
+  }
+  .badge.fill { background: var(--accent); border-color: var(--accent); color: white; }
+  p.subnote { font-size: 12px; color: #888; margin: 10px 0 20px; max-width: 900px; }
   .inputRow { display: flex; gap: 12px; align-items: stretch; margin-bottom: 12px; }
   textarea {
     flex: 1; min-height: 110px; padding: 12px 14px;
@@ -28,13 +44,13 @@
     border: 1px solid #ccc; border-radius: 10px; background: white;
     resize: vertical;
   }
-  textarea:focus { outline: 2px solid #8aa; }
+  textarea:focus { outline: 2px solid rgba(236, 48, 19, 0.4); }
   #goBtn {
-    padding: 0 30px; font-size: 15px; font-family: inherit; font-weight: 600;
-    border: none; border-radius: 10px; background: #35524a; color: white;
+    padding: 0 30px; font-size: 15px; font-family: inherit; font-weight: 700;
+    border: none; border-radius: 10px; background: var(--accent); color: white;
     cursor: pointer;
   }
-  #goBtn:hover { background: #2a4139; }
+  #goBtn:hover { background: var(--accent-dark); }
   .toolRow { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 8px; }
   #shareBtn {
     font-family: inherit; font-size: 12px; padding: 5px 14px;
@@ -44,13 +60,13 @@
   #shareBtn:hover { background: #e0e8ea; }
   #editGuide {
     margin: 4px 0 18px; padding: 12px 16px;
-    background: #eef2f0; border-left: 4px solid #35524a; border-radius: 8px;
-    font-size: 13px; line-height: 1.9; color: #2b3b36;
+    background: #faf1ef; border-left: 4px solid var(--accent); border-radius: 8px;
+    font-size: 13px; line-height: 1.9; color: #3a3230;
   }
   #editGuide .egHead { margin-bottom: 4px; }
   #editGuide ul { list-style: none; }
   #editGuide li { display: inline-block; margin-right: 22px; }
-  #editGuide li b { color: #35524a; }
+  #editGuide li b { color: var(--accent-dark); }
   #chips { margin: 6px 0 18px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
   .note { font-size: 12px; color: #777; }
   .chip {
@@ -86,10 +102,19 @@
 </style>
 </head>
 <body>
-  <h1>テクスト→地図ジェネレーター</h1>
+  <div class="eyebrow">TEXT → MAP</div>
+  <h1>地名を含む文を貼るだけの<span class="accent">白地図</span>ツール</h1>
   <p class="lead">
-    地名を含むテクストを入力すると、内容を解析して注釈付きの白地図を3案生成します。
-    都道府県・市区町村・町字（大字）・駅名・島・地方名・旧市町村・間切（沖縄）を自動検出し、「県境」「市町村境界」などの語にも反応します。
+    テクスト→地図ジェネレーター。テクストを解析して注釈付きの白地図を3案生成し、そのまま地図上で編集できます。
+    約19万件の地名辞書——旧市町村・間切・町字・駅名まで。すべてブラウザ内で完結。
+  </p>
+  <div class="badges">
+    <span class="badge">SVG / PNG 保存</span>
+    <span class="badge">ラベル手動調整</span>
+    <span class="badge fill">無料・登録不要</span>
+  </div>
+  <p class="subnote">
+    都道府県・市区町村・町字（大字・小字）・駅名・島・地方名・旧市町村・間切（沖縄）を自動検出。「県境」「市町村境界」などの語にも反応します。
     旧字体・異体字（澤/沢・龍/竜など）や方言形（ピサラ=平良など）にも対応し、綴りが近い未知の語には「もしかして」候補を提示します。
   </p>
   <div class="inputRow">
@@ -121,12 +146,12 @@
     (<a href="https://github.com/MichinoriShimoji/japan-text-map">GitHub</a>)
   </footer>
   <!-- ?v= はキャッシュバスター。ファイルを更新したら番号を上げる -->
-  <script src="data/japan_pref.js?v=15"></script>
-  <script src="data/japan_muni.js?v=15"></script>
-  <script src="data/places.js?v=15"></script>
-  <script src="data/chome.js?v=15"></script>
-  <script src="data/stations.js?v=15"></script>
-  <script src="data/hist.js?v=15"></script>
-  <script src="app.js?v=15"></script>
+  <script src="data/japan_pref.js?v=16"></script>
+  <script src="data/japan_muni.js?v=16"></script>
+  <script src="data/places.js?v=16"></script>
+  <script src="data/chome.js?v=16"></script>
+  <script src="data/stations.js?v=16"></script>
+  <script src="data/hist.js?v=16"></script>
+  <script src="app.js?v=16"></script>
 </body>
 </html>
