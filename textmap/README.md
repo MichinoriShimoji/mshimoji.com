@@ -112,6 +112,8 @@ BibTeX や各種フォーマットは GitHub の「Cite this repository」ボタ
 - 旧市町村辞書: [歴史的行政区域データセットβ版](https://geoshape.ex.nii.ac.jp/city/)
   （CODH／国立情報学研究所、CC BY 4.0）のGeoNLP辞書から廃止自治体を抽出して生成。
 - 間切辞書: 明治期の沖縄県の区・間切一覧をもとに手作業で作成（座標は中心集落の概算）。
+- 島辞書 (追加分): [Wikidata](https://www.wikidata.org/)「日本にある島」（CC0）から
+  972島を収録（3文字以上・「島」で終わる名前のみ。再生成は R/process_islands.R）。
 - 行政区域データを新しい年度に更新する場合は、国土数値情報から全47県の
   N03 シェープファイルを取得し、開発リポジトリの `scripts/build_topo.sh`
   (mapshaper による簡略化・TopoJSON化・JS埋め込みまで自動) を実行してください。

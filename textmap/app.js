@@ -233,6 +233,11 @@ const DICT = (() => {
     add(name, "magiri", { name, lon, lat, muniCode, prefCode: "47" });
   });
 
+  // 主要な自然地名 (places.js の GEO_CURATED, 1件に確定)
+  (window.GEO_CURATED || []).forEach(([name, lon, lat, cls]) => {
+    add(name, "geo", { name, lon, lat, muniCode: null, prefCode: null, cls });
+  });
+
   // 追加の島辞書 (Wikidata由来, islands_ext.js)。手作り辞書 (places.js) が正で、
   // 同名キーが既にあればスキップする (竹富島などが曖昧化しないように)。
   // 3文字以上・「島」で終わる名前のみ収録済み (「大島」等の一般語は手作りのみ)
@@ -242,6 +247,17 @@ const DICT = (() => {
       if (taken0.has(norm(name))) return;
       add(name, "island", { name, lon, lat, muniCode: muniCode || null,
                             prefCode: muniCode ? muniCode.slice(0, 2) : null });
+    });
+  }
+
+  // 自然地名辞書 (Wikidata由来, geo_ext.js: 山・湖・岬・峠・半島・平野・盆地)。
+  // GEO_CURATED や他の地名と同名のものはスキップ (手作り・既存が常に優先)
+  {
+    const takenG = new Set([...map.values()].map(e => norm(e.key)));
+    (window.GEO_EXT || []).forEach(([name, muniCode, lon, lat, cls]) => {
+      if (takenG.has(norm(name))) return;
+      add(name, "geo", { name, lon, lat, muniCode: muniCode || null,
+                         prefCode: muniCode ? muniCode.slice(0, 2) : null, cls });
     });
   }
 
@@ -470,7 +486,7 @@ function analyzeText(text, accepted = new Set()) {
   // 市区町村 → 都道府県 の順で文脈を見る
   found.forEach(e => {
     if (e.campus) return;
-    if (["chome", "station", "hist", "magiri", "landmark"].includes(e.kind) && e.cands.length > 1) {
+    if (["chome", "station", "hist", "magiri", "landmark", "geo"].includes(e.kind) && e.cands.length > 1) {
       let inCtx = e.cands.filter(c => ctxMuni.has(c.muniCode));
       if (!inCtx.length) inCtx = e.cands.filter(c => ctx.has(c.prefCode));
       if (inCtx.length >= 1) e.cands = inCtx;
@@ -838,7 +854,7 @@ function renderMap(spec) {
         if (lon < extent[0] || lon > extent[2] || lat < extent[1] || lat > extent[3]) return;
         labelJobs.push({ name: i.key, px: proj.x(lon), py: proj.y(lat), dot: true, box: boxLabels });
       });
-    } else if (["island", "point", "chome", "station", "hist", "magiri", "landmark"].includes(i.kind)) {
+    } else if (["island", "point", "chome", "station", "hist", "magiri", "landmark", "geo"].includes(i.kind)) {
       i.cands.forEach(c => {
         if (c.lon < extent[0] || c.lon > extent[2] || c.lat < extent[1] || c.lat > extent[3]) return;
         labelJobs.push({ name: i.key, px: proj.x(c.lon), py: proj.y(c.lat), dot: i.kind !== "island", box: boxLabels });
@@ -1048,6 +1064,12 @@ function targetExtent(items) {
       i.cands.forEach(c => {
         pts = mergeBbox(pts, [c.lon - 0.02, c.lat - 0.02, c.lon + 0.02, c.lat + 0.02]);
       });
+    } else if (i.kind === "geo") {
+      // 半島・平野・盆地は広がりのある地形なので余白を大きく取る
+      i.cands.forEach(c => {
+        const m = ["半島", "平野", "盆地", "湖"].includes(c.cls) ? 0.12 : 0.05;
+        pts = mergeBbox(pts, [c.lon - m, c.lat - m, c.lon + m, c.lat + m]);
+      });
     } else if (i.kind === "island" || i.kind === "point") {
       i.cands.forEach(c => {
         pts = mergeBbox(pts, [c.lon - 0.12, c.lat - 0.12, c.lon + 0.12, c.lat + 0.12]);
@@ -1146,6 +1168,7 @@ const KIND_LABEL = { pref: "都道府県", muni: "市町村", city: "市・郡",
 // チップの種別表示。ランドマークは大学/高校/病院などの実種別を出す
 function kindLabel(item) {
   if (item.kind === "landmark") return (item.cands[0] && item.cands[0].cls) || "施設";
+  if (item.kind === "geo") return (item.cands[0] && item.cands[0].cls) || "自然地名";
   return KIND_LABEL[item.kind] || item.kind;
 }
 
