@@ -36,7 +36,13 @@
     border: 1.5px solid #222; background: white; color: var(--ink);
   }
   .badge.fill { background: var(--accent); border-color: var(--accent); color: white; }
-  p.subnote { font-size: 12px; color: #888; margin: 10px 0 20px; max-width: 900px; }
+  p.noteLink { font-size: 13px; margin: 12px 0 2px; }
+  p.noteLink a {
+    color: var(--accent-dark); font-weight: 600; text-decoration: none;
+    border-bottom: 1px solid rgba(194, 42, 15, 0.4);
+  }
+  p.noteLink a:hover { border-bottom-color: var(--accent-dark); }
+  p.subnote { font-size: 12px; color: #888; margin: 8px 0 20px; max-width: 900px; }
   .inputRow { display: flex; gap: 12px; align-items: stretch; margin-bottom: 12px; }
   textarea {
     flex: 1; min-height: 110px; padding: 12px 14px;
@@ -113,6 +119,9 @@
     <span class="badge">ラベル手動調整</span>
     <span class="badge fill">無料・登録不要</span>
   </div>
+  <p class="noteLink">
+    ▶ 解説記事: <a href="https://note.com/lingfieldwork/n/n55ff8b169b1e" target="_blank" rel="noopener">「テクストを貼るだけで言語・方言の分布地図ができるツールを作った」（note）</a>
+  </p>
   <p class="subnote">
     都道府県・市区町村・町字（大字・小字）・駅名・島・地方名・旧市町村・間切（沖縄）を自動検出。「県境」「市町村境界」などの語にも反応します。
     旧字体・異体字（澤/沢・龍/竜など）や方言形（ピサラ=平良など）にも対応し、綴りが近い未知の語には「もしかして」候補を提示します。
@@ -146,12 +155,12 @@
     (<a href="https://github.com/MichinoriShimoji/japan-text-map">GitHub</a>)
   </footer>
   <!-- ?v= はキャッシュバスター。ファイルを更新したら番号を上げる -->
-  <script src="data/japan_pref.js?v=16"></script>
-  <script src="data/japan_muni.js?v=16"></script>
-  <script src="data/places.js?v=16"></script>
-  <script src="data/chome.js?v=16"></script>
-  <script src="data/stations.js?v=16"></script>
-  <script src="data/hist.js?v=16"></script>
-  <script src="app.js?v=16"></script>
+  <script src="data/japan_pref.js?v=17"></script>
+  <script src="data/japan_muni.js?v=17"></script>
+  <script src="data/places.js?v=17"></script>
+  <script src="data/chome.js?v=17"></script>
+  <script src="data/stations.js?v=17"></script>
+  <script src="data/hist.js?v=17"></script>
+  <script src="app.js?v=17"></script>
 </body>
 </html>

@@ -10,6 +10,7 @@
 
 - **ウェブ**: https://michinorishimoji.github.io/japan-text-map/ を開き、テクストを入力して「地図を生成」
 - **ローカル**: このフォルダをダウンロードして `index.html` をダブルクリック（`file://` でも動作します）
+- **解説記事**: [テクストを貼るだけで言語・方言の分布地図ができるツールを作った（note）](https://note.com/lingfieldwork/n/n55ff8b169b1e)
 
 ### 機能
 
