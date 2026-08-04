@@ -218,6 +218,49 @@ const DICT = (() => {
     });
   });
 
+  // 市町村名の裸形 (「札幌」「仙台」「箱根」など「市/町/村」を落とした形)。
+  // 一般語と同形になるものは除外。既存キー (県の裸形など) と衝突する場合は
+  // 追加しない (「福岡」は県の裸形が先にあるので、ここでは登録されない —
+  // 都市の並びでの再解釈は analyzeText 側で行う)。
+  // 同語幹の市町村 (府中市×2・府中町など) は1キーに集約され曖昧解決に乗る
+  {
+    // 一般語・人名・著名な別地名と紛らわしい語幹は登録しない
+    // (正式名「中央市」「本部町」等では従来どおりヒットする)
+    const STEM_STOP = new Set(["国立", "三次", "大町", "本山", "中央", "東北",
+      "高原", "本部", "大島", "上野", "山田", "中島", "石井", "吉田", "松田",
+      "早川", "中山", "中村", "大江", "田村", "橋本", "春日", "日進", "玉川",
+      "大正", "住吉", "麻生", "青木", "千代田", "中野"]);
+    const takenC = new Set([...map.values()].map(e => norm(e.key)));
+    const snap = [...map.values()].filter(e => e.kind === "city" || e.kind === "muni");
+    const addStem = (e, re) => {
+      const stem = e.key.replace(re, "");
+      if (stem.length < 2 || STEM_STOP.has(stem) || takenC.has(norm(stem))) return;
+      e.cands.forEach(c => add(stem, e.kind, c));
+      map.get(stem + "\0" + e.kind).stem = true;   // 裸形 (省略形) 印
+    };
+    // 政令市 (city) を先に登録し、同語幹の町村はスキップする
+    // (「横浜」が青森県横浜町に、「神戸」が岐阜県神戸町にならないように)
+    const stemsSoFar = () =>
+      new Set([...map.values()].filter(e => e.stem).map(e => norm(e.key)));
+    snap.forEach(e => {
+      if (e.kind === "city" && /市$/.test(e.key)) addStem(e, /市$/);
+    });
+    const stems1 = stemsSoFar();
+    snap.forEach(e => {
+      if (e.kind !== "muni" || !/[市町村]$/.test(e.key)) return;
+      if (stems1.has(norm(e.key.replace(/[市町村]$/, "")))) return;
+      addStem(e, /[市町村]$/);
+    });
+    // 区・郡の裸形 (「博多」「浦和」) は市町村由来の裸形が無い場合のみ
+    // (金沢区が「金沢」=金沢市を曖昧化しないように)
+    const stems2 = stemsSoFar();
+    snap.forEach(e => {
+      if (!/[区郡]$/.test(e.key)) return;
+      if (stems2.has(norm(e.key.replace(/[区郡]$/, "")))) return;
+      addStem(e, /[区郡]$/);
+    });
+  }
+
   // 島・地点は muni (所属市町村コード) があれば文脈解決に使えるようにする
   const addPlace = p => add(p.name, p.type || "point", {
     ...p,
@@ -265,7 +308,7 @@ const DICT = (() => {
   // 一般語と同形で誤検出しやすい名前はストップワードとして除外
   // 実在の町字だが一般語として頻出し誤検出の害が大きいもの
   const CHOME_STOP = new Set(["一部", "離島", "本島", "海岸", "山地", "平野", "高原", "渡り",
-                              "学校", "病院", "大学", "駅前"]);
+                              "学校", "病院", "大学", "駅前", "国立", "三次", "温泉"]);
   Object.entries(window.CHOME).forEach(([muniCode, arr]) => {
     arr.forEach(([name, lon, lat]) => {
       if (CHOME_STOP.has(name)) return;
@@ -273,6 +316,7 @@ const DICT = (() => {
       // テクスト側は「字長浜」と書かれても中の「長浜」でマッチできる
       const stripped = name.replace(/^大?字/, "");
       const key = stripped.length >= 2 ? stripped : name;
+      if (CHOME_STOP.has(key)) return;   // 「字大学」→「大学」のような剥がした後の一般語も除外
       add(key, "chome", { name, lon, lat, muniCode, prefCode: muniCode.slice(0, 2) });
     });
   });
@@ -449,6 +493,23 @@ function analyzeText(text, accepted = new Set()) {
     }
   });
 
+  // 「札幌と仙台と福岡」のような都市の並びでは、裸の県名 (「福岡」) を
+  // 同名の市への言及と再解釈する (他に市・郡の言及があるときだけ。
+  // 「福岡県」と明記されていればそのまま県として扱う)
+  const hasCitySubject = found.some(e => !e.excluded &&
+    (e.kind === "muni" || e.kind === "city"));
+  if (hasCitySubject) {
+    found.forEach(e => {
+      if (e.kind !== "pref" || e.excluded) return;
+      if (e.key === e.cands[0].name) return;
+      const cityE = DICT_BY_ID.get(e.key + "市 city") || DICT_BY_ID.get(e.key + "市 muni");
+      if (cityE) {
+        e.kind = cityE.kind;
+        e.cands = cityE.cands;
+      }
+    });
+  }
+
   // 文脈の市区町村コード (町字・駅の解決に使う)
   const ctxMuni = new Set();
   found.forEach(e => {
@@ -522,6 +583,32 @@ function analyzeText(text, accepted = new Set()) {
     const inCtx = st.cands.filter(c => ctxMuni.has(c.muniCode));
     if (inCtx.length === 1) {
       e.kind = "station";
+      e.cands = inCtx;
+      e.excluded = false;
+      e.ambiguous = false;
+    }
+  });
+
+  // 市町村の裸形 (省略形) が「〜方言」「〜弁」「〜語」の複合語の中でだけ
+  // マッチした場合は除外する (「宮古語」の宮古が岩手県宮古市に化けるのを防ぐ。
+  // 正式名 (「宮古島市」「深浦町」) の言及はこのルールの影響を受けない)
+  found.forEach(e => {
+    if (!e.stem || e.excluded) return;
+    const compoundOnly = (e.spans || []).every(([, end]) =>
+      end < ntext.length && /[方弁語]/.test(ntext[end]));
+    if (compoundOnly) e.excluded = true;
+  });
+
+  // 曖昧なままの市町村裸形が、文脈の市区町村の町字と一致するなら
+  // 町字として拾い直す (「宮古島市西原」の西原 = 沖縄の西原町ではなく
+  // 宮古島市の大字西原)
+  found.forEach(e => {
+    if (!e.stem || !e.excluded || !e.ambiguous) return;
+    const ch = DICT_BY_ID.get(e.key + " chome");
+    if (!ch) return;
+    const inCtx = ch.cands.filter(c => ctxMuni.has(c.muniCode));
+    if (inCtx.length >= 1) {
+      e.kind = "chome";
       e.cands = inCtx;
       e.excluded = false;
       e.ambiguous = false;
