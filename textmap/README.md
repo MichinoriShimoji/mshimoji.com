@@ -114,6 +114,9 @@ BibTeX や各種フォーマットは GitHub の「Cite this repository」ボタ
 - 間切辞書: 明治期の沖縄県の区・間切一覧をもとに手作業で作成（座標は中心集落の概算）。
 - 島辞書 (追加分): [Wikidata](https://www.wikidata.org/)「日本にある島」（CC0）から
   972島を収録（3文字以上・「島」で終わる名前のみ。再生成は R/process_islands.R）。
+- 自然地名辞書: Wikidata（CC0）から山・湖・岬・峠・半島・平野・盆地 3,421件を収録
+  （種別ごとの接尾辞条件つき。再生成は R/process_geo.R。富士山など主要地名は
+  places.js の GEO_CURATED で1件に確定）。
 - 行政区域データを新しい年度に更新する場合は、国土数値情報から全47県の
   N03 シェープファイルを取得し、開発リポジトリの `scripts/build_topo.sh`
   (mapshaper による簡略化・TopoJSON化・JS埋め込みまで自動) を実行してください。

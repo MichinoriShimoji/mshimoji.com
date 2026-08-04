@@ -49,52 +49,111 @@
   <main class="main-content">
     <section class="page-hero">
       <h1 class="page-title" data-i18n="nav-resources">記述のリソース</h1>
-      <p class="page-description"><span class="ja">フィールドワーカーを支援するさまざまな取り組み</span><span class="en">Various initiatives to support fieldworkers</span></p>
+      <p class="page-description"><span class="ja">フィールドワーカーを支援するさまざまな取り組み — 全リソースをこの1ページに一覧しています</span><span class="en">Various initiatives to support fieldworkers — all resources listed on this single page</span></p>
     </section>
 
-    <section class="section">
-      <p class="ja" style="line-height:1.8; text-align:justify;">
-        日琉諸語の記述研究、特に記述文法作成にかかる困難に対応するため、ここではさまざまな形でフィールドワーカーを支援する取り組みを進めています。
-      </p>
-      <p class="en" style="line-height:1.8; text-align:justify;">
-        To address the difficulties involved in descriptive research on Japonic languages, especially in writing descriptive grammars, we are developing various initiatives to support fieldworkers.
-      </p>
-    </section>
+    <style>
+      .res-jump { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 1.8rem; }
+      .res-jump a {
+        font-size: 0.85rem; padding: 6px 14px; border-radius: 999px;
+        background: #eef3f1; color: #35524a; text-decoration: none; border: 1px solid #cfe0da;
+      }
+      .res-jump a:hover { background: #dfeae6; }
+      .res-block { margin-bottom: 2.6rem; }
+      .res-block-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 0.4rem; }
+      .res-block-head .icon { font-size: 1.4rem; }
+      .res-block-head h2 { font-size: 1.25rem; margin: 0; }
+      .res-block-lead { font-size: 0.92rem; color: #555; margin: 0 0 1rem; line-height: 1.7; }
+      .res-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 10px; }
+      .res-item {
+        background: #fff; border: 1px solid #e3e6e4; border-left: 4px solid #7fa79b;
+        border-radius: 8px; padding: 0.75rem 0.95rem;
+      }
+      .res-item a.t { font-weight: 600; color: #2a4139; text-decoration: none; font-size: 0.98rem; }
+      .res-item a.t:hover { text-decoration: underline; }
+      .res-item p { margin: 0.3rem 0 0; font-size: 0.85rem; color: #555; line-height: 1.65; }
+      .res-item .ext { font-size: 0.72rem; color: #999; margin-left: 4px; }
+      .res-cta {
+        display: inline-block; margin-top: 0.6rem; padding: 0.5rem 1.4rem; border-radius: 8px;
+        background: #35524a; color: #fff; text-decoration: none; font-weight: 600; font-size: 0.9rem;
+      }
+      .res-cta:hover { background: #2a4139; }
+    </style>
 
     <section class="section">
-      <h2 class="section-title"><span class="ja-inline">リソース一覧</span><span class="en-inline">Resources</span></h2>
-      <div class="link-card-grid">
-        <a href="grammar.html" class="link-card">
-          <div class="link-card-icon">📝</div>
-          <div class="link-card-content">
-            <div class="link-card-title"><span class="ja-inline">記述文法作成支援</span><span class="en-inline">Grammar Writing Support</span></div>
-            <div class="link-card-desc"><span class="ja">グラマーの執筆項目リスト、記述のポイント解説など</span><span class="en">List of grammar writing topics, explanation of key points in description, etc.</span></div>
-          </div>
-        </a>
-        
-        <a href="glossing.html" class="link-card">
-          <div class="link-card-icon">🏷️</div>
-          <div class="link-card-content">
-            <div class="link-card-title"><span class="ja-inline">ドキュメンテーション・グロスづけ支援</span><span class="en-inline">Documentation & Glossing Support</span></div>
-            <div class="link-card-desc"><span class="ja">例文提示法、グロスづけに関する解説、その他、ドキュメンテーション関連の便利なツールなど</span><span class="en">Example presentation methods, glossing guidelines, and other useful documentation tools</span></div>
-          </div>
-        </a>
+      <div class="res-jump">
+        <a href="#grammar"><span class="ja-inline">📝 記述文法作成支援</span><span class="en-inline">📝 Grammar Writing</span></a>
+        <a href="#glossing"><span class="ja-inline">🏷️ グロスづけ・ドキュメンテーション</span><span class="en-inline">🏷️ Glossing & Documentation</span></a>
+        <a href="#litscope"><span class="ja-inline">🔍 文献検索 LitScope</span><span class="en-inline">🔍 LitScope</span></a>
+        <a href="#textmap"><span class="ja-inline">🗾 テクスト→地図</span><span class="en-inline">🗾 Text-to-Map</span></a>
+      </div>
 
-        <a href="https://michinorishimoji.github.io/LitScope/" class="link-card" target="_blank" rel="noopener">
-          <div class="link-card-icon">🔍</div>
-          <div class="link-card-content">
-            <div class="link-card-title"><span class="ja-inline">LitScope：日琉諸語の総合検索システム</span><span class="en-inline">LitScope: Japonic Literature Search System</span></div>
-            <div class="link-card-desc"><span class="ja">本ウェブサイトで長く運用している「地域別方言研究文献リスト」を基礎データに、最新の研究をリアルタイムでカバーできるAIベースの総合検索システムを公開しました。</span><span class="en">An AI-based integrated search system built on the long-running Regional Dialect Research Bibliography hosted on this website, designed to cover the latest research in real time.</span></div>
-          </div>
-        </a>
+      <!-- ================= 記述文法作成支援 ================= -->
+      <div class="res-block" id="grammar">
+        <div class="res-block-head"><span class="icon">📝</span>
+          <h2><span class="ja-inline">記述文法作成支援</span><span class="en-inline">Grammar Writing Support</span></h2>
+        </div>
+        <p class="res-block-lead"><span class="ja">記述文法（グラマー）を書くためのガイド・リスト類。フィールドデータを体系的な文法書にまとめる際に。</span><span class="en">Guides and lists for writing descriptive grammars.</span></p>
+        <div class="res-grid">
+          <div class="res-item"><a class="t" href="basicvoc.html">🎧 <span class="ja-inline">基礎語彙調査ガイド</span><span class="en-inline">Basic Vocabulary Survey Guide</span></a>
+            <p><span class="ja">調査1日目の基礎語彙調査の進め方。音素分析の3キーワードを伊良部島方言の音声つき実例で。</span><span class="en">How to run a first-day vocabulary survey, with audio examples from Irabu.</span></p></div>
+          <div class="res-item"><a class="t" href="wordboundary.html">📐 <span class="ja-inline">語境界の認定法</span><span class="en-inline">Identifying Word Boundaries</span></a>
+            <p><span class="ja">スペース・イコール・ハイフンの使い分け。自立語・接語・接辞をテストで区別する。</span><span class="en">Spaces, equals signs and hyphens; distinguishing words, clitics and affixes.</span></p></div>
+          <div class="res-item"><a class="t" href="morphology.html">🔬 <span class="ja-inline">形態素分析の実際</span><span class="en-inline">Morphological Analysis in Practice</span></a>
+            <p><span class="ja">形態素と異形態、境界標示、形態音韻規則の分析テクニック。練習問題つき。</span><span class="en">Morphemes and allomorphs, boundary marking, morphophonological rules — with exercises.</span></p></div>
+          <div class="res-item"><a class="t" href="https://www.canva.com/design/DAF6CK2iCHo/7f-u1_Xb1LYXOl-Euc19Jw/view" target="_blank" rel="noopener">📖 <span class="ja-inline">方言記述のスタートガイド</span><span class="en-inline">Starter Guide to Dialect Description</span><span class="ext">↗</span></a>
+            <p><span class="ja">総合的な記述文法を独力で仕上げるために知っておくべきことのコンパクトなガイド（下地ゼミ監修）。</span><span class="en">A compact guidebook for completing a full descriptive grammar on your own.</span></p></div>
+          <div class="res-item"><a class="t" href="writing-guide.html">📋 <span class="ja-inline">執筆項目リスト</span><span class="en-inline">Checklist of Topics</span></a>
+            <p><span class="ja">どの言語でも最低限カバーすべき執筆項目と、項目ごとの記述のポイント。</span><span class="en">Minimum topics any grammar should cover, with notes for each.</span></p></div>
+          <div class="res-item"><a class="t" href="https://docs.google.com/spreadsheets/d/1tEUe9VKN0gqPYd0jQViqSjkvAXurZK7GtLw8GgXAt7E/edit#gid=0" target="_blank" rel="noopener">📚 <span class="ja-inline">日琉諸語の記述文法リスト</span><span class="en-inline">List of Japonic Descriptive Grammars</span><span class="ext">↗</span></a>
+            <p><span class="ja">出版・公開済みの日琉諸語の記述文法/概説のリスト。多くにPDFリンクつき。</span><span class="en">Published grammars/sketches of Japonic languages, many with PDF links.</span></p></div>
+          <div class="res-item"><a class="t" href="https://sites.google.com/view/japoniclanguages-questionnaire/%E3%83%9B%E3%83%BC%E3%83%A0" target="_blank" rel="noopener">📝 <span class="ja-inline">日琉諸語の調査票ポータル</span><span class="en-inline">Questionnaire Portal</span><span class="ext">↗</span></a>
+            <p><span class="ja">日琉諸語の調査に使える調査票を集めたポータルサイト。</span><span class="en">A portal collecting questionnaires for Japonic fieldwork.</span></p></div>
+        </div>
+      </div>
 
-        <a href="textmap.html" class="link-card">
-          <div class="link-card-icon">🗾</div>
-          <div class="link-card-content">
-            <div class="link-card-title"><span class="ja-inline">テクスト→地図ジェネレーター</span><span class="en-inline">Text-to-Map Generator</span></div>
-            <div class="link-card-desc"><span class="ja">地名を含む日本語テクストを貼り付けるだけで、注釈付きの白地図を3案自動生成。方言・言語の分布記述に。SVG/PNG保存対応。</span><span class="en">Paste Japanese text containing place names to automatically generate three annotated base maps. Useful for describing dialect and language distributions. Saves as SVG/PNG.</span></div>
-          </div>
-        </a>
+      <!-- ================= グロスづけ・ドキュメンテーション ================= -->
+      <div class="res-block" id="glossing">
+        <div class="res-block-head"><span class="icon">🏷️</span>
+          <h2><span class="ja-inline">ドキュメンテーション・グロスづけ支援</span><span class="en-inline">Documentation & Glossing Support</span></h2>
+        </div>
+        <p class="res-block-lead"><span class="ja">例文提示法・グロスづけの解説と、作業を効率化する自作ツール群。</span><span class="en">Guides on example presentation and glossing, plus tools to streamline the work.</span></p>
+        <div class="res-grid">
+          <div class="res-item"><a class="t" href="blt.html">🎚️ BLT — <span class="ja-inline">ブラウザ完結の音声注釈ツール</span><span class="en-inline">Browser-based Annotation Toolkit</span></a>
+            <p><span class="ja">波形上で発話を区切り、形態素・グロス・品詞を注釈してEAF書き出し。インストール不要・データは外部送信なし（ベータ版）。</span><span class="en">Segment audio, annotate morphemes/glosses/POS, export to EAF — fully in the browser (beta).</span></p></div>
+          <div class="res-item"><a class="t" href="https://michinorishimoji.github.io/searchgloss/" target="_blank" rel="noopener">🔍 SearchGloss<span class="ext">↗</span></a>
+            <p><span class="ja">文法用語⇄グロスの双方向検索アプリ（グロスリストは宮岡大氏作成）。</span><span class="en">Two-way search between grammatical terms and glosses.</span></p></div>
+          <div class="res-item"><a class="t" href="format-tools.html">⚙️ <span class="ja-inline">例文フォーマット自動整形</span><span class="en-inline">Auto-format Examples</span></a>
+            <p><span class="ja">ベタ打ちから「方言テキスト/グロス/訳」の3行フォーマットへ自動で整えるツールの紹介。</span><span class="en">Tools that turn plain text into aligned three-line examples.</span></p></div>
+          <div class="res-item"><a class="t" href="https://www.academia.edu/41601269/" target="_blank" rel="noopener">📚 <span class="ja-inline">例文提示法の論文（方言の研究6）</span><span class="en-inline">Paper on Example Presentation</span><span class="ext">↗</span></a>
+            <p><span class="ja">方言研究における例文提示とグロスづけの基本的な考え方。</span><span class="en">Foundations of example presentation and glossing in dialect research.</span></p></div>
+          <div class="res-item"><a class="t" href="https://note.com/lingfieldwork/n/nb8776ec7db93" target="_blank" rel="noopener">📖 <span class="ja-inline">Leipzig Glossing Rules 解説</span><span class="en-inline">Guide to the Leipzig Glossing Rules</span><span class="ext">↗</span></a>
+            <p><span class="ja">国際標準のグロスづけ規則の実践的な解説（note）。</span><span class="en">A practical guide to the international glossing standard.</span></p></div>
+          <div class="res-item"><a class="t" href="https://note.com/lingfieldwork/n/n7e0299ed494a" target="_blank" rel="noopener">🎬 <span class="ja-inline">ELAN→談話ギャラリー作成</span><span class="en-inline">ELAN → Discourse Gallery</span><span class="ext">↗</span></a>
+            <p><span class="ja">ELANの注釈+音声から、見やすい談話ギャラリーページ(HTML)を作る。</span><span class="en">Build browsable discourse galleries from ELAN data.</span></p></div>
+          <div class="res-item"><a class="t" href="https://note.com/lingfieldwork/n/ncccf87239433" target="_blank" rel="noopener">📔 <span class="ja-inline">ELAN→形態素辞書作成</span><span class="en-inline">ELAN → Morpheme Dictionary</span><span class="ext">↗</span></a>
+            <p><span class="ja">談話データの全形態素を品詞別に整理し、音声付き例文と一緒に引ける簡易辞書を自動生成。</span><span class="en">Auto-generate a morpheme dictionary with playable examples.</span></p></div>
+        </div>
+      </div>
+
+      <!-- ================= LitScope ================= -->
+      <div class="res-block" id="litscope">
+        <div class="res-block-head"><span class="icon">🔍</span>
+          <h2>LitScope<span class="ja-inline">：日琉諸語の総合検索システム</span><span class="en-inline">: Japonic Literature Search</span></h2>
+        </div>
+        <p class="res-block-lead"><span class="ja">本サイトで長く運用してきた「地域別方言研究文献リスト」を基礎データに、最新の研究をリアルタイムでカバーするAIベースの文献検索システム。地域名・言語名・トピックから日琉諸語の研究文献を横断検索できます。</span><span class="en">An AI-based literature search system built on our long-running regional bibliography of dialect research, covering the latest work in real time.</span></p>
+        <a class="res-cta" href="https://michinorishimoji.github.io/LitScope/" target="_blank" rel="noopener"><span class="ja-inline">LitScope を開く</span><span class="en-inline">Open LitScope</span></a>
+      </div>
+
+      <!-- ================= テクスト→地図 ================= -->
+      <div class="res-block" id="textmap">
+        <div class="res-block-head"><span class="icon">🗾</span>
+          <h2><span class="ja-inline">テクスト→地図ジェネレーター</span><span class="en-inline">Text-to-Map Generator</span></h2>
+        </div>
+        <p class="res-block-lead"><span class="ja">「◯◯方言は△△市と□□町で話されている」のようなテクストを貼るだけで、注釈付きの白地図を3案自動生成。約22万件の地名辞書（市区町村・町字・駅・路線・学校・病院・島・山・旧市町村・間切など）を内蔵し、生成後は地図上でラベルをドラッグ編集してSVG/PNG保存できます。処理はすべてブラウザ内で完結。</span><span class="en">Paste text like "the ◯◯ dialect is spoken in △△ City" to auto-generate three annotated base maps. A built-in gazetteer of ~220k place names; drag-edit labels and save as SVG/PNG. Everything runs in your browser.</span></p>
+        <a class="res-cta" href="textmap/index.html"><span class="ja-inline">ツールを開く</span><span class="en-inline">Open the tool</span></a>
+        <a class="res-cta" style="background:transparent;color:#35524a;border:1px solid #35524a" href="textmap.html"><span class="ja-inline">紹介ページ</span><span class="en-inline">About</span></a>
+        <a class="res-cta" style="background:transparent;color:#35524a;border:1px solid #35524a" href="https://note.com/lingfieldwork/n/n55ff8b169b1e" target="_blank" rel="noopener"><span class="ja-inline">解説記事（note）</span><span class="en-inline">Article (note)</span></a>
       </div>
     </section>
   </main>
