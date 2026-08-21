@@ -110,13 +110,13 @@
         'fukaya-role': 'JSPS (PD)',
         'fukaya-name': '深谷 康佳',
         'fukaya-research': 'オーストロネシア語族マラヨポリネシア語派ケラビット語の総合的記述。辞書作成。',
-        'fukaya-pdf-fallback': 'PDFを表示できません。<a href="https://www.mshimoji.com/_files/ugd/88f9b7_a8fae396f5fc449492af06d6385b968a.pdf" target="_blank" rel="noopener">こちらからダウンロード</a>してください。'
+        'fukaya-pdf-fallback': 'PDFを表示できません。<a href="files/members/fukaya.pdf" target="_blank" rel="noopener">こちらからダウンロード</a>してください。'
       },
       en: {
         'fukaya-role': 'JSPS Postdoctoral Fellow',
         'fukaya-name': 'Yasuka FUKAYA',
         'fukaya-research': 'Comprehensive description of Kelabit (Austronesian, Malayo-Polynesian). Lexicography.',
-        'fukaya-pdf-fallback': 'Cannot display PDF. <a href="https://www.mshimoji.com/_files/ugd/88f9b7_a8fae396f5fc449492af06d6385b968a.pdf" target="_blank" rel="noopener">Download here</a>.'
+        'fukaya-pdf-fallback': 'Cannot display PDF. <a href="files/members/fukaya.pdf" target="_blank" rel="noopener">Download here</a>.'
       }
     },
 
