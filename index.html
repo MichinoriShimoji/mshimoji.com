@@ -102,6 +102,23 @@
     .news-box a:hover {
       color: #0284c7;
     }
+    .news-box a { display: block; margin: 0.15rem 0; }
+    /* 公開のお知らせ（BLTのメタル配色に合わせた赤バッジで目立たせる） */
+    .news-box a.news-hot { color: #9d1220; font-weight: 700; }
+    .news-box a.news-hot:hover { color: #d21b2a; }
+    .news-flash {
+      display: inline-block;
+      background: linear-gradient(180deg, #d21b2a, #8e0d17);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      border-radius: 4px;
+      padding: 0.1rem 0.5rem;
+      margin-right: 0.5rem;
+      vertical-align: 1.5px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
     .site-footer {
       display: none;
     }
@@ -166,6 +183,7 @@
         </p>
       </div>
       <div class="news-box">
+        <a class="news-hot" href="news.html"><span class="news-flash">🤘 NEW</span><span class="ja-inline">BLT 正式公開！ ベータ版を卒業し、ロック魂を注入した公開版になりました（2026/8/22）</span><span class="en-inline">BLT is out of beta! The full release ships with rock spirit built in (2026/8/22)</span></a>
         <a href="news.html"><span class="ja-inline">📢 テクスト→地図ジェネレーター：地名を含む文を貼るだけの白地図ツールを公開（2026/8/3）</span><span class="en-inline">📢 Text-to-Map Generator: paste a sentence, get a base map (2026/8/3)</span></a>
       </div>
     </main>
