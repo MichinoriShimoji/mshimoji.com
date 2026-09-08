@@ -1134,11 +1134,45 @@ $('btnStartNew').addEventListener('click',()=>setStartMode('new'));
 $('btnStartCorpus').addEventListener('click',()=>{switchTab('analysis');setTimeout(()=>{try{$('corpusInput').click()}catch(e){}},150);});
 $('btnStartResume').addEventListener('click',()=>setStartMode('resume'));
 $('btnStartBack').addEventListener('click',()=>setStartMode(null));
+// 読み込んだJSONを「プロジェクト形式（segs 配列を持つオブジェクト）」に正規化する。
+// 途中保存の .json はそのまま。BLT自身の「JSON」書き出し（_tokens.json:
+// {id,spk,text,trans,start,end,morphs?,tiers?} の配列）や、外部ツールが同じ形で作ったレコード配列
+// （{records:[…]} / {tokens:[…]} で包んだものも可）は segs に変換して受け付ける。
+function normalizeProject(p){
+  if(p&&typeof p==='object'&&!Array.isArray(p)&&Array.isArray(p.segs))return p;
+  const arr=Array.isArray(p)?p:(p&&typeof p==='object')?(Array.isArray(p.records)?p.records:Array.isArray(p.tokens)?p.tokens:null):null;
+  if(!arr)throw new Error('プロジェクトファイルではありません（segs を持つオブジェクトか、レコードの配列が必要です）');
+  if(!arr.length)throw new Error('レコードがありません（空の配列です）');
+  const num=v=>{const n=parseFloat(v);return isFinite(n)?n:NaN};
+  const str=v=>String(v==null?'':v);
+  const morphL=[],segL=[];
+  const segs=arr.map((r,i)=>{
+    if(!r||typeof r!=='object')throw new Error((i+1)+'件目のレコードがオブジェクトではありません');
+    const t0=num(r.t0!=null?r.t0:r.start), t1=num(r.t1!=null?r.t1:r.end);
+    if(isNaN(t0)||isNaN(t1))throw new Error((i+1)+'件目のレコードに開始／終了時刻（start・end または t0・t1）がありません');
+    const o={t0,t1,id:str(r.id),spk:str(r.spk),text:str(r.text),note:str(r.note!=null?r.note:r.trans),
+             tv:(r.tv&&typeof r.tv==='object')?Object.assign({},r.tv):{}};
+    if(Array.isArray(r.morphs))o.morphs=r.morphs.map(str);
+    if(r.tiers&&typeof r.tiers==='object')Object.keys(r.tiers).forEach(k=>{
+      const v=r.tiers[k];
+      const cells=(v&&typeof v==='object'&&Array.isArray(v.cells))?v.cells:(Array.isArray(v)?v:null);
+      if(cells){o.tv[k]=cells.map(str);if(!morphL.includes(k))morphL.push(k)}
+      else{o.tv[k]=str(v&&typeof v==='object'?v.line:v);if(!segL.includes(k))segL.push(k)}
+    });
+    return o;
+  });
+  const speakers=[]; segs.forEach(s=>{if(s.spk&&!speakers.includes(s.spk))speakers.push(s.spk)});
+  const src=(p&&typeof p==='object'&&!Array.isArray(p))?p:{};
+  return Object.assign({},src,{segs, speakers:speakers.length?speakers:['A'],
+    tiersDef:morphL.map(n=>({name:n,parent:'morph'})).concat(segL.map(n=>({name:n,parent:'seg'}))),
+    wavName:typeof src.wavName==='string'?src.wavName:''});
+}
 $('projInput').addEventListener('change',async ev=>{
   const f=ev.target.files[0];if(!f)return;
   try{
-    const p=JSON.parse(await f.text());
-    if(!p.segs)throw new Error('プロジェクトファイルではありません');
+    let p;
+    try{p=JSON.parse(await f.text());}catch(e){throw new Error('JSONとして読めません（'+e.message+'）');}
+    p=normalizeProject(p);
     if(!env){alert('先にWAVファイルを読み込んでください');return}
     if(p.multiCh&&!multiCh&&!confirm('この保存は「複数チャンネル（話者ごとのWAV）」で作成されています（'+(p.trackFiles||[]).map(t=>t.spk+'='+t.name).join(' / ')+'）。\n単一の音声で読み込んでいますが、このまま続けますか？\n（本来は「🎙 複数チャンネル」から、保存時と同じ順番でWAVを選び直すのが正確です）'))return;
     if(p.multiCh&&multiCh&&p.trackFiles&&p.trackFiles.length!==tracks.length&&!confirm('保存時は '+p.trackFiles.length+' チャンネル、現在は '+tracks.length+' チャンネルです。話者と音声の対応がずれる可能性があります。続けますか？'))return;
@@ -1245,8 +1279,10 @@ function importEaf(xmlText){
   const spkOf=t=>{const m=String(t.id).match(/@(.+)$/);return m?m[1]:(t.part?t.part.split(/\s+/)[0]:null)};
   // テキスト層＝時間整列・親なし・子を持つ（topic等の独立層は子を持たない）
   const rootAligned=tiers.filter(t=>!t.parent&&t.align!==false&&t.anns.some(a=>a.kind==='al'));
-  const textTiers=rootAligned.filter(t=>(childrenOf[t.id]||[]).length>0||/^text/i.test(t.id));
-  if(!textTiers.length)throw new Error('テキスト層（時間整列）が見つかりません');
+  let textTiers=rootAligned.filter(t=>(childrenOf[t.id]||[]).length>0||/^text/i.test(t.id));
+  // 子層も text という名前も無い（ELANで書き起こしただけの eaf 等）: 注釈のある親なし時間整列層をすべてテキスト層とみなす
+  if(!textTiers.length)textTiers=rootAligned.filter(t=>t.anns.some(a=>a.kind==='al'&&a.t0!=null&&a.t1!=null));
+  if(!textTiers.length)throw new Error('テキスト層（時間整列の注釈がある、親を持たない層）が見つかりません。\nこのファイルの層: '+(tiers.map(t=>t.id+(t.parent?'（親: '+t.parent+'）':'')).join('・')||'なし'));
   const indepTiers=rootAligned.filter(t=>!textTiers.includes(t));   // topic など独立した時間整列層
   // morph層＝Symbolic_Subdivision
   const isMorphTier=t=>t.cons==='Symbolic_Subdivision';
@@ -4734,7 +4770,7 @@ function corpusRefresh(){
   refreshAnalysis();
 }
 function corpusAddProject(name,p){
-  if(!p||!Array.isArray(p.segs))throw new Error('プロジェクトファイルではありません');
+  p=normalizeProject(p);   // レコード配列形式（JSON書き出し・外部ツール製）も segs 形式に揃える
   const sid=(typeof p.sessionId==='string'&&p.sessionId)?p.sessionId:'';
   if(sid&&corpus.some(c=>c.sessionId===sid))return {skipped:name+'（同じセッションを追加済み）'};
   if(!sid&&corpus.some(c=>c.name===name))return {skipped:name+'（同名を追加済み）'};
