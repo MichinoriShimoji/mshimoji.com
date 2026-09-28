@@ -321,13 +321,6 @@ const DICT = (() => {
     });
   });
 
-  // 通称の集落名 (地理院タイル注記の居住地名・通称, settlements.js)。
-  // 一般語と同形の名前が多いので、照合は analyzeText の集落パスで
-  // 文脈 (その市区町村・島の言及) があるときだけ行う
-  (window.SETTLEMENTS || []).forEach(([name, muniCode, lon, lat]) => {
-    add(name, "settle", { name, lon, lat, muniCode, prefCode: muniCode.slice(0, 2) });
-  });
-
   // ランドマーク (学校・病院、landmarks.js)。cls は 大学/高校/病院 などの種別
   (window.LANDMARKS || []).forEach(([name, muniCode, lon, lat, cls]) => {
     const cand = { name, lon, lat, muniCode, prefCode: muniCode.slice(0, 2), cls };
@@ -420,6 +413,14 @@ const DICT = (() => {
       map.set(k, { key: alias, kind: best.kind, cands: best.cands, aliasOf: target });
   });
 
+  // 通称の集落名 (地理院タイル注記の居住地名・通称, settlements.js)。
+  // 一般語と同形の名前が多いので、照合は analyzeText の集落パスで
+  // 文脈 (その市区町村・島の言及) があるときだけ行う。
+  // 他の辞書の「既存キーならスキップ」判定 (旧市町村など) に影響しないよう最後に登録する
+  (window.SETTLEMENTS || []).forEach(([name, muniCode, lon, lat]) => {
+    add(name, "settle", { name, lon, lat, muniCode, prefCode: muniCode.slice(0, 2) });
+  });
+
   return [...map.values()]
     .map(e => ({ ...e, nkey: norm(e.key) }))
     .sort((a, b) => b.key.length - a.key.length);
@@ -428,7 +429,15 @@ const DICT = (() => {
 /* ================= テクスト解析 ================= */
 
 const DICT_BY_ID = new Map(DICT.map(e => [e.key + " " + e.kind, e]));
-const SETTLE_POOL = DICT.filter(e => e.kind === "settle");   // 長い名前から順 (DICT の並び)
+// 集落名を市区町村コードで引けるようにしておく (九州・沖縄で1万件超。文脈の自治体の分だけ照合する)
+const SETTLE_BY_MUNI = new Map();
+DICT.forEach(e => {
+  if (e.kind !== "settle") return;
+  new Set(e.cands.map(c => c.muniCode)).forEach(code => {
+    if (!SETTLE_BY_MUNI.has(code)) SETTLE_BY_MUNI.set(code, []);
+    SETTLE_BY_MUNI.get(code).push(e);
+  });
+});
 const KATA_ONLY = /^[ァ-ヶー]+$/;
 const KATA_CH = /[ァ-ヶー]/;
 const HIRA_ONLY = /^[ぁ-ゖー]+$/;
@@ -615,7 +624,9 @@ function analyzeText(text, accepted = new Set()) {
       if (found[i].spans && !found[i].spans.length && owners.includes(found[i])) found.splice(i, 1);
     return true;
   };
-  if (ctxMuni.size) SETTLE_POOL.forEach(e => {
+  const settlePool = new Set();
+  ctxMuni.forEach(code => (SETTLE_BY_MUNI.get(code) || []).forEach(e => settlePool.add(e)));
+  [...settlePool].sort((a, b) => b.nkey.length - a.nkey.length).forEach(e => {
     const cands = e.cands.filter(c => ctxMuni.has(c.muniCode));
     if (!cands.length) return;
     const kanaCh = KATA_ONLY.test(e.nkey) ? KATA_CH : HIRA_ONLY.test(e.nkey) ? HIRA_CH : null;
