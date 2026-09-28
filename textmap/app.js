@@ -1,4 +1,4 @@
-/* app.js -- テクスト→地図ジェネレーター
+/* app.js -- SPOT: Sketch Places Out of Text
  * 依存: data/japan_pref.js (PREF_TOPO), data/japan_muni.js (MUNI_TOPO),
  *       data/places.js (EXTRA_PLACES, REGIONS)
  * すべてクライアントサイドで完結 (file:// でも動作)
@@ -1087,7 +1087,7 @@ function renderMap(spec) {
   parts.push(`<text x="34" y="70" font-size="13" fill="#333" text-anchor="middle">北</text>`);
 
   // --- クレジット (2行: 作図ツールのDOIとデータ出典) ---
-  parts.push(`<text x="${W - 8}" y="${H - 19}" font-size="9" fill="#aaa" text-anchor="end">作図: テクスト→地図ジェネレーター (doi:10.5281/zenodo.21766019)</text>`);
+  parts.push(`<text x="${W - 8}" y="${H - 19}" font-size="9" fill="#aaa" text-anchor="end">作図: SPOT: Sketch Places Out of Text (doi:10.5281/zenodo.21766019)</text>`);
   parts.push(`<text x="${W - 8}" y="${H - 8}" font-size="9" fill="#aaa" text-anchor="end">出典: 国土数値情報(N03,N02,P29,P04)・地理院タイルを加工, Geolonia住所データ, 歴史的行政区域データセット(CODH)</text>`);
   parts.push(`</svg>`);
   return parts.join("\n");

@@ -1,4 +1,4 @@
-# テクスト→地図ジェネレーター
+# SPOT: Sketch Places Out of Text
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21766019.svg)](https://doi.org/10.5281/zenodo.21766019)
 
@@ -88,11 +88,11 @@ data/hist.js         旧市町村辞書
 研究・出版物で本ツール (または本ツールで生成した地図) を使用した場合は、
 以下の形式での引用をお願いします。
 
-> 下地理則 (2026)『テクスト→地図ジェネレーター』(バージョン 1.0.0) [ソフトウェア].
+> 下地理則 (2026)『SPOT: Sketch Places Out of Text』(バージョン 1.1.0) [ソフトウェア].
 > https://michinorishimoji.github.io/japan-text-map/
 > DOI: [10.5281/zenodo.21766019](https://doi.org/10.5281/zenodo.21766019)
 
-> Shimoji, Michinori (2026). *Japan Text-to-Map Generator* (Version 1.0.0) [Software].
+> Shimoji, Michinori (2026). *SPOT: Sketch Places Out of Text* (Version 1.1.0) [Software].
 > https://michinorishimoji.github.io/japan-text-map/
 > DOI: [10.5281/zenodo.21766019](https://doi.org/10.5281/zenodo.21766019)
 
