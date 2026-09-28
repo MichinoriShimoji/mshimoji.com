@@ -615,6 +615,25 @@ function analyzeText(text, accepted = new Set()) {
     }
   });
 
+  // 曖昧でない市町村裸形でも、文脈 (島・市区町村の言及) の中に同名の町字・
+  // 集落があればそちらを優先する (「伊良部島の字長浜」の長浜 = 滋賀県長浜市では
+  // なく宮古島市伊良部の長浜)。裸形自身の県が文脈にある場合 (「滋賀県の長浜」)
+  // は市のまま。判定に使う文脈からは裸形自身の市区町村コードを除く
+  found.forEach(e => {
+    if (!e.stem || e.excluded || e.kind !== "muni") return;
+    if (e.cands.some(c => ctx.has(c.prefCode))) return;
+    const ch = DICT_BY_ID.get(e.key + " chome");
+    if (!ch) return;
+    const own = new Set(e.cands.map(c => c.code));
+    const inCtx = ch.cands.filter(c => ctxMuni.has(c.muniCode) && !own.has(c.muniCode));
+    if (inCtx.length >= 1) {
+      own.forEach(code => ctxMuni.delete(code));
+      e.kind = "chome";
+      e.cands = inCtx;
+      e.stem = false;
+    }
+  });
+
   // 市町村名・島名と同語幹の町字は、「〜方言」「〜弁」「〜語」のような
   // 言語名の複合語の中でだけマッチした場合に冗長とみなして除外する
   // (例: 「深浦町」言及時の「深浦方言」の深浦、「池間島」言及時の「池間方言」の池間。
