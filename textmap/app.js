@@ -321,6 +321,13 @@ const DICT = (() => {
     });
   });
 
+  // 通称の集落名 (地理院タイル注記の居住地名・通称, settlements.js)。
+  // 一般語と同形の名前が多いので、照合は analyzeText の集落パスで
+  // 文脈 (その市区町村・島の言及) があるときだけ行う
+  (window.SETTLEMENTS || []).forEach(([name, muniCode, lon, lat]) => {
+    add(name, "settle", { name, lon, lat, muniCode, prefCode: muniCode.slice(0, 2) });
+  });
+
   // ランドマーク (学校・病院、landmarks.js)。cls は 大学/高校/病院 などの種別
   (window.LANDMARKS || []).forEach(([name, muniCode, lon, lat, cls]) => {
     const cand = { name, lon, lat, muniCode, prefCode: muniCode.slice(0, 2), cls };
@@ -421,6 +428,7 @@ const DICT = (() => {
 /* ================= テクスト解析 ================= */
 
 const DICT_BY_ID = new Map(DICT.map(e => [e.key + " " + e.kind, e]));
+const SETTLE_POOL = DICT.filter(e => e.kind === "settle");   // 長い名前から順 (DICT の並び)
 const KATA_ONLY = /^[ァ-ヶー]+$/;
 const KATA_CH = /[ァ-ヶー]/;
 const HIRA_ONLY = /^[ぁ-ゖー]+$/;
@@ -432,6 +440,7 @@ function analyzeText(text, accepted = new Set()) {
   const claimed = [];
   const found = [];
   for (const e of DICT) {
+    if (e.kind === "settle") continue;   // 集落は文脈確定後に別パスで照合
     // かなだけの地名は、かな語の一部への誤マッチを防ぐため、前後が同じ
     // 文字種でないときだけ採用する (「またがる」の「たが」、カタカナ語中の
     // 方言形エイリアスなど)
@@ -589,6 +598,44 @@ function analyzeText(text, accepted = new Set()) {
     }
   });
 
+  // 通称の集落名パス: 文脈の市区町村 (島の所属市町村を含む) にある集落だけを照合する。
+  // 文脈の無いテクストでは何も検出しない (「小林」「中村」のような一般的な名前の誤爆を防ぐ)。
+  // 既に取られた位置でも、その持ち主が「曖昧で除外された地名」か「集落名の内側に
+  // 収まる短い地名」だけなら集落が奪う (「十根川」の中の根川、「上椎葉」の中の椎葉、
+  // 全国に同名がある「中村」「小崎」など)。奪われて位置を失った地名は結果から外す
+  const takeOver = (s0, e0) => {
+    const owners = found.filter(f => (f.spans || []).some(([a, b]) => a < e0 && s0 < b));
+    const ok = owners.every(f => f.excluded ||
+      f.spans.every(([a, b]) => !(a < e0 && s0 < b) || (s0 <= a && b <= e0 && b - a < e0 - s0)));
+    if (!ok) return false;
+    owners.forEach(f => { f.spans = f.spans.filter(([a, b]) => !(a < e0 && s0 < b)); });
+    for (let i = claimed.length - 1; i >= 0; i--)
+      if (claimed[i][0] < e0 && s0 < claimed[i][1]) claimed.splice(i, 1);
+    for (let i = found.length - 1; i >= 0; i--)
+      if (found[i].spans && !found[i].spans.length && owners.includes(found[i])) found.splice(i, 1);
+    return true;
+  };
+  if (ctxMuni.size) SETTLE_POOL.forEach(e => {
+    const cands = e.cands.filter(c => ctxMuni.has(c.muniCode));
+    if (!cands.length) return;
+    const kanaCh = KATA_ONLY.test(e.nkey) ? KATA_CH : HIRA_ONLY.test(e.nkey) ? HIRA_CH : null;
+    const spans = [];
+    let idx = 0;
+    while ((idx = ntext.indexOf(e.nkey, idx)) !== -1) {
+      const end = idx + e.nkey.length;
+      const okBoundary = !kanaCh ||
+        (!(idx > 0 && kanaCh.test(ntext[idx - 1])) &&
+         !(end < ntext.length && kanaCh.test(ntext[end])));
+      if (okBoundary && (!claimed.some(c => idx < c[1] && c[0] < end) || takeOver(idx, end))) {
+        claimed.push([idx, end]);
+        spans.push([idx, end]);
+      }
+      idx = end;
+    }
+    if (spans.length)
+      found.push({ ...e, kind: "chome", settle: true, cands, spans, excluded: false, ambiguous: false });
+  });
+
   // 市町村の裸形 (省略形) が「〜方言」「〜弁」「〜語」の複合語の中でだけ
   // マッチした場合は除外する (「宮古語」の宮古が岩手県宮古市に化けるのを防ぐ。
   // 正式名 (「宮古島市」「深浦町」) の言及はこのルールの影響を受けない)
@@ -622,15 +669,19 @@ function analyzeText(text, accepted = new Set()) {
   found.forEach(e => {
     if (!e.stem || e.excluded || e.kind !== "muni") return;
     if (e.cands.some(c => ctx.has(c.prefCode))) return;
-    const ch = DICT_BY_ID.get(e.key + " chome");
-    if (!ch) return;
     const own = new Set(e.cands.map(c => c.code));
-    const inCtx = ch.cands.filter(c => ctxMuni.has(c.muniCode) && !own.has(c.muniCode));
-    if (inCtx.length >= 1) {
-      own.forEach(code => ctxMuni.delete(code));
-      e.kind = "chome";
-      e.cands = inCtx;
-      e.stem = false;
+    for (const kind of ["chome", "settle"]) {
+      const ch = DICT_BY_ID.get(e.key + " " + kind);
+      if (!ch) continue;
+      const inCtx = ch.cands.filter(c => ctxMuni.has(c.muniCode) && !own.has(c.muniCode));
+      if (inCtx.length >= 1) {
+        own.forEach(code => ctxMuni.delete(code));
+        e.kind = "chome";
+        if (kind === "settle") e.settle = true;
+        e.cands = inCtx;
+        e.stem = false;
+        break;
+      }
     }
   });
 
@@ -1275,6 +1326,7 @@ const KIND_LABEL = { pref: "都道府県", muni: "市町村", city: "市・郡",
 function kindLabel(item) {
   if (item.kind === "landmark") return (item.cands[0] && item.cands[0].cls) || "施設";
   if (item.kind === "geo") return (item.cands[0] && item.cands[0].cls) || "自然地名";
+  if (item.settle) return "集落";
   return KIND_LABEL[item.kind] || item.kind;
 }
 
