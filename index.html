@@ -134,13 +134,38 @@
     .site-footer {
       display: none;
     }
+    /* スマホ：全画面固定をやめて通常スクロールに（固定のままだとニュース欄が画面外で見えない） */
     @media (max-width: 768px) {
+      html, body {
+        height: auto;
+        overflow: auto;
+      }
+      .fullpage-container {
+        height: auto;
+        min-height: 100vh;
+        min-height: 100svh;
+      }
+      .main-content {
+        padding: 1rem 0.9rem 1.5rem;
+        gap: 0.8rem;
+      }
       .content-box {
-        padding: 1.5rem 1.5rem;
-        margin: 0.5rem;
+        padding: 1.4rem 1.2rem;
+        margin: 0;
+        width: auto;
+        max-height: none;      /* 箱内スクロールを廃止し、ページ全体でスクロール */
+        overflow-y: visible;
+      }
+      .content-box p {
+        line-height: 1.9;
       }
       .news-box {
-        padding: 0.6rem 1rem;
+        padding: 0.7rem 1rem;
+        width: auto;
+      }
+      .news-box a {
+        font-size: 0.88rem;
+        line-height: 1.7;
       }
     }
     /* i18n styles */
